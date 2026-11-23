@@ -1,35 +1,33 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>SpendSim – True Wealth & Spending Simulator (CAD)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>SpendSim Ultimate</title>
 <style>
+/* Design plan: deep-space "fintech casino" look. Ink on night, violet accent, lime for gains, coral for losses.
+   Layout: sticky balance HUD over a tabbed store grid, with a full-screen canvas for spectacle. */
 :root{
   --bg:#eef1f6;--card:#ffffff;--ink:#101523;--mut:#667089;--line:#dde2ee;
   --acc:#5b3df5;--ok:#0fa968;--bad:#e5383b;--warn:#f59e0b;--hd:#ffffffee;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px)
+  box-sizing:border-box;color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
 }
 @media(prefers-color-scheme:dark){
-  :root:not([data-theme=light]){
-    --bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;
-    --acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--warn:#fbbf24;--hd:#0c1020ee
-  }
+  :root:not([data-theme=light]){--bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;--acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--warn:#fbbf24;--hd:#0c1020ee;color-scheme:dark}
 }
-:root[data-theme=dark]{
-  --bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;
-  --acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--warn:#fbbf24;--hd:#0c1020ee
-}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root[data-theme=dark]{--bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;--acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--warn:#fbbf24;--hd:#0c1020ee;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;overflow-x:hidden}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;overflow-x:hidden;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input[type=search],input[type=text],input[type=number]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
 
-/* Sticky Header */
-#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--hd);backdrop-filter:blur(14px);padding:10px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between}
+/* HUD */
+#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--hd);backdrop-filter:blur(14px);padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between}
 .bal small{color:var(--mut);display:flex;align-items:center;gap:6px;font-weight:600}
 #bal{font-size:clamp(26px,6.5vw,44px);font-weight:800;font-variant-numeric:tabular-nums;color:var(--ok);letter-spacing:-.02em;transition:color .2s}
 #bal.hit{color:var(--bad);animation:jolt .4s}
@@ -38,24 +36,24 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--bad),#ffb020,var(--ok));transition:width .9s cubic-bezier(.2,.8,.2,1)}
 #st{display:flex;flex-wrap:wrap;gap:6px;font-size:12.5px}
 #st span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 10px;font-weight:600;white-space:nowrap}
-.fl{position:absolute;left:16px;top:58px;font-weight:800;font-size:20px;color:var(--bad);animation:up 1.6s forwards;pointer-events:none;z-index:12}
+.fl{position:fixed;left:16px;top:88px;font-weight:800;font-size:20px;color:var(--bad);animation:up 1.6s forwards;pointer-events:none;z-index:12}
 .fl.g{color:var(--ok)}
 
-/* Main Layout & Navigation */
-main{max-width:1160px;margin:0 auto;padding:14px 16px 70px}
+/* Layout */
+main{max-width:1160px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 70px max(16px,env(safe-area-inset-left,0px));min-width:0}
 .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .tabs button{padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-weight:600;transition:transform .12s}
 .tabs button:active{transform:scale(.96)}
 .tabs .on{background:var(--acc);color:#fff;border-color:var(--acc)}
 .tabs #rs{margin-left:auto;color:var(--mut)}
 .controls{display:flex;gap:8px;flex-wrap:wrap}
-input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chips button{white-space:nowrap;padding:6px 13px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600}
 .chips .on{background:var(--ink);color:var(--bg)}
+.sec-h{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:16px 0 8px}
 
-/* Store Grid */
+/* Store grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:10px}
 .co{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:left;transition:transform .15s,border-color .15s,box-shadow .15s;position:relative}
 .co:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:0 8px 20px #00000012}
@@ -63,10 +61,11 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .co b{display:block;font-size:15px}
 .co small{color:var(--mut);font-size:12px}
 
-/* Modals & Sheets */
+/* Layers and sheets */
 .layer{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));background:#04060dd9;backdrop-filter:blur(7px)}
 .layer.on{display:flex}
-#ov{z-index:20}#ck{z-index:30}#lay{z-index:40}#fx{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+#ov{z-index:20}#ck{z-index:30}#lay{z-index:40}
+#fxc{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
 .sheet{background:var(--card);border:1px solid var(--line);border-radius:22px;width:100%;max-width:480px;max-height:100%;overflow:auto;animation:pop .28s cubic-bezier(.2,1.35,.4,1)}
 .sh{padding:18px;color:#fff;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:2}
 .sh i{font-style:normal;font-size:34px}
@@ -82,38 +81,28 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .buy{background:var(--acc);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;white-space:nowrap;transition:transform .1s}
 .buy:active{transform:scale(.95)}
 .buy:disabled{opacity:.45}
+.ghost{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:700;background:var(--card);white-space:nowrap}
+.ghost:disabled{opacity:.4}
+.good{color:var(--ok)}.bad{color:var(--bad)}
 
-/* Checkout & 5 Card Animations */
+/* Checkout + 5 card styles */
 .ckb{padding:18px}
 .ckb h3{margin:0 0 2px}
 .qty{display:flex;gap:6px;margin:10px 0;align-items:center;flex-wrap:wrap}
 .qty button{border:1px solid var(--line);border-radius:9px;padding:6px 11px;font-weight:600}
 .qty b{min-width:56px;text-align:center}
-
 .card-styles{display:flex;gap:5px;overflow-x:auto;padding:4px 0 6px;scrollbar-width:none}
 .card-styles::-webkit-scrollbar{display:none}
 .card-styles button{font-size:11.5px;padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:var(--bg);white-space:nowrap;font-weight:700;color:var(--mut)}
 .card-styles button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-
 .card-stage{perspective:1000px;margin:10px 0 14px;position:relative;height:164px}
-.card{
-  height:164px;border-radius:18px;padding:18px;color:#fff;
-  background:linear-gradient(135deg,#1b2a6b,#6a2fd8 60%,#d6357f);
-  position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
-  font-family:ui-monospace,monospace;letter-spacing:.08em;
-  box-shadow:0 12px 28px #00000033;
-  transform-style:preserve-3d;transition:transform .65s cubic-bezier(.2,.9,.3,1.1),box-shadow .4s
-}
+.card{height:164px;border-radius:18px;padding:18px;color:#fff;background:linear-gradient(135deg,#1b2a6b,#6a2fd8 60%,#d6357f);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;font-family:ui-monospace,monospace;letter-spacing:.08em;box-shadow:0 12px 28px #00000033;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.2,.9,.3,1.1),box-shadow .4s}
 .card-top{display:flex;justify-content:space-between;align-items:center;z-index:2}
 .chip{width:40px;height:28px;border-radius:6px;background:linear-gradient(135deg,#f6d98a,#b98d2e);position:relative;overflow:hidden}
 .chip::after{content:"";position:absolute;inset:6px;border:1px solid #0003;border-radius:3px}
 .card-mid{z-index:2;font-size:17px;font-weight:700;text-shadow:0 2px 6px #0004}
 .card-bot{display:flex;justify-content:space-between;align-items:flex-end;z-index:2;font-size:12px}
-
-/* Style 0: Classic Shimmer Sweep */
 .card.s0.busy::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 25%,#ffffff88 50%,transparent 75%);animation:sweep .85s infinite}
-
-/* Style 1: 3D Flip & Laser Etch */
 .card.s1{background:linear-gradient(135deg,#0f172a,#1e3a8a 55%,#0284c7)}
 .card-back{position:absolute;inset:0;background:linear-gradient(135deg,#090d16,#1e293b);border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;backface-visibility:hidden;transform:rotateY(180deg);z-index:3}
 .magstripe{height:34px;background:#000;margin:4px -18px}
@@ -121,8 +110,6 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .laser-beam{position:absolute;left:0;right:0;height:3px;background:#38bdf8;box-shadow:0 0 14px 4px #38bdf8,0 0 24px #fff;top:20%;opacity:0;z-index:4}
 .card.s1.busy{transform:rotateY(180deg)}
 .card.s1.busy .laser-beam{opacity:1;animation:laserScan .9s ease-in-out infinite alternate}
-
-/* Style 2: Contactless Tap & NFC Ripple */
 .card.s2{background:linear-gradient(135deg,#064e3b,#059669 55%,#10b981)}
 .nfc-zone{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4;opacity:0}
 .nfc-ring{position:absolute;width:60px;height:60px;border-radius:50%;border:3px solid #6ee7b7;opacity:0}
@@ -131,27 +118,21 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .card.s2.busy .nfc-ring:nth-child(1){animation:nfcWave 1.2s ease-out infinite}
 .card.s2.busy .nfc-ring:nth-child(2){animation:nfcWave 1.2s ease-out .4s infinite}
 .card.s2.busy .nfc-ring:nth-child(3){animation:nfcWave 1.2s ease-out .8s infinite}
-
-/* Style 3: Obsidian Black Metal Drop */
 .card.s3{background:radial-gradient(circle at 20% 20%,#3f3f46,#18181b 60%,#09090b);border:1px solid #52525b}
 .obsidian-glint{position:absolute;inset:-50%;background:linear-gradient(45deg,transparent 42%,#ffffff33 50%,transparent 58%);transform:translateX(-100%);z-index:3}
 .card.s3.busy{animation:metalSlam .7s cubic-bezier(.3,1.6,.4,1) forwards}
 .card.s3.busy .obsidian-glint{animation:glintRun 1s ease-in-out infinite}
-
-/* Style 4: Holographic Prism Vault */
 .card.s4{background:linear-gradient(125deg,#ff0080,#7928ca,#0070f3,#00dfd8,#ff0080);background-size:300% 300%;animation:holoShift 4s ease infinite}
 .bio-scan{position:absolute;right:18px;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:2px dashed #fff9;display:grid;place-items:center;font-size:24px;z-index:4;background:#0004}
 .bio-line{position:absolute;left:6px;right:6px;height:2px;background:#2be08f;box-shadow:0 0 8px #2be08f;top:10%;opacity:0}
 .card.s4.busy{transform:rotateY(-12deg) rotateX(8deg) scale(1.03)}
 .card.s4.busy .bio-scan{border-color:#2be08f;box-shadow:0 0 20px #2be08f88}
 .card.s4.busy .bio-line{opacity:1;animation:bioSweep .75s ease-in-out infinite alternate}
-
 .tot{display:flex;justify-content:space-between;font-size:20px;font-weight:800}
 .stat{min-height:22px;color:var(--mut);margin:8px 0;font-weight:600}
 .pay{width:100%;padding:14px;border-radius:14px;background:var(--ok);color:#04150d;font-weight:800;font-size:17px;transition:transform .1s}
 .pay:active{transform:scale(.98)}
 .pay:disabled{opacity:.6}
-
 .res{padding:30px 20px;text-align:center}
 .res h2{margin:14px 0 4px}
 .res p{color:var(--mut);margin:3px 0}
@@ -162,63 +143,23 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .res.ok svg{stroke:var(--ok)}
 .res.no svg{stroke:var(--bad)}
 
-/* =========================================================
-   UPGRADED TIKTOK / TWITCH / YOUTUBE LIVE STUDIO OVERLAY
-   ========================================================= */
-.tt-live{
-  width:100%;max-width:420px;height:min(86vh,740px);
-  border-radius:26px;overflow:hidden;background:#09090f;color:#fff;
-  position:relative;display:flex;flex-direction:column;justify-content:space-between;
-  box-shadow:0 24px 60px #000a;border:1px solid #ffffff22;
-  animation:pop .32s cubic-bezier(.2,1.3,.4,1)
-}
-.tt-live.yt-mode{
-  max-width:520px;background:#0f0f0f;border-color:#ff000044;
-  box-shadow:0 24px 60px #ff000022
-}
-.tt-live.tw-mode{
-  max-width:460px;background:#0e0e10;border-color:#9146ff55;
-  box-shadow:0 24px 60px #9146ff28
-}
-.tt-stage{
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 32%,#ff2c5555,#4f46e544 45%,#09090f 85%);
-  background-size:200% 200%;animation:bg 5s ease infinite;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  pointer-events:none;z-index:0
-}
-.yt-mode .tt-stage{
-  background:radial-gradient(circle at 50% 28%,#ff000044,#28282866 48%,#0f0f0f 86%)
-}
-.tw-mode .tt-stage{
-  background:radial-gradient(circle at 50% 30%,#9146ff55,#1f1f2366 48%,#0e0e10 86%)
-}
-.tt-avatar-ring{
-  width:136px;height:136px;border-radius:50%;padding:5px;
-  background:linear-gradient(45deg,#ff2c55,#00f2fe,#ff2c55);
-  animation:spinSlow 4s linear infinite;display:grid;place-items:center;
-  box-shadow:0 0 40px #ff2c5566
-}
-.yt-mode .tt-avatar-ring{
-  background:linear-gradient(45deg,#ff0000,#ff8a00,#ff0000);
-  box-shadow:0 0 40px #ff000066
-}
-.tw-mode .tt-avatar-ring{
-  background:linear-gradient(45deg,#9146ff,#00f5d4,#9146ff);
-  box-shadow:0 0 40px #9146ff66
-}
-.tt-avatar{
-  width:100%;height:100%;border-radius:50%;background:#13131f;
-  display:grid;place-items:center;font-size:68px;
-  animation:spinSlowReverse 4s linear infinite
-}
+/* Live studio (TikTok / YouTube / Twitch / other) */
+.tt-live{width:100%;max-width:420px;height:min(86vh,740px);border-radius:26px;overflow:hidden;background:#09090f;color:#fff;position:relative;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 24px 60px #000a;border:1px solid #ffffff22;animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+.tt-live.yt-mode{max-width:520px;background:#0f0f0f;border-color:#ff000044}
+.tt-live.tw-mode{max-width:460px;background:#0e0e10;border-color:#9146ff55}
+.tt-stage{position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,#ff2c5555,#4f46e544 45%,#09090f 85%);background-size:200% 200%;animation:bg 5s ease infinite;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:0}
+.yt-mode .tt-stage{background:radial-gradient(circle at 50% 28%,#ff000044,#28282866 48%,#0f0f0f 86%)}
+.tw-mode .tt-stage{background:radial-gradient(circle at 50% 30%,#9146ff55,#1f1f2366 48%,#0e0e10 86%)}
+.tt-avatar-ring{width:136px;height:136px;border-radius:50%;padding:5px;background:linear-gradient(45deg,#ff2c55,#00f2fe,#ff2c55);animation:spinSlow 4s linear infinite;display:grid;place-items:center;box-shadow:0 0 40px #ff2c5566}
+.yt-mode .tt-avatar-ring{background:linear-gradient(45deg,#ff0000,#ff8a00,#ff0000)}
+.tw-mode .tt-avatar-ring{background:linear-gradient(45deg,#9146ff,#00f5d4,#9146ff)}
+.tt-avatar{width:100%;height:100%;border-radius:50%;background:#13131f;display:grid;place-items:center;font-size:68px;animation:spinSlowReverse 4s linear infinite}
 .tt-eq{display:flex;gap:4px;height:22px;align-items:flex-end;margin-top:12px}
 .tt-eq i{width:4px;background:#00f2fe;border-radius:4px;animation:eqBar .45s ease-in-out infinite alternate}
 .tt-eq i:nth-child(2){animation-delay:.12s;background:#ff2c55}
 .tt-eq i:nth-child(3){animation-delay:.24s}
 .tt-eq i:nth-child(4){animation-delay:.08s;background:#ff2c55}
 .tt-eq i:nth-child(5){animation-delay:.3s}
-
 .tt-top{position:relative;z-index:3;padding:12px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#000b,transparent)}
 .tt-bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tt-creator{display:flex;align-items:center;gap:8px;background:#0007;backdrop-filter:blur(8px);padding:4px 10px 4px 5px;border-radius:99px;border:1px solid #ffffff1a}
@@ -237,8 +178,6 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .yt-mode .tt-live-tag{background:#ff0000}
 .tw-mode .tt-live-tag{background:#9146ff}
 .tt-close{width:30px;height:30px;border-radius:50%;background:#0007;color:#fff;display:grid;place-items:center;font-size:16px}
-
-/* PK Battle Bar & Top Gifter */
 .tt-pk{background:#0008;border-radius:99px;padding:3px;border:1px solid #ffffff22}
 .tt-pk-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:800;padding:0 8px 3px}
 .tt-pk-track{height:10px;border-radius:99px;background:#2563eb;overflow:hidden;display:flex}
@@ -248,36 +187,22 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .tw-mode .tt-pk-track{background:#26262c}
 .tw-mode .tt-pk-fill{background:linear-gradient(90deg,#9146ff,#ec4899,#00f5d4)}
 .tt-vip{align-self:flex-start;background:linear-gradient(90deg,#f59e0b,#eab308);color:#111;font-size:11.5px;font-weight:900;padding:4px 10px;border-radius:99px;box-shadow:0 4px 12px #f59e0b55}
-
-/* YouTube Pinned Super Chat Ticker Strip */
 .yt-ticker{display:flex;gap:6px;overflow:hidden;padding:2px 0}
 .yt-chip{padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:5px;white-space:nowrap;box-shadow:0 3px 10px #0006;animation:pop .3s}
-
-/* Gift Banner inside Stream */
-.tt-gift-combo{
-  position:relative;z-index:4;margin:4px 12px;
-  background:linear-gradient(90deg,#fe2c55dd,#7c3aedcc,transparent);
-  border-radius:99px;padding:6px 14px;display:flex;align-items:center;gap:10px;
-  animation:slideInLeft .4s cubic-bezier(.2,1.4,.4,1)
-}
+.tt-gift-combo{position:relative;z-index:4;margin:4px 12px;background:linear-gradient(90deg,#fe2c55dd,#7c3aedcc,transparent);border-radius:99px;padding:6px 14px;display:flex;align-items:center;gap:10px;animation:slideInLeft .4s cubic-bezier(.2,1.4,.4,1)}
 .yt-mode .tt-gift-combo{background:linear-gradient(90deg,#ff0000dd,#b91c1ccc,transparent)}
 .tw-mode .tt-gift-combo{background:linear-gradient(90deg,#9146ffdd,#4f46e5cc,transparent)}
 .tt-gift-combo .gi{font-size:34px;animation:bob .5s infinite alternate}
 .tt-gift-combo .gx{font-size:24px;font-weight:900;font-style:italic;color:#fde047;text-shadow:0 2px 10px #000}
-
-/* Bottom Chat & Heart Fountain */
 .tt-bot{position:relative;z-index:3;padding:10px 12px 14px;background:linear-gradient(transparent,#000d 45%,#000)}
 .tt-sc-pin{margin-bottom:8px;border-radius:14px;overflow:hidden;background:var(--c,#e62117);animation:drop .5s cubic-bezier(.2,1.4,.4,1);box-shadow:0 8px 24px #0008}
 .tt-sc-pin .hd{padding:7px 12px;font-weight:800;font-size:13px;display:flex;justify-content:space-between}
 .tt-sc-pin .bd{padding:7px 12px;background:#0004;font-size:13.5px;font-weight:600}
 .tt-sc-pin u{display:block;height:3px;background:#fff;animation:bar 7s linear forwards;transform-origin:left}
-
-.tt-chat-wrap{display:flex;align-items:flex-end;gap:8px}
-.tt-chat{flex:1;height:165px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;mask-image:linear-gradient(transparent,#000 22%)}
+.tt-chat{height:165px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;mask-image:linear-gradient(transparent,#000 22%)}
 .tt-msg{background:#0006;backdrop-filter:blur(4px);padding:5px 10px;border-radius:14px;font-size:12.5px;line-height:1.3;animation:msgPop .22s ease-out;align-self:flex-start;max-width:100%}
 .tt-badge{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:800;margin-right:4px;vertical-align:middle}
 .tt-rx{margin-top:8px;background:#ffffff14;border:1px solid #ffffff22;border-radius:12px;padding:8px 12px;font-size:13px;font-style:italic;color:#f8fafc;min-height:38px}
-
 .tt-actions{display:flex;gap:8px;margin-top:10px;align-items:center}
 .tt-fake-in{flex:1;background:#ffffff18;border-radius:99px;padding:8px 14px;font-size:12.5px;color:#cbd5e1;text-align:left}
 .tt-heart-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#fe2c55,#ff6b8b);color:#fff;font-size:20px;display:grid;place-items:center;box-shadow:0 4px 16px #fe2c5588;transition:transform .1s}
@@ -285,15 +210,9 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .tt-fountain{position:absolute;right:14px;bottom:70px;width:50px;height:260px;pointer-events:none;z-index:4}
 .tt-fheart{position:absolute;bottom:0;right:10px;font-size:24px;animation:floatHeart 2.2s ease-out forwards}
 
-/* =========================================================
-   SOCIAL MEDIA VIRAL AD CAMPAIGN PHONE SIMULATOR
-   ========================================================= */
-.ad-phone{
-  width:100%;max-width:410px;border-radius:28px;overflow:hidden;
-  background:var(--card);color:var(--ink);border:1px solid var(--line);
-  box-shadow:0 24px 60px #0008;animation:pop .3s
-}
-.ad-hdr{padding:14px 16px;color:#fff;display:flex;align-items:center;justify-content:space-between;font-weight:800}
+/* Ad simulator */
+.ad-phone{width:100%;max-width:410px;border-radius:28px;overflow:hidden;background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 24px 60px #0008;animation:pop .3s}
+.ad-hdr{padding:14px 16px;color:#fff;display:flex;align-items:center;justify-content:space-between;font-weight:800;gap:8px}
 .ad-post{margin:12px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--bg)}
 .ad-user{padding:10px 12px;display:flex;align-items:center;gap:9px}
 .ad-user .uav{width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800}
@@ -307,37 +226,25 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .pb{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin:0 12px}
 .pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--ok));animation:grow 3.2s ease-out forwards}
 
-/* Floating Banners & Effects */
-.ban{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;animation:ban 3.4s forwards;filter:drop-shadow(0 6px 20px #0008)}
-.ban i{display:block;font-style:normal;font-size:min(32vw,150px)}
-.ban span{display:inline-block;background:var(--acc);color:#fff;padding:8px 18px;border-radius:99px;font-weight:800;font-size:17px}
-#fx s{position:absolute;top:-60px;text-decoration:none;animation:fall linear forwards}
-.flash{position:absolute;inset:0;background:#fff;animation:fade .7s forwards}
-
-/* Custom Bespoke Category Animation Helpers */
-.fx-road{position:absolute;left:0;right:0;bottom:14%;height:96px;background:linear-gradient(#1f2937,#111827);border-top:4px solid #fbbf24;border-bottom:4px solid #9ca3af;box-shadow:0 16px 40px #000a;overflow:hidden}
-.fx-road::after{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,#fde047 0 44px,transparent 44px 88px);animation:roadDash .35s linear infinite}
-.fx-blueprint{position:absolute;inset:0;background-color:#0c2d57dd;background-image:linear-gradient(#38bdf833 1px,transparent 1px),linear-gradient(90deg,#38bdf833 1px,transparent 1px);background-size:28px 28px}
-.fx-matrix{position:absolute;inset:0;background:radial-gradient(circle at center,#052e16cc,#020617ee)}
-.fx-chart{position:absolute;left:8%;right:8%;bottom:24%;height:180px;display:flex;align-items:flex-end;gap:8px;padding:12px;border-left:2px solid #2be08f88;border-bottom:2px solid #2be08f88}
-.fx-candle{flex:1;background:linear-gradient(#4ade80,#16a34a);border-radius:4px 4px 0 0;box-shadow:0 0 16px #2be08f66;transform-origin:bottom}
-.fx-vip-card{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1e1b4b,#5b3df5,#ec4899);color:#fff;padding:22px 28px;border-radius:22px;border:2px solid #ffffff55;box-shadow:0 20px 50px #000a;text-align:center;min-width:260px}
-@keyframes roadDash{from{transform:translateX(0)}to{transform:translateX(-88px)}}
-
-/* Inventory, Receipts & Reset Presets */
-.rec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+/* Receipts, inventory, presets */
+.rec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums;min-width:0}
 .rec div{flex:1;min-width:0}
 .rec small{color:var(--mut);display:block;font-size:12.5px}
 .rec b{color:var(--bad)}
 .sell-btn{background:#f59e0b22;color:var(--warn);border:1px solid #f59e0b55;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;white-space:nowrap}
-.sell-btn:hover{background:#f59e0b33}
 .empty{color:var(--mut);padding:30px;text-align:center}
 .preset-grid{display:grid;gap:8px;margin-top:14px}
-.preset-btn{padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);text-align:left;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.preset-btn{padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);text-align:left;display:flex;justify-content:space-between;align-items:center;font-weight:700;gap:8px}
 .preset-btn:hover{border-color:var(--acc);background:var(--card)}
+.spark{width:100%;height:56px;display:block}
+.stock-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--line);min-width:0}
+.stock-row>div{flex:1;min-width:0}
+.stock-row small{color:var(--mut);font-size:12px;display:block}
+.qbtns{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.qbtns button{border:1px solid var(--line);border-radius:9px;padding:5px 10px;font-weight:700;font-size:12.5px;background:var(--bg)}
 
-#tt{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
-#tt div{background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;animation:pop .3s,fade 3.4s forwards;font-size:13.5px;font-weight:600;box-shadow:0 6px 20px #0004}
+#tt{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:max-content;max-width:92vw}
+#tt div{background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;animation:pop .3s,fade 3.4s forwards;font-size:13.5px;font-weight:600;box-shadow:0 6px 20px #0004;text-align:center}
 .shake{animation:shake .6s}
 
 @keyframes pop{from{transform:scale(.85);opacity:0}}
@@ -357,8 +264,6 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 @keyframes bob{to{transform:translateY(-10px) rotate(6deg)}}
 @keyframes drop{from{transform:translateY(-90px) scale(.8);opacity:0}}
 @keyframes bar{to{transform:scaleX(0)}}
-@keyframes ban{0%{transform:translate(-50%,-50%) scale(0)}12%{transform:translate(-50%,-50%) scale(1.15)}20%,80%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-90%) scale(.9);opacity:0}}
-@keyframes fall{to{transform:translateY(115vh) rotate(540deg)}}
 @keyframes fade{to{opacity:0}}
 @keyframes grow{to{width:100%}}
 @keyframes spinSlow{to{transform:rotate(360deg)}}
@@ -373,7 +278,7 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 <body>
 <header id="top">
   <div class="bal">
-    <small id="modeLabel">Balance · CAD ($1M Classic)</small>
+    <small id="modeLabel">Balance · CAD</small>
     <div id="bal"></div>
     <div class="meter"><i id="mt"></i></div>
   </div>
@@ -383,17 +288,17 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 <main>
   <nav class="tabs">
     <button data-t="s" class="on">Stores</button>
+    <button data-t="v">Ventures &amp; Markets</button>
     <button data-t="m">My stuff &amp; Assets</button>
     <button data-t="r">Receipts</button>
     <button id="rs">Mode / Reset</button>
   </nav>
   <section id="s">
-    <div class="controls">
-      <input type="search" id="q" placeholder="Search companies & items…">
-    </div>
+    <div class="controls"><input type="search" id="q" placeholder="Search companies &amp; items…"></div>
     <div class="chips" id="ch"></div>
     <div class="grid" id="gr"></div>
   </section>
+  <section id="v" hidden></section>
   <section id="m" hidden></section>
   <section id="r" hidden></section>
 </main>
@@ -401,30 +306,32 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 <div class="layer" id="ov"></div>
 <div class="layer" id="ck"></div>
 <div class="layer" id="lay"></div>
-<div id="fx"></div>
+<canvas id="fxc"></canvas>
 <div id="tt"></div>
-
 <script>
 const $=s=>document.querySelector(s),
       wait=ms=>new Promise(r=>setTimeout(r,ms)),
-      fmt=n=>new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:n>=100?0:2}).format(n),
+      fmt=n=>new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:Math.abs(n)>=100?0:2}).format(n),
+      fmtS=n=>(n<0?'−':'')+fmt(Math.abs(n)),
       rnd=(a,b)=>a+Math.random()*(b-a),
-      pick=a=>a[~~(Math.random()*a.length)];
+      pick=a=>a[~~(Math.random()*a.length)],
+      clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 /*
-  ITEM FORMAT:
-  emoji Name:price:flag:cashflow
-  flags:
-    m = monthly subscription (recurring charge)
-    s = live Super Chat (triggers Live Stream Studio + voice reaction)
-    g = animated gift burst (triggers TikTok/YouTube/Platform Live Studio + full-screen gift animation)
-    h = hype train / mega gift (triggers PK Battle / Hype Train surge in Live Stream Studio)
-    a = ad campaign / viral boost (triggers Social Feed & Analytics Simulator)
-  cashflow (optional):
-    positive number = passive income / dividend earned every 20s cycle
-    negative number = recurring upkeep / maintenance / property tax every 20s cycle
+  ITEM FORMAT: emoji Name:price:flag:cashflow
+  flags: m = subscription, s = live Super Chat, g = animated gift, h = hype/PK boost, a = viral ad campaign
+  cashflow: + = income every 20s, − = upkeep every 20s
 */
 
+// Extra companies added in the Ultimate edition (same format as the originals)
+const EXTRA=`TikTok Live Gifts+|🎁|#fe2c55|Social|🍰 Ice Cream Cake:0.99:g;🎈 Hot Air Balloon:250:g;🔥 Phoenix Rising:700:g;🏯 Dragon Palace:15000:g;⚡ Thunder God:4200:g;🦁 Golden Lion Crown:12000:g;🌈 Rainbow Lion Parade:30000:g;🕊️ Golden Dove Choir:9000:g;🪐 Saturn Ring Orbit:60000:g;🎆 Grand Fireworks Finale:200000:g;🦁 Royal Lion Sovereign:500000:g;🌍 Earth Gift Planet:1500000:g;🏰 Golden TikTok Castle:3000000:g
+Petco|🐾|#3d6fb6|Pets|🐶 Rescue Puppy Adoption:1500::-45;🐱 Siamese Kitten:900::-35;🦜 Macaw Parrot:4200::-80;🐴 Quarter Horse & Stable:18500::-600;🥩 Premium Pet Food Plan:79:m;🩺 Pet Insurance Plan:65:m
+Christie’s|🎨|#1b1b1b|Luxury|🎨 Emerging Artist Print:2500;🗿 Ancient Greek Bronze:2400000::900;🖼️ Monet Water Lilies Study:6800000::1500;🖼️ Gallery Wall Lease:350000::600
+Necker Island|🏝️|#0f766e|Property|🏝️ Island Villa Week:95000;🌴 Private Island Lease (1 yr):1200000::-2000;🏝️ Buy Private Island:45000000::-25000
+Penfolds|🍷|#7f1d1d|Food|🍷 Grange Shiraz 2002:1500;🍾 Bordeaux Vintage Case:245000::1000;🍷 Full Wine Cellar Build:180000::-600
+Mapl Robotics|🤖|#0ea5e9|Tech|🤖 Humanoid Helper Bot:45000::-220;🏭 Robot Factory Line:4800000::28000;🧠 AI Warehouse Fleet:18000000::95000
+Peacock|🦚|#1a1a1a|Streaming|🦚 Peacock Premium:10.99:m;🏈 NBC Sports Season Pass:320:m;🎬 Original Series Greenlight:850000::6000
+Roots|🦫|#1f2937|Fashion|🦫 Signature Sweatpants:98;🍁 Olympic Team Parka:695;🦫 Cabin Lodge Wardrobe:6400;🎽 Lodge Gift Card:250`;
 const DATA=`Amazon|🛒|#ff9900|Shopping|📦 Prime Membership:9.99:m;🔊 Echo Dot (5th Gen):69.99;📖 Kindle Paperwhite:184.99;🎮 PlayStation 5 Pro:959.99;🚁 DJI Mini 4 Pro Drone:1099;🤖 Astro Home Robot:2199;📦 Pallet of Mystery Returns:4500;🚚 Amazon Delivery Van Fleet:195000::3200;🏭 Automated Fulfillment Center:12500000::145000
 Walmart|🛍️|#0071ce|Shopping|🛒 Cart of Groceries:192.50;📺 75-inch 4K Smart TV:798;🚲 Supercycle Mountain Bike:299.99;🎄 Entire Seasonal Aisle:3200;🍗 100 Rotisserie Chickens:897;🧸 Toy Aisle Takeover:4500;🏪 Buy Out Local Supercentre Stock:185000
 Costco|🏬|#e31837|Shopping|🌭 Hot Dog + Drink Combo:1.50;🥩 Bulk AAA Beef Pallet:1480;🛞 Michelin Tires + Install:1299;💍 3-Carat Diamond Ring:15999;🥧 50 Pumpkin Pies:349.50;🛋️ Luxury Patio Set:2499;🪙 1 oz Gold Bullion Bar:3920::45;🚛 18-Wheeler Full of Kirkland Toilet Paper:44000
@@ -529,7 +436,8 @@ Anthropic|🧠|#d97706|Tech|💬 Claude Pro Subscription:28:m;⚡ Claude Max 20x
 Boston Dynamics|🐕|#0284c7|Tech|🐕 Spot Enterprise Quadruped Robot:102000::-250;🦾 Stretch Warehouse Logistics Robot:248000::5500;🤖 Electric Atlas Humanoid Prototype:495000
 Vanguard Canada|📈|#991b1b|Finance|📊 S&P 500 Index ETF (VFV) Block:10000::140;🏦 Canadian Government T-Bills:100000::1150;💎 Private Equity Institutional Fund:1000000::14500;🏛️ Sovereign Wealth Endowment:25000000::410000`;
 
-const CO=(DATA+'\n'+NEWCO).split('\n').map((l,i)=>{
+
+const CO=(DATA+'\n'+NEWCO+'\n'+EXTRA).split('\n').filter(Boolean).map((l,i)=>{
   const[n,e,c,cat,it]=l.split('|');
   return{
     id:i,n,e,c,cat,
@@ -539,77 +447,131 @@ const CO=(DATA+'\n'+NEWCO).split('\n').map((l,i)=>{
     })
   };
 });
+const CO_BY_NAME=Object.fromEntries(CO.map(c=>[c.n,c]));
 
-// Update search bar dynamically with exact company & item count
-$('#q').placeholder=`Search ${CO.length} companies & ${CO.reduce((a,c)=>a+c.it.length,0)} items…`;
+const ITEM_COUNT=CO.reduce((a,c)=>a+c.it.length,0);
+$('#q').placeholder=`Search ${CO.length} companies & ${ITEM_COUNT} items…`;
 
-const KEY='spendsim-v2';
-let S={start:1e6,bal:1e6,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0,cardStyle:0};
-let shown=1e6,raf,openCo=null,busy=false,cat='All',next=Date.now()+20000;
-
+// ---------- Persistent state (per-viewer, optional) ----------
+const KEY='spendsim-ultimate-v1';
+const BLANK=()=>({start:1e6,bal:1e6,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0,cardStyle:0,
+  stk:{},prop:[],biz:[],karma:0,fund:0,xp:0,wins:0,losses:0});
+let S=BLANK();
+let shown=S.bal,raf,openCo=null,busy=false,cat='All',next=Date.now()+20000,tab='s';
 try{
   const d=JSON.parse(localStorage.getItem(KEY));
-  if(d&&typeof d.bal=='number'){
-    S={start:1e6,bal:1e6,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0,cardStyle:0,...d};
-    shown=S.bal;
-  }
+  if(d&&typeof d.bal=='number')S={...BLANK(),...d};
+  shown=S.bal;
 }catch(e){}
-
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const ITM=k=>{const[a,b]=k.split('.');return[CO[a],CO[a].it[b]]};
-const RANKS=[[0,'Window shopper'],[1e3,'Impulse buyer'],[1e4,'Big spender'],[1e5,'Whale'],[5e5,'Tycoon'],[2e6,'Deca-Millionaire'],[25e6,'Centimillionaire'],[250e6,'Billionaire Legend']];
+const RANKS=[[0,'Window shopper'],[1e3,'Impulse buyer'],[1e4,'Big spender'],[1e5,'Whale'],[5e5,'Tycoon'],[2e6,'Deca-Millionaire'],[25e6,'Centimillionaire'],[250e6,'Billionaire Legend'],[2e9,'Sovereign of Capital']];
+const gauss=()=>Math.sqrt(-2*Math.log(Math.random()+1e-12))*Math.cos(2*Math.PI*Math.random());
 
-let ac;
-function ding(f=880,t=.15,ty='sine'){
-  try{
-    ac=ac||new AudioContext();
-    const o=ac.createOscillator(),g=ac.createGain();
-    o.type=ty;o.frequency.value=f;
-    g.gain.setValueAtTime(.1,ac.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t*3);
-    o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+t*3);
-  }catch(e){}
+// ---------- Markets: ticker prices random-walk with news shocks ----------
+const TICKERS=[
+  {t:'MPL',name:'Maple Robotics',c:'#0ea5e9',p:184,vol:.035,drift:.002,theme:'AI & robots'},
+  {t:'CRWN',name:'Crown Luxury Group',c:'#b45309',p:912,vol:.022,drift:.001,theme:'Luxury houses'},
+  {t:'ROAR',name:'Roaring Lion Media',c:'#f59e0b',p:58,vol:.06,drift:.003,theme:'Live streaming'},
+  {t:'NOVA',name:'Nova Orbital',c:'#7c3aed',p:41,vol:.09,drift:.001,theme:'Space'},
+  {t:'PXLS',name:'Pixel Gaming Co.',c:'#22c55e',p:77,vol:.05,drift:.0015,theme:'Games'},
+  {t:'BYTE',name:'Byte Cloud',c:'#06b6d4',p:133,vol:.03,drift:.002,theme:'Tech'},
+  {t:'NRTH',name:'North Woods Realty',c:'#16a34a',p:263,vol:.015,drift:.0008,theme:'Property'},
+  {t:'SLTH',name:'Sloth Coffee Roasters',c:'#a16207',p:19,vol:.07,drift:0,theme:'Food & drink'},
+  {t:'MOON',name:'Moonshot Fund',c:'#4338ca',p:1200,vol:.11,drift:.004,theme:'Venture'},
+  {t:'BTCX',name:'Blockchain Index',c:'#f97316',p:3400,vol:.13,drift:.0,theme:'Crypto'}
+].map(x=>({...x,hist:[x.p],prev:x.p}));
+const mkt=TICKERS;
+const tickerOf=t=>mkt.find(x=>x.t==t);
+
+function tickMarket(){
+  mkt.forEach(x=>{
+    x.prev=x.p;
+    let shock=0;
+    if(Math.random()<.02) shock=rnd(-.12,.14)*(x.vol/.05);   // occasional news event
+    x.p=Math.max(.5,x.p*Math.exp(x.drift+x.vol*gauss()*.35+shock));
+    x.hist.push(x.p); if(x.hist.length>60)x.hist.shift();
+  });
 }
+setInterval(tickMarket,3000);
 
+// ---------- Ventures: properties, startups, staff ----------
+const PROPERTIES=[
+  {id:'p1',n:'Downtown Toronto Studio Condo',e:'🏙️',price:520000,rent:1450,tax:310,apprec:.0045},
+  {id:'p2',n:'Muskoka Lakefront Cottage',e:'🌲',price:1390000,rent:3600,tax:820,apprec:.0055},
+  {id:'p3',n:'Vancouver Harbour Penthouse',e:'🌊',price:2850000,rent:6900,tax:1550,apprec:.0042},
+  {id:'p4',n:'Calgary Duplex (Rental)',e:'🏘️',price:690000,rent:2900,tax:420,apprec:.0035},
+  {id:'p5',n:'Ottawa Heritage Mansion',e:'🏛️',price:4800000,rent:12000,tax:3100,apprec:.0038},
+  {id:'p6',n:'Miami Oceanfront Tower Floor',e:'🌴',price:7200000,rent:19000,tax:2600,apprec:.0046},
+  {id:'p7',n:'Aspen Ski Chalet',e:'⛷️',price:11500000,rent:24000,tax:4100,apprec:.0031},
+  {id:'p8',n:'Manhattan Full Tower Lease',e:'🗽',price:96000000,rent:310000,tax:52000,apprec:.0029}
+];
+const STARTUPS=[
+  {id:'s1',n:'Drip Snacks AI',e:'🍿',stage:'Seed',win:.45,mult:[2,6],risk:'Low'},
+  {id:'s2',n:'Gigafarm Vertical Agri',e:'🥬',stage:'Series A',win:.32,mult:[3,9],risk:'Medium'},
+  {id:'s3',n:'HoloStream Gaming',e:'🕹️',stage:'Series A',win:.28,mult:[4,12],risk:'Medium'},
+  {id:'s4',n:'Orbit Lunar Cargo',e:'🛰️',stage:'Series B',win:.18,mult:[6,25],risk:'High'},
+  {id:'s5',n:'Synthetic Pop Idol AI',e:'🎤',stage:'Seed',win:.22,mult:[5,30],risk:'High'}
+];
+const BIZ_TYPES=[
+  {id:'b1',n:'Corner Café Chain',e:'☕',cost:85000,income:2400,upkeep:900,staffPay:1900},
+  {id:'b2',n:'Mobile Car Detailing',e:'🚗',cost:140000,income:4100,upkeep:1300,staffPay:2100},
+  {id:'b3',n:'Streaming Studio',e:'🎙️',cost:320000,income:9800,upkeep:3400,staffPay:3500},
+  {id:'b4',n:'Esports Arena',e:'🏟️',cost:1200000,income:42000,upkeep:12000,staffPay:6500}
+];
+
+// Startup rounds resolve every 60s on live cycles
+function startupRound(){
+  S.biz.forEach(b=>{ if(b.kind!='startup'||b.dead)return;
+    const r=Math.random();
+    if(r<b.win){ b.val*=rnd(1.3,1.25+b.mult[1]/10); b.wins=(b.wins||0)+1; b.notes='📈 Series round closed up!'; }
+    else if(r<b.win+.25){ b.val*=rnd(.35,.85); b.notes='📉 Burned cash, valuation trimmed'; }
+    else{ b.dead=true; b.val=0; b.notes='💥 Company shut down'; }
+  });
+}
+setInterval(()=>{ if(S.biz.some(b=>b.kind=='startup'&&!b.dead)){ startupRound(); save(); toast('📊 Startup funding round update'); }},60000);
+
+// Helper to get a clean view of a company's ticker, property, etc.
+const propOf=id=>PROPERTIES.find(p=>p.id==id);
+const stupOf=id=>STARTUPS.find(p=>p.id==id);
+const bizOf=id=>BIZ_TYPES.find(p=>p.id==id);
+
+// ---------- Feedback helpers ----------
 function toast(m){
-  const d=document.createElement('div');
-  d.textContent=m;
-  $('#tt').append(d);
+  const d=document.createElement('div');d.textContent=m;$('#tt').append(d);
   setTimeout(()=>d.remove(),3400);
 }
-
 function flt(t,g){
-  const d=document.createElement('div');
-  d.className='fl'+(g?' g':'');
-  d.textContent=t;
-  $('#top').append(d);
-  setTimeout(()=>d.remove(),1600);
+  const d=document.createElement('div');d.className='fl'+(g?' g':'');d.textContent=t;
+  document.body.append(d);setTimeout(()=>d.remove(),1600);
 }
 
+// ---------- Net worth & cashflow ----------
+function portfolioValue(){
+  let v=0;
+  for(const t in S.stk){const x=tickerOf(t);if(x)v+=x.p*S.stk[t].q}
+  return v;
+}
+function propValue(){return S.prop.reduce((a,p)=>a+p.value,0)}
+function bizValue(){return S.biz.reduce((a,b)=>a+(b.dead?0:b.kind=='startup'?b.val:b.val||0),0)}
 function getNetWorth(){
   let assets=0;
   for(const k in S.inv){
     const[,it]=ITM(k);
-    if(it&&it.f!=='m'&&it.f!=='s'&&it.f!=='g'&&it.f!=='h'&&it.f!=='a'){
-      assets+=it.p*S.inv[k]*0.7;
-    }
+    if(it&&!/[mshag]/.test(it.f))assets+=it.p*S.inv[k]*.7;
   }
-  return S.bal+assets;
+  return S.bal+assets+portfolioValue()+propValue()+bizValue();
 }
-
 function getCycleNet(){
   let net=0;
-  for(const k in S.subs){
-    const[,it]=ITM(k);
-    if(it)net-=it.p;
-  }
-  for(const k in S.inv){
-    const[,it]=ITM(k);
-    if(it&&it.cf)net+=it.cf*S.inv[k];
-  }
+  for(const k in S.subs){const[,it]=ITM(k);if(it)net-=it.p}
+  for(const k in S.inv){const[,it]=ITM(k);if(it&&it.cf)net+=it.cf*S.inv[k]}
+  S.prop.forEach(p=>{net+=p.rent-p.tax});
+  S.biz.forEach(b=>{if(!b.dead&&b.kind!='startup')net+=b.income*(1+(b.staff||0)*.15)-b.upkeep-(b.staff||0)*b.staffPay});
   return net;
 }
 
+// ---------- Balance & HUD ----------
 function setBal(dir=0){
   cancelAnimationFrame(raf);
   const f=shown,to=S.bal,t0=performance.now();
@@ -621,16 +583,13 @@ function setBal(dir=0){
     $('#bal').textContent=fmt(shown);
     if(k<1)raf=requestAnimationFrame(s);
   })(t0);
-  const pct=Math.max(0,Math.min(100,S.bal/S.start*100));
-  $('#mt').style.width=pct+'%';
-  $('#modeLabel').textContent=`Balance · CAD (Start: ${fmt(S.start)})`;
-  stats();
-  save();
+  $('#mt').style.width=clamp(S.bal/S.start*100,0,100)+'%';
+  $('#modeLabel').textContent=`Cash · CAD (Start ${fmt(S.start)})`;
+  stats();save();
 }
-
 function stats(){
   const net=getCycleNet(),
-        r=RANKS.filter(x=>S.spent>=x[0]).pop()[1],
+        r=RANKS.filter(x=>getNetWorth()>=x[0]).pop()[1],
         sec=Math.max(0,Math.ceil((next-Date.now())/1000)),
         netStr=net===0?'$0/20s':(net>0?`+${fmt(net)}/20s`:`−${fmt(Math.abs(net))}/20s`);
   $('#st').innerHTML=`
@@ -638,17 +597,16 @@ function stats(){
     <span>🏦 Net Worth ${fmt(getNetWorth())}</span>
     <span>😊 ${Math.round(S.h)}</span>
     <span>📣 ${Math.round(S.c)}</span>
-    <span>💖 ${Math.round(S.k)}</span>
-    <span style="color:${net>0?'var(--ok)':net<0?'var(--bad)':'inherit'}">⏱️ ${netStr} (${sec}s)</span>
-  `;
+    <span>💖 ${Math.round(S.k+S.karma)}</span>
+    <span style="color:${net>0?'var(--ok)':net<0?'var(--bad)':'inherit'}">⏱️ ${netStr} (${sec}s)</span>`;
 }
 
+// ---------- Layers ----------
 const show=(id,h)=>{const e=$('#'+id);e.innerHTML=h;e.className='layer on';return e},
       cls=id=>{const e=$('#'+id);e.className='layer';e.innerHTML=''};
-
 ['ov','lay'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id==id){cls(id);if(id=='ov')openCo=null}});
 
-// ---- Store Browsing
+// ---------- Store browsing ----------
 function grid(){
   const q=$('#q').value.toLowerCase();
   $('#gr').innerHTML='';
@@ -661,28 +619,25 @@ function grid(){
       $('#gr').append(b);
     });
 }
-
 function chips(){
   const cs=['All',...new Set(CO.map(c=>c.cat))];
   $('#ch').innerHTML='';
   cs.forEach(c=>{
     const b=document.createElement('button');
-    b.textContent=c;
-    b.className=c==cat?'on':'';
+    b.textContent=c;b.className=c==cat?'on':'';
     b.onclick=()=>{cat=c;chips();grid()};
     $('#ch').append(b);
   });
 }
-
 function openStore(c){
   openCo=c;
   const e=show('ov',`<div class="sheet"><div class="sh" style="background:${c.c}"><i>${c.e}</i><div><b style="font-size:20px">${c.n}</b><br><small style="opacity:.9">${c.cat} · ${c.it.length} items</small></div><button>✕</button></div></div>`);
   e.querySelector('button').onclick=()=>{cls('ov');openCo=null};
-  const list=c.n=='TikTok'?c.it.map((x,i)=>[x,i]).sort((a,b)=>a[0].p-b[0].p):c.it.map((x,i)=>[x,i]);
+  const list=/TikTok/.test(c.n)?c.it.map((x,i)=>[x,i]).sort((a,b)=>a[0].p-b[0].p):c.it.map((x,i)=>[x,i]);
   list.forEach(([it,i])=>{
     const r=document.createElement('div'),own=S.inv[c.id+'.'+i],sub=S.subs[c.id+'.'+i];
     r.className='row';
-    const flagTxt={m:'per month 🔁',s:' · Live Super Chat 💬',g:' · Animated Gift ✨',h:' · Hype Train / PK Boost 🚂',a:' · Viral Ad Campaign 📈'}[it.f]||'';
+    const flagTxt={m:' · per month 🔁',s:' · Live Super Chat 💬',g:' · Animated Gift ✨',h:' · Hype Train / PK Boost 🚂',a:' · Viral Ad Campaign 📈'}[it.f]||'';
     const cfBadge=it.cf>0?`<span class="badge inc">+${fmt(it.cf)}/20s income</span>`:it.cf<0?`<span class="badge upk">−${fmt(Math.abs(it.cf))}/20s upkeep</span>`:'';
     const ownBadge=own&&!sub?`<span class="badge per">Owned: ${own.toLocaleString()}</span>`:'';
     r.innerHTML=`<span>${it.e}</span><div><b>${it.n}</b><small>${fmt(it.p)}${flagTxt}</small>${cfBadge}${ownBadge}</div><button class="buy">${sub?'Subscribed ✓':'Buy'}</button>`;
@@ -693,7 +648,7 @@ function openStore(c){
   });
 }
 
-// ---- Checkout + 5 Interactive Card Animations
+// ---------- Checkout with 5 card animations ----------
 const CARD_STYLES=[
   {id:0,name:'✨ Shimmer',label:'VISA INFINITE · 4242'},
   {id:1,name:'🔦 3D Laser Flip',label:'PLATINUM LASER · 8819'},
@@ -701,41 +656,30 @@ const CARD_STYLES=[
   {id:3,name:'🖤 Obsidian Drop',label:'TITANIUM BLACK · 0001'},
   {id:4,name:'🌈 Prism Vault',label:'HOLOGRAPHIC BIO · 7777'}
 ];
-
 function buildCardHTML(st){
   const info=CARD_STYLES[st]||CARD_STYLES[0];
-  return `
-  <div class="card s${st}" id="cd">
-    <div class="card-top">
-      <div class="chip"></div>
-      <span style="font-size:12px;font-weight:800;opacity:.9">${st===2?'📡 NFC READY':st===4?'🔐 BIO VAULT':'💳 SPENDSIM'}</span>
-    </div>
+  return `<div class="card s${st}" id="cd">
+    <div class="card-top"><div class="chip"></div>
+      <span style="font-size:12px;font-weight:800;opacity:.9">${st===2?'📡 NFC READY':st===4?'🔐 BIO VAULT':'💳 SPENDSIM'}</span></div>
     <div class="card-mid">•••• •••• •••• ${info.label.slice(-4)}</div>
-    <div class="card-bot">
-      <span>CARDHOLDER · YOU</span>
-      <span>12/29</span>
-    </div>
+    <div class="card-bot"><span>CARDHOLDER · YOU</span><span>12/29</span></div>
     ${st===1?`<div class="card-back"><div class="magstripe"></div><div class="cvv-bar"><span>AUTHORIZED SIGNATURE</span><span>CVV 849</span></div><small style="opacity:.7">LASER SECURITY VERIFIED</small><div class="laser-beam"></div></div>`:''}
-    ${st===2?`<div class="nfc-zone"><div class="nfc-ring"></div><div class="nfc-ring"></div><div class="nfc-ring"></div><span style="font-size:32px;filter:drop-shadow(0 0 10px #fff)">📡</span></div>`:''}
+    ${st===2?`<div class="nfc-zone"><div class="nfc-ring"></div><div class="nfc-ring"></div><div class="nfc-ring"></div><span style="font-size:32px">📡</span></div>`:''}
     ${st===3?`<div class="obsidian-glint"></div>`:''}
     ${st===4?`<div class="bio-scan">🧬<div class="bio-line"></div></div>`:''}
   </div>`;
 }
-
 function checkout(c,it,i){
   let q=1;
   const one=it.f=='m'||it.f=='s',
         max=Math.max(1,Math.min(1e5,Math.floor(S.bal/it.p)));
-
   const e=show('ck',`<div class="sheet"><div class="ckb">
     <h3>${it.e} ${it.n}</h3>
     <small style="color:var(--mut)">${c.n} · ${fmt(it.p)} each</small>
-    ${one?'':'<div class="qty"><button>−</button><b id="qn">1</b><button>+</button><button data-q="10">×10</button><button data-q="100">×100</button><button data-q="max">Max</button></div>'}
+    ${one?'':'<div class="qty"><button data-d="-1">−</button><b id="qn">1</b><button data-d="1">+</button><button data-q="10">×10</button><button data-q="100">×100</button><button data-q="max">Max</button></div>'}
     ${it.f=='s'?'<input type="text" id="msg" maxlength="120" placeholder="Type your live Super Chat message 💬" style="margin-top:8px">':''}
-    <div style="margin-top:10px;font-size:11.5px;font-weight:700;color:var(--mut)">CARD ANIMATION STYLE:</div>
-    <div class="card-styles" id="cstyles">
-      ${CARD_STYLES.map(s=>`<button data-st="${s.id}" class="${S.cardStyle===s.id?'on':''}">${s.name}</button>`).join('')}
-    </div>
+    <div style="margin-top:10px;font-size:11.5px;font-weight:700;color:var(--mut)">CARD ANIMATION STYLE</div>
+    <div class="card-styles" id="cstyles">${CARD_STYLES.map(s=>`<button data-st="${s.id}" class="${S.cardStyle===s.id?'on':''}">${s.name}</button>`).join('')}</div>
     <div class="card-stage" id="cstage">${buildCardHTML(S.cardStyle)}</div>
     <div class="tot"><span>Total</span><span id="tt2"></span></div>
     <div class="stat" id="stt">Ready to authorize payment</div>
@@ -743,291 +687,782 @@ function checkout(c,it,i){
   </div></div>`);
 
   const upd=()=>{
-    q=Math.max(1,Math.min(1e6,q));
+    q=clamp(q,1,1e6);
     $('#tt2').textContent=fmt(q*it.p);
     $('#pay').textContent='Pay '+fmt(q*it.p);
     if($('#qn'))$('#qn').textContent=q.toLocaleString();
   };
   upd();
-
   e.querySelectorAll('#cstyles button').forEach(btn=>btn.onclick=()=>{
     if(busy)return;
-    S.cardStyle=+btn.dataset.st;
-    save();
+    S.cardStyle=+btn.dataset.st;save();
     e.querySelectorAll('#cstyles button').forEach(b=>b.className=b===btn?'on':'');
     $('#cstage').innerHTML=buildCardHTML(S.cardStyle);
-    ding(620,.06,'triangle');
+    sfxTick(620);
   });
-
-  e.querySelectorAll('.qty button').forEach((b,n)=>b.onclick=()=>{
+  e.querySelectorAll('.qty button').forEach(b=>b.onclick=()=>{
     const d=b.dataset.q;
-    q=d?(d=='max'?max:q*+d):q+(n?1:-1);
+    q=d?(d=='max'?max:q*+d):q+ +b.dataset.d;
     upd();
   });
-
   e.onclick=ev=>{if(ev.target.id=='ck'&&!busy)cls('ck')};
 
   $('#pay').onclick=async()=>{
-    busy=true;
-    $('#pay').disabled=true;
-    const cd=$('#cd');
-    cd.classList.add('busy');
-
-    const st=S.cardStyle;
-    if(st===1){tone(900,.3,'sawtooth',.06);tone(1400,.4,'sine',.07,.35)}
-    if(st===2){tone(1200,.12,'sine',.12);tone(1600,.18,'sine',.12,.14)}
-    if(st===3){tone(95,.35,'sawtooth',.2);noise(.18,.18,0,400)}
-    if(st===4){[523,659,784,1046].forEach((f,idx)=>tone(f,.15,'triangle',.08,idx*.12))}
-
-    const tot=+(q*it.p).toFixed(2),
-          msg=$('#msg')?$('#msg').value.trim():'';
-
-    const stepsByStyle=[
+    busy=true;$('#pay').disabled=true;
+    $('#cd').classList.add('busy');
+    const st=S.cardStyle,tot=+(q*it.p).toFixed(2),msg=$('#msg')?$('#msg').value.trim():'';
+    if(st===1){sfxTone(900,.3,'sawtooth',.06);sfxTone(1400,.4,'sine',.07,.35)}
+    if(st===2){sfxTone(1200,.12,'sine',.12);sfxTone(1600,.18,'sine',.12,.14)}
+    if(st===3){sfxTone(95,.35,'sawtooth',.2);sfxNoise(.18,.18,0,400)}
+    if(st===4)[523,659,784,1046].forEach((f,idx)=>sfxTone(f,.15,'triangle',.08,idx*.12));
+    const steps=[
       ['🔒 Encrypting card details…','🏦 Contacting issuing bank…','🧾 Authorizing '+fmt(tot)+'…'],
       ['🔄 Flipping titanium card…','🔦 Laser-etching security strip…','✅ CVV & hologram verified…'],
       ['📡 Establishing NFC field…','⚡ Handshaking contactless terminal…','🧾 Approving '+fmt(tot)+'…'],
       ['🖤 Dropping Obsidian card…','⚖️ Verifying unlimited credit line…','🏛️ Clearing '+fmt(tot)+'…'],
-      ['🧬 Scanning biometric print…','🌈 Unlocking holographic vault…','🔐 Releasing '+fmt(tot)+'…']
-    ][st];
-
-    for(const s of stepsByStyle){
-      $('#stt').textContent=s;
-      ding(480+Math.random()*240,.05);
-      await wait(620);
-    }
-
-    const ok=tot<=S.bal+1e-9,
-          sh=e.querySelector('.sheet');
-
+      ['🧬 Scanning biometric print…','🌈 Unlocking holographic vault…','🔐 Releasing '+fmt(tot)+'…']][st];
+    for(const s of steps){$('#stt').textContent=s;sfxTick(480+Math.random()*240);await wait(620)}
+    const ok=tot<=S.bal+1e-9,sh=e.querySelector('.sheet');
     sh.innerHTML=ok
       ?`<div class="res ok"><svg viewBox="0 0 100 100" stroke="currentColor"><circle cx="50" cy="50" r="30"/><path d="M36 51l10 10 19-21"/></svg><h2>Payment confirmed</h2><p><b>${fmt(tot)}</b> · ${c.n}</p><p>Auth #${Math.random().toString(36).slice(2,8).toUpperCase()}</p></div>`
       :`<div class="res no"><svg viewBox="0 0 100 100" stroke="currentColor"><circle cx="50" cy="50" r="30"/><path d="M40 40l20 20M60 40L40 60"/></svg><h2>Card declined</h2><p>Insufficient funds. You have ${fmt(S.bal)}.</p></div>`;
-
-    if(ok){ding(880,.12);setTimeout(()=>ding(1320,.2),140)}
-    else ding(150,.3,'sawtooth');
-
+    if(ok){sfxTone(880,.12);setTimeout(()=>sfxTone(1320,.2),140)}else sfxTone(150,.3,'sawtooth');
     await wait(ok?1250:1800);
-    busy=false;
-    cls('ck');
+    busy=false;cls('ck');
     if(ok)commit(c,it,i,q,tot,msg);
   };
 }
 
+// ---------- Commit a purchase ----------
 function commit(c,it,i,q,tot,msg){
   S.bal=+(S.bal-tot).toFixed(2);
   S.spent+=tot;
   const k=c.id+'.'+i;
   S.inv[k]=(S.inv[k]||0)+q;
   if(it.f=='m')S.subs[k]=1;
-
   const d=Math.log10(tot+1)*3,ct=c.cat;
-  if(ct=='Charity')S.k+=d;
-  else if(['Social','Luxury','Cars','Space','Sports'].includes(ct)||it.f=='a')S.c+=d,S.h+=d/2;
+  if(ct=='Charity'){S.k+=d;S.karma+=d}
+  else if(['Social','Luxury','Cars','Space','Sports'].includes(ct)||it.f=='a'){S.c+=d;S.h+=d/2}
   else S.h+=d;
-
+  S.xp+=Math.round(Math.log10(tot+10)*10);
   S.rec.unshift({e:it.e,n:it.n,s:c.n,q,tot,t:Date.now(),d:/[gsamh]/.test(it.f)});
-  S.rec=S.rec.slice(0,100);
-
-  setBal(-1);
-  flt('−'+fmt(tot));
-  ding(260,.2,'triangle');
-
-  if(it.f=='s'||it.f=='h'||it.f=='g'){
-    openLiveStudio(c,it,q,tot,msg);
-  }else if(it.f=='a'){
-    openViralAdSim(c,it,tot);
-  }else{
-    playBespokeAnimation(c,it,q,tot);
-  }
-
+  S.rec=S.rec.slice(0,150);
+  setBal(-1);flt('−'+fmt(tot));sfxDing(260,.2,'triangle');
+  if(it.f=='s'||it.f=='h'||it.f=='g')openLiveStudio(c,it,q,tot,msg);
+  else if(it.f=='a')openViralAdSim(c,it,tot);
+  else celebrate(c,it,q,tot);
   if(openCo)openStore(openCo);
   renderTabs();
   if(S.bal<1&&getNetWorth()<10)setTimeout(broke,2400);
 }
 
-// =========================================================
-// BESPOKE CUSTOM ANIMATIONS FOR EVERY CATEGORY & PLATFORM
-// =========================================================
-function playBespokeAnimation(c,it,q,tot){
-  const f=$('#fx');
-  f.innerHTML='';
-  const qtyTag=q>1?`${q.toLocaleString()}× `:'';
-  const label=`${qtyTag}${it.n}`;
-
-  if(tot>=50000){
-    f.insertAdjacentHTML('beforeend','<div class="flash"></div>');
-    shk();
-  }
-
-  // 1. Subscriptions (m flag)
-  if(it.f==='m'){
-    tint('radial-gradient(#5b3df566,#000a)',3200);
-    el(`<div class="fx-vip-card">
-      <div style="font-size:48px;margin-bottom:6px">${it.e}</div>
-      <div style="font-size:11px;letter-spacing:.15em;opacity:.8;font-weight:800">RECURRING PASS ACTIVATED</div>
-      <div style="font-size:19px;font-weight:900;margin:4px 0">${c.n}</div>
-      <div style="font-size:13px;opacity:.9">${it.n} · ${fmt(it.p)}/20s</div>
-    </div>`,'inset:0',[{opacity:0,transform:'scale(.7)'},{opacity:1,transform:'scale(1)',offset:.18},{opacity:1,transform:'scale(1)',offset:.82},{opacity:0,transform:'scale(1.06)'}],{duration:3200});
-    pops(['✨','🔁','💎','⭐'],24,320,28,1800,.15);
-    [523.25,659.25,783.99,1046.5].forEach((hz,idx)=>tone(hz,.35,'triangle',.1,idx*.09));
-    return;
-  }
-
-  // 2. Cars & Motorcycles
-  if(c.cat==='Cars'){
-    tint('linear-gradient(transparent 45%,#000000aa)',3400);
-    el('<div class="fx-road"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3400});
-    cross(it.e,130,68,2.2,1,0,0);
-    cross('💨',70,71,2.2,1,.14,0);
-    cross('🔥',54,72,2.2,1,.18,0);
-    cap(`🔑 ${label} Delivered!`,'#fde047');
-    tone(65,1.4,'sawtooth',.16,0,340);
-    tone(340,.7,'sawtooth',.12,1.3,110);
-    noise(.7,.15,1.2,2800,700);
-    return;
-  }
-
-  // 3. Space & Aviation
-  if(c.cat==='Space'||['Air Canada','Emirates','WestJet','NetJets'].includes(c.n)){
-    const isSpace=c.cat==='Space';
-    tint(isSpace?'radial-gradient(#1e1b4bdd,#000e)':'linear-gradient(#0284c7aa,#e0f2fe55)',3800);
-    if(isSpace){
-      stars(80,'#fff',2800);
-      el(it.e,'left:50%;bottom:5%;margin-left:-.6em;font-size:120px;line-height:1',[{transform:'translateY(0) scale(.8)'},{transform:'translateY(-115vh) scale(1.2)'}],{duration:2600,easing:'ease-in'});
-      for(let i=0;i<14;i++)el(pick(['🔥','💨','✨']),`left:50%;margin-left:-.5em;bottom:${i*7}vh;font-size:64px`,[{opacity:1,transform:'scale(.6)'},{opacity:0,transform:'scale(1.6)'}],{duration:800,delay:i*120});
-      noise(2.4,.26,0,400,3200);
-      tone(65,2.4,'sawtooth',.16,0,190);
-    }else{
-      cross('☁️',90,22,3.4,-1,0);
-      cross('☁️',110,48,3.8,-1,.4);
-      cross(it.e,135,34,2.8,1,.1,-45);
-      noise(2.2,.14,0,300,2400);
-      tone(180,1.8,'sine',.09,0,420);
+// ---------- Billing cycle: every 20s ----------
+setInterval(()=>{
+  if(Date.now()>=next){
+    next=Date.now()+20000;
+    let delta=0;
+    Object.keys(S.subs).forEach(k=>{
+      const[c,it]=ITM(k);
+      if(S.bal<it.p){delete S.subs[k];toast(`⚠️ ${it.n} cancelled: insufficient funds`);return}
+      S.bal=+(S.bal-it.p).toFixed(2);S.spent+=it.p;delta-=it.p;
+      S.rec.unshift({e:'🔁',n:'Sub: '+it.n,s:c.n,q:1,tot:it.p,t:Date.now(),d:1});
+    });
+    let passive=0,upkeep=0;
+    Object.keys(S.inv).forEach(k=>{
+      const[,it]=ITM(k);
+      if(it&&it.cf){const amt=it.cf*S.inv[k];if(amt>0)passive+=amt;else upkeep+=Math.abs(amt)}
+    });
+    S.prop.forEach(p=>{passive+=p.rent;upkeep+=p.tax;p.value*=1+propOf(p.pid).apprec});
+    S.biz.forEach(b=>{if(b.dead||b.kind=='startup')return;const inc=b.income*(1+(b.staff||0)*.15);passive+=inc;upkeep+=b.upkeep+(b.staff||0)*b.staffPay});
+    if(passive>0){S.bal=+(S.bal+passive).toFixed(2);delta+=passive;S.rec.unshift({e:'📈',n:'Passive income & rent',s:'Portfolio',q:1,tot:-passive,t:Date.now(),d:1})}
+    if(upkeep>0){const payUp=Math.min(S.bal,upkeep);S.bal=+(S.bal-payUp).toFixed(2);S.spent+=payUp;delta-=payUp;
+      if(payUp>0)S.rec.unshift({e:'🧾',n:'Upkeep, taxes & payroll',s:'Operations',q:1,tot:payUp,t:Date.now(),d:1})}
+    if(delta!==0){
+      setBal(delta>0?1:-1);
+      flt((delta>0?'+':'−')+fmt(Math.abs(delta)),delta>0);
+      sfxDing(delta>0?660:330,.1);
+      renderTabs();
     }
-    cap(`🛫 ${label}`,'#e0f2fe');
-    return;
+    save();
   }
+  stats();
+  if(tab!='s'&&!$('#v').hidden)renderVentures();
+  if(!$('#r').hidden)renderTabs();
+},1000);
 
-  // 4. Luxury, Watches, Jewelry, Fashion & Art
-  if(c.cat==='Luxury'||c.cat==='Fashion'){
-    tint('radial-gradient(#fde04733,#3b0764cc 60%,#090514ee)',3800);
-    ring('#fde047',0);
-    ring('#f472b6',.25);
-    big(it.e,150,3400,POP);
-    pops(['💎','✨','👑','🥂'],32,360,32,2000,.15);
-    rain(['✨','💎'],24,0,3400);
-    cap(`✨ ${label}`,'#fef08a');
-    [1046.5,1318.5,1568,2093,2637].forEach((hz,idx)=>tone(hz,.7,'sine',.07,idx*.11));
-    return;
-  }
-
-  // 5. Real Estate & Mega-Projects
-  if(c.cat==='Property'||it.n.includes('Home Build')||it.n.includes('Pool')||it.n.includes('Deck')){
-    el('<div class="fx-blueprint"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3600});
-    big(it.e,145,3400,[{transform:'translateY(40vh) scale(.4)',opacity:0},{transform:'translateY(0) scale(1.05)',opacity:1,offset:.25},{transform:'translateY(0) scale(1)',opacity:1,offset:.85},{opacity:0}]);
-    pops(['🔑','📐','🏡','✨'],26,320,32,1800,.3);
-    cap(`🔑 ${label} Closed!`,'#7dd3fc');
-    [392,493.88,587.33,783.99].forEach((hz,idx)=>tone(hz,.5,'triangle',.11,idx*.14));
-    return;
-  }
-
-  // 6. Food & Fine Dining
-  if(c.cat==='Food'){
-    const isGoldSteak=c.n.includes('Salt Bae')||it.n.includes('Gold');
-    tint(isGoldSteak?'radial-gradient(#f59e0b55,#000c)':'radial-gradient(#fb923c44,#0009)',3200);
-    big(it.e,140,3000,POP);
-    rain(isGoldSteak?['✨','🥩','🧂','🪙']:['♨️','🔥','😋','✨'],28,1,3000);
-    cap(`🍽️ ${label}`,'#fed7aa');
-    noise(.45,.18,0,3500,900);
-    tone(587.33,.25,'sine',.1,.2);
-    tone(880,.35,'sine',.1,.35);
-    return;
-  }
-
-  // 7. Tech, Gaming, Music & AI Clusters
-  if(['Tech','Gaming','Music','Telecom','Fitness'].includes(c.cat)){
-    el('<div class="fx-matrix"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3400});
-    ring('#2be08f',0);
-    ring('#38bdf8',.2);
-    big(it.e,140,3200,POP);
-    pops(['⚡','💻','🎮','🔊','✨'],28,340,30,1800,.1);
-    cap(`⚡ ${label}`,'#6ee7b7');
-    [440,554.37,659.25,880,1108.73].forEach((hz,idx)=>tone(hz,.3,'sawtooth',.06,idx*.08));
-    return;
-  }
-
-  // 8. Charity & Humanitarian Impact
-  if(c.cat==='Charity'){
-    tint('radial-gradient(#10b98166,#064e3bcc)',3800);
-    ring('#34d399',0);
-    ring('#fde047',.25);
-    big(it.e,145,3500,POP);
-    rain(['💖','💚','🕊️','✨','🌟'],34,1,3600);
-    cap(`💚 Thank You! ${label}`,'#a7f3d0');
-    [523.25,659.25,783.99,987.77,1046.5].forEach((hz,idx)=>tone(hz,.8,'sine',.09,idx*.15));
-    return;
-  }
-
-  // 9. Sports & Live Arena Events
-  if(c.cat==='Sports'||c.cat==='Fun'){
-    tint('radial-gradient(#ef444444,#1e3a8acc)',3500);
-    big(it.e,145,3200,POP);
-    pops(['🎉','🎊','🏆','🔥','📣'],38,440,34,2000,.1);
-    rain(['🎊','🎉','⭐'],30,0,3400);
-    cap(`🏆 ${label}`,'#fde047');
-    tone(146.83,.9,'sawtooth',.16,0);
-    tone(220,.9,'sawtooth',.14,.05);
-    noise(1.1,.2,.1,1400,600);
-    return;
-  }
-
-  // 10. Finance & Investments
-  if(c.cat==='Finance'){
-    tint('radial-gradient(#05966955,#020617dd)',3600);
-    const bars=[35,55,48,72,66,92,100].map((h,idx)=>`<div class="fx-candle" style="height:${h}%;animation:grow .6s ${idx*.08}s both"></div>`).join('');
-    el(`<div class="fx-chart">${bars}</div>`,'inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3600});
-    rain(['💰','🪙','💵','📈'],32,0,3400);
-    cap(`📈 Invested: ${label}`,'#4ade80');
-    tone(987.77,.15,'sine',.12,0);
-    tone(1318.51,.4,'sine',.12,.14);
-    return;
-  }
-
-  // Fallback Shopping / General Celebration
-  burst(it.e,q,tot,`${label} ordered!`);
+// ---------- Tabs, reset, broke ----------
+document.querySelectorAll('.tabs [data-t]').forEach(b=>b.onclick=()=>{
+  tab=b.dataset.t;
+  document.querySelectorAll('.tabs [data-t]').forEach(x=>x.className=x==b?'on':'');
+  ['s','v','m','r'].forEach(i=>$('#'+i).hidden=i!=tab);
+  if(tab=='v')renderVentures();else renderTabs();
+});
+function openResetModal(){
+  show('lay',`<div class="sheet"><div class="res">
+    <div style="font-size:48px">🏦</div>
+    <h2>Select Wealth Tier / Reset</h2>
+    <p>Choose a starting fortune. This wipes your current portfolio.</p>
+    <div class="preset-grid">
+      <button class="preset-btn" data-amt="1000000"><span>💼 Classic Millionaire</span><span class="good">$1M CAD</span></button>
+      <button class="preset-btn" data-amt="100000000"><span>🛩️ Centi-Millionaire</span><span class="good">$100M CAD</span></button>
+      <button class="preset-btn" data-amt="1000000000"><span>🚀 Billionaire Mode</span><span class="good">$1B CAD</span></button>
+      <button class="preset-btn" data-amt="10000000000"><span>👑 Sovereign Mode</span><span class="good">$10B CAD</span></button>
+    </div>
+    <button style="margin-top:14px;color:var(--mut);font-weight:700" onclick="cls('lay')">Cancel</button>
+  </div></div>`);
+  $('#lay').querySelectorAll('[data-amt]').forEach(btn=>btn.onclick=()=>reset(+btn.dataset.amt));
+}
+$('#rs').onclick=openResetModal;
+function reset(amount=1e6){
+  S={...BLANK(),start:amount,bal:amount,cardStyle:S.cardStyle||0};
+  mkt.forEach(x=>{x.p=x.hist[0];x.hist=[x.p]});
+  cls('lay');setBal(1);renderTabs();
+  if(openCo)openStore(openCo);
+  toast(`Fresh ${fmt(amount)} CAD loaded!`);
+}
+function broke(){
+  show('lay',`<div class="sheet"><div class="res"><div style="font-size:60px">🪦</div><h2>You’re out of cash!</h2><p>You turned ${fmt(S.start)} into memories, assets and receipts.</p><p>Total spent: <b>${fmt(S.spent)}</b></p><br><button class="pay" onclick="openResetModal()">Choose New Starting Fortune</button></div></div>`);
 }
 
-// ---- Standard Celebration Burst
-function burst(e,q,tot,label){
-  const f=$('#fx'),n=Math.min(75,12+Math.round(Math.log10(tot+1)*9)+Math.min(q,15));
-  if(label)f.insertAdjacentHTML('beforeend',`<div class="ban"><i>${e}</i><span>${label}</span></div>`);
-  if(tot>=50000){
-    f.insertAdjacentHTML('beforeend','<div class="flash"></div>');
-    document.body.classList.add('shake');
-    setTimeout(()=>document.body.classList.remove('shake'),600);
-  }
+$('#q').oninput=grid;
+chips();grid();
+$('#bal').textContent=fmt(shown);
+setBal();
+
+// =====================================================================
+// FX ENGINE — full-screen canvas: physics particles, hero sprites,
+// shockwaves, light rays, colour tints, screen shake and flashes.
+// AUDIO — WebAudio synth with a generated reverb tail and a procedural roar.
+// =====================================================================
+const cv=$('#fxc'),cx=cv.getContext('2d');
+let DPR=1,VW=innerWidth,VH=innerHeight;
+function resizeFX(){
+  DPR=Math.min(2,window.devicePixelRatio||1);VW=innerWidth;VH=innerHeight;
+  cv.width=VW*DPR;cv.height=VH*DPR;
+}
+addEventListener('resize',resizeFX);resizeFX();
+
+const FX={parts:[],ents:[],shake:0,flash:0,running:false,last:0,maxParts:900};
+const EMO_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",system-ui,sans-serif';
+const cxX=()=>VW/2, cyY=()=>VH*.42;
+
+function fxKick(){ if(!FX.running){FX.running=true;FX.last=performance.now();requestAnimationFrame(fxFrame)} }
+
+// --- emitters ---
+function emit(o){
+  if(FX.parts.length>FX.maxParts)return;
+  FX.parts.push({x:o.x,y:o.y,vx:o.vx||0,vy:o.vy||0,g:o.g??0,drag:o.drag??.985,
+    life:o.life||1.6,age:0,sz:o.sz||28,ch:o.ch||null,col:o.col||null,rot:o.rot||0,vr:o.vr||0,
+    kind:o.kind||'emoji',glow:o.glow||0,alpha:1});
+}
+function burst(x,y,o={}){
+  const n=Math.round((o.n||24)*(FX.perf||1)),sp=o.speed||420;
   for(let i=0;i<n;i++){
-    const p=document.createElement('s');
-    p.textContent=Math.random()<.22?'💸':e;
-    p.style.cssText=`left:${rnd(0,95)}%;font-size:${rnd(16,44)}px;animation-delay:${rnd(0,.9)}s;animation-duration:${rnd(1.6,3.2)}s`;
-    f.append(p);
+    const a=rnd(0,Math.PI*2),s=sp*rnd(.35,1);
+    emit({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:o.g??260,drag:o.drag??.978,life:rnd(o.life?0.7*o.life:1.1,o.life||1.9),
+      sz:rnd(o.sz?0.6*o.sz:16,o.sz||34),ch:o.chs?pick(o.chs):o.ch,col:o.col,kind:o.col&&!o.chs&&!o.ch?'spark':'emoji',vr:rnd(-6,6),glow:o.glow||0});
   }
-  setTimeout(()=>{f.innerHTML=''},4400);
+}
+function sparkRing(x,y,n,r,col,dur=1){
+  for(let i=0;i<n;i++){
+    const a=i/n*Math.PI*2;
+    emit({x:x+Math.cos(a)*r,y:y+Math.sin(a)*r,vx:Math.cos(a)*90,vy:Math.sin(a)*90,g:-30,drag:.97,life:dur*rnd(.8,1.2),sz:rnd(3,6),col,kind:'spark',glow:12});
+  }
+}
+function rain(chs,n,dur=3,o={}){
+  n=Math.round(n*(FX.perf||1));
+  for(let i=0;i<n;i++){
+    const t=rnd(0,dur*.7);
+    setTimeout(()=>emit({x:rnd(0,VW),y:-40,vx:rnd(-30,30),vy:rnd(120,260)*(o.speed||1),g:o.g??60,drag:.995,life:dur,sz:rnd(o.min||18,o.max||44),ch:o.col?null:pick(chs),col:o.col?pick(o.col):null,kind:o.col?'confetti':'emoji',rot:rnd(0,6),vr:rnd(-5,5)}),t*1000);
+  }
+}
+function rise(chs,n,dur=3,o={}){
+  n=Math.round(n*(FX.perf||1));
+  for(let i=0;i<n;i++){
+    const t=rnd(0,dur*.6);
+    setTimeout(()=>emit({x:rnd(0,VW),y:VH+40,vx:rnd(-40,40),vy:-rnd(160,320)*(o.speed||1),g:-20,drag:.997,life:dur,sz:rnd(o.min||18,o.max||40),ch:pick(chs),rot:0,vr:rnd(-3,3)}),t*1000);
+  }
+}
+function confetti(n,dur=3.2){
+  const cols=['#fde047','#f472b6','#60a5fa','#34d399','#fb923c','#a78bfa'];
+  rain([],n,dur,{col:cols,min:8,max:14,speed:1.2});
+}
+// --- scene elements ---
+function hero(e,o={}){
+  FX.ents.push({type:'hero',e,x:o.x??cxX(),y:o.y??cyY(),size:o.size||160,t0:performance.now()+(o.delay||0),dur:o.dur||2400,anim:o.anim||'pop',spin:o.spin||0,glow:o.glow||null});
+  fxKick();
+}
+function ring(o={}){
+  FX.ents.push({type:'ring',x:o.x??cxX(),y:o.y??cyY(),r0:o.r0||20,r1:o.r1||Math.max(VW,VH)*.85,col:o.col||'#fde047',w:o.w||6,t0:performance.now()+(o.delay||0),dur:o.dur||1100});
+  fxKick();
+}
+function tint(col,dur=3000,peak=1,delay=0){
+  FX.ents.push({type:'tint',col,t0:performance.now()+delay,dur,peak});fxKick();
+}
+function rays(col,dur=3000,n=18,delay=0){
+  FX.ents.push({type:'rays',col,n,t0:performance.now()+delay,dur});fxKick();
+}
+function text(txt,o={}){
+  FX.ents.push({type:'text',txt,x:o.x??cxX(),y:o.y??VH*.72,size:o.size||44,col:o.col||'#fff',t0:performance.now()+(o.delay||0),dur:o.dur||2400,glow:o.glow||'#000'});
+  fxKick();
+}
+function shakeFX(v=10){FX.shake=Math.max(FX.shake,v)}
+function flashFX(a=.7){FX.flash=Math.max(FX.flash,a)}
+function bodyShake(){document.querySelector('main').animate([{transform:'translate(0,0)'},{transform:'translate(-6px,3px)'},{transform:'translate(5px,-4px)'},{transform:'translate(-3px,2px)'},{transform:'translate(0,0)'}],{duration:420})}
+
+// --- frame loop ---
+const ease={
+  out:t=>1-Math.pow(1-t,3),
+  back:t=>1+2.7*Math.pow(t-1,3)+1.7*Math.pow(t-1,2),
+  inOut:t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2
+};
+function fxFrame(now){
+  const dt=Math.min(.05,(now-FX.last)/1000);FX.last=now;
+  cx.setTransform(DPR,0,0,DPR,0,0);
+  cx.clearRect(0,0,VW,VH);
+  cx.save();
+  if(FX.shake>.3)cx.translate(rnd(-FX.shake,FX.shake),rnd(-FX.shake,FX.shake));
+  cx.textAlign='center';cx.textBaseline='middle';
+
+  // ents
+  FX.ents=FX.ents.filter(en=>now<en.t0+en.dur+50);
+  for(const en of FX.ents){
+    const p=clamp((now-en.t0)/en.dur,0,1);
+    if(now<en.t0)continue;
+    if(en.type=='tint'){
+      const a=p<.2?p/.2*en.peak:p>.7?(1-(p-.7)/.3)*en.peak:en.peak;
+      cx.fillStyle=en.col.replace('A',(a).toFixed(3));
+      cx.globalAlpha=1;cx.fillRect(-20,-20,VW+40,VH+40);
+    }else if(en.type=='rays'){
+      cx.save();cx.translate(cxX(),cyY());cx.rotate(p*Math.PI*1.2);
+      const r=Math.max(VW,VH)*1.2;cx.globalAlpha=(p<.15?p/.15:p>.8?(1-p)/.2:1)*.55;
+      for(let i=0;i<en.n;i++){
+        cx.rotate(Math.PI*2/en.n);cx.beginPath();cx.moveTo(0,0);cx.lineTo(r,-r*.05);cx.lineTo(r,r*.05);cx.closePath();
+        cx.fillStyle=en.col;cx.fill();
+      }
+      cx.restore();cx.globalAlpha=1;
+    }else if(en.type=='ring'){
+      const e2=ease.out(p),r=en.r0+(en.r1-en.r0)*e2;
+      cx.globalAlpha=1-p;cx.lineWidth=en.w*(1-p*.6);cx.strokeStyle=en.col;
+      cx.shadowColor=en.col;cx.shadowBlur=24;
+      cx.beginPath();cx.arc(en.x,en.y,r,0,Math.PI*2);cx.stroke();
+      cx.shadowBlur=0;cx.globalAlpha=1;
+    }else if(en.type=='hero'){
+      let s=1,a=1,dy=0,r=en.spin*p;
+      if(en.anim=='pop'){const q=ease.back(clamp(p/.22,0,1));s=.1+.9*q;a=p>.8?1-(p-.8)/.2:1}
+      else if(en.anim=='drop'){const q=p<.35?ease.out(p/.35):1;dy=-(1-q)*VH*.5;s=1+(p<.35?0:Math.sin((p-.35)*14)*.04*(1-p));a=p>.85?1-(p-.85)/.15:1}
+      else if(en.anim=='roar'){s=.2+1.1*ease.back(clamp(p/.3,0,1));if(p>.3)s+=Math.sin((p-.3)*26)*.05*(1-p);a=p>.9?1-(p-.9)/.1:1}
+      else if(en.anim=='rise'){const q=ease.out(clamp(p/.4,0,1));dy=(1-q)*VH*.45;s=.6+.4*q;a=p>.85?1-(p-.85)/.15:1}
+      else if(en.anim=='fly'){const q=ease.inOut(p);dy=-q*VH*.1;s=1;a=p>.9?1-(p-.9)/.1:1;r=Math.sin(p*Math.PI*2)*.15}
+      else if(en.anim=='fade'){a=p<.2?p/.2:p>.8?1-(p-.8)/.2:1;s=1+p*.15}
+      cx.save();cx.globalAlpha=clamp(a,0,1);cx.translate(en.x,en.y+dy);cx.rotate(r);
+      cx.font=`${en.size*s}px ${EMO_FONT}`;
+      cx.shadowColor=en.glow||'rgba(255,220,120,.8)';cx.shadowBlur=en.glow===false?0:50*s;
+      cx.fillText(en.e,0,0);cx.restore();
+    }else if(en.type=='text'){
+      const q=ease.back(clamp(p/.16,0,1)),a=p>.85?1-(p-.85)/.15:1;
+      cx.save();cx.globalAlpha=clamp(a,0,1);cx.translate(en.x,en.y);cx.scale(.4+.6*q,.4+.6*q);
+      cx.font=`900 ${en.size}px ui-rounded,system-ui,sans-serif`;cx.fillStyle=en.col;
+      cx.shadowColor=en.glow;cx.shadowBlur=20;cx.fillText(en.txt,0,0);
+      cx.restore();
+    }
+  }
+
+  // particles
+  FX.parts=FX.parts.filter(pt=>(pt.age+=dt)<pt.life&&pt.y<VH+200);
+  for(const pt of FX.parts){
+    pt.vy+=pt.g*dt;pt.vx*=Math.pow(pt.drag,dt*60);pt.vy*=Math.pow(pt.drag,dt*60);
+    pt.x+=pt.vx*dt;pt.y+=pt.vy*dt;pt.rot+=pt.vr*dt;
+    const life=pt.age/pt.life,a=life>.7?1-(life-.7)/.3:1;
+    cx.globalAlpha=clamp(a,0,1);
+    if(pt.kind=='spark'){
+      cx.fillStyle=pt.col;cx.shadowColor=pt.col;cx.shadowBlur=pt.glow||10;
+      cx.beginPath();cx.arc(pt.x,pt.y,pt.sz*(1-life*.5),0,Math.PI*2);cx.fill();cx.shadowBlur=0;
+    }else if(pt.kind=='confetti'){
+      cx.save();cx.translate(pt.x,pt.y);cx.rotate(pt.rot);cx.fillStyle=pt.col;
+      cx.fillRect(-pt.sz/2,-pt.sz/4,pt.sz,pt.sz/2);cx.restore();
+    }else{
+      cx.save();cx.translate(pt.x,pt.y);cx.rotate(pt.rot);
+      cx.font=`${pt.sz}px ${EMO_FONT}`;
+      if(pt.col){cx.fillStyle=pt.col;cx.beginPath();cx.arc(0,0,pt.sz/2,0,Math.PI*2);cx.fill()}
+      else cx.fillText(pt.ch,0,0);
+      cx.restore();
+    }
+  }
+  cx.globalAlpha=1;
+  cx.restore();
+
+  FX.shake*=.86;FX.flash*=.82;
+  if(FX.flash>.01){cx.fillStyle=`rgba(255,255,255,${FX.flash})`;cx.fillRect(0,0,VW,VH)}
+
+  if(FX.parts.length||FX.ents.length||FX.flash>.01||FX.shake>.3)requestAnimationFrame(fxFrame);
+  else FX.running=false;
 }
 
-// =========================================================
-// UPGRADED TIKTOK / YOUTUBE / TWITCH LIVE STUDIO
-// =========================================================
+// =====================================================================
+// AUDIO
+// =====================================================================
+let AC=null,MASTER=null,VERB=null;
+function audio(){
+  if(!AC){
+    try{
+      AC=new (window.AudioContext||window.webkitAudioContext)();
+      MASTER=AC.createGain();MASTER.gain.value=.85;MASTER.connect(AC.destination);
+      VERB=AC.createConvolver();
+      const len=AC.sampleRate*2.6,buf=AC.createBuffer(2,len,AC.sampleRate);
+      for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2)}
+      VERB.buffer=buf;const vg=AC.createGain();vg.gain.value=.4;VERB.connect(vg);vg.connect(MASTER);
+    }catch(e){AC=null}
+  }
+  if(AC&&AC.state=='suspended')AC.resume();
+  return AC;
+}
+function sfxTone(f,d,ty='sine',v=.15,at=0,f2,wet=0){
+  const a=audio();if(!a)return;
+  try{
+    const t=a.currentTime+at,o=a.createOscillator(),g=a.createGain();
+    o.type=ty;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+Math.min(.04,d/3));g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);g.connect(MASTER);if(wet)g.connect(VERB);
+    o.start(t);o.stop(t+d+.05);
+  }catch(e){}
+}
+function sfxNoise(d,v=.1,at=0,hz=1000,hz2,wet=0){
+  const a=audio();if(!a)return;
+  try{
+    const t=a.currentTime+at,n=a.sampleRate*d|0,b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);
+    for(let i=0;i<n;i++)x[i]=Math.random()*2-1;
+    const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
+    s.buffer=b;f.frequency.setValueAtTime(hz,t);if(hz2)f.frequency.exponentialRampToValueAtTime(hz2,t+d);
+    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    s.connect(f);f.connect(g);g.connect(MASTER);if(wet)g.connect(VERB);s.start(t);
+  }catch(e){}
+}
+function sfxDing(f,t=.15,ty='sine'){sfxTone(f,t*3,ty,.1)}
+function sfxTick(f){sfxTone(f,.05,'square',.04)}
+// Procedural lion roar: detuned sawtooths, vibrato, formant-ish bandpass, reverb tail.
+function sfxRoar(at=0,len=1.8,vol=.35){
+  const a=audio();if(!a)return;
+  try{
+    const t=a.currentTime+at;
+    const out=a.createGain();out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(vol,t+.15);
+    out.gain.linearRampToValueAtTime(vol*.8,t+len*.6);out.gain.exponentialRampToValueAtTime(.001,t+len);
+    const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(700,t);lp.frequency.linearRampToValueAtTime(1400,t+len*.5);lp.frequency.linearRampToValueAtTime(500,t+len);
+    const lfo=a.createOscillator(),lg=a.createGain();lfo.frequency.value=6;lg.gain.value=9;lfo.connect(lg);
+    for(const det of [0,7,-9]){
+      const o=a.createOscillator();o.type='sawtooth';
+      o.frequency.setValueAtTime(140+det,t);o.frequency.linearRampToValueAtTime(92+det,t+len*.5);o.frequency.linearRampToValueAtTime(70+det,t+len);
+      lg.connect(o.frequency);o.connect(lp);o.start(t);o.stop(t+len+.1);
+    }
+    const nz=a.createBufferSource(),nb=a.createBuffer(1,a.sampleRate*len|0,a.sampleRate),nd=nb.getChannelData(0);
+    for(let i=0;i<nd.length;i++)nd[i]=(Math.random()*2-1)*.5;
+    nz.buffer=nb;const bp=a.createBiquadFilter();bp.type='bandpass';bp.frequency.value=900;bp.Q.value=1.2;
+    const ng=a.createGain();ng.gain.value=.35;nz.connect(bp);bp.connect(ng);
+    lp.connect(out);ng.connect(out);out.connect(MASTER);out.connect(VERB);
+    lfo.start(t);lfo.stop(t+len+.1);nz.start(t);nz.stop(t+len);
+  }catch(e){}
+}
+function sfxBoom(at=0,vol=.5){sfxTone(70,1.4,'sine',vol,at,28,.6);sfxNoise(1.1,vol*.5,at,600,60,.5)}
+function sfxSparkle(at=0){[1568,2093,2637,3136].forEach((f,i)=>sfxTone(f,.25,'triangle',.05,at+i*.05,null,.8))}
+function sfxFanfare(at=0){[523.25,659.25,783.99,1046.5].forEach((f,i)=>sfxTone(f,.7,'triangle',.09,at+i*.11,null,.6))}
+
+// =====================================================================
+// GIFT CINEMATICS — each gift is a scripted, multi-stage scene.
+// `at(ms, fn)` schedules a beat; the engine above renders it.
+// =====================================================================
+const at=(ms,fn)=>setTimeout(fn,ms);
+const multTxt=q=>q>1?`×${q.toLocaleString()} `:'';
+const CX=()=>cxX(), CY=()=>cyY();
+function beatCaption(it,q,tot,col='#fde047',delay=0){
+  text(`${multTxt(q)}${it.n}`,{y:VH*.74,size:Math.min(46,VW/11),col,delay,dur:2800});
+  text(fmtS(tot),{y:VH*.80,size:Math.min(24,VW/22),col:'#fff',delay:delay+120,dur:2600,glow:'#000'});
+}
+// Shared helper: a "gift burst" with a counter that rewards big quantities.
+function megaCount(q,delay=0){
+  if(q<=1)return;
+  text(`×${q.toLocaleString()}`,{x:VW*.82,y:VH*.16,size:Math.min(70,VW/7),col:'#f0abfc',delay,dur:3200,glow:'#f0f'});
+}
+
+const GIFTS={
+  // ---------- Classic TikTok gifts (rebuilt) ----------
+  'Rose':(c,it,q,tot)=>{
+    tint('rgba(255,44,85,A)',4200,.5);
+    hero('🌹',{size:150,anim:'fly',dur:3800,glow:'rgba(255,60,100,.9)'});
+    rain(['🌹','🌸','🥀','✨'],34,4.2);
+    sparkRing(CX(),CY(),28,120,'#ff6b8b',1.2);
+    at(400,()=>sfxSparkle(0));
+    beatCaption(it,q,tot);
+    megaCount(q);
+  },
+  'Finger Heart':(c,it,q,tot)=>{
+    tint('rgba(236,72,153,A)',3600,.45);
+    ring({col:'#f9a8d4',w:8,dur:1200});ring({col:'#f472b6',w:4,dur:1500,delay:250});
+    hero('💖',{size:170,anim:'pop',glow:'rgba(244,114,182,.9)'});
+    at(120,()=>burst(CX(),CY(),{chs:['❤️','💖','💕'],n:26,speed:520,sz:30}));
+    rise(['💗','💕','💓'],22,3);
+    beatCaption(it,q,tot,'#f9a8d4');
+    megaCount(q);
+  },
+  'Doughnut':(c,it,q,tot)=>{
+    tint('rgba(251,146,60,A)',3600,.4);
+    hero('🍩',{size:200,anim:'roar',spin:Math.PI*2,dur:3400});
+    rain(['🍩','🍬','🍪','🧁'],30,3.6);
+    at(200,()=>sfxTone(330,.2,'triangle',.12));at(380,()=>sfxTone(440,.2,'triangle',.12));at(560,()=>sfxTone(660,.4,'triangle',.12));
+    beatCaption(it,q,tot,'#fdba74');megaCount(q);
+  },
+  'Confetti':(c,it,q,tot)=>{
+    confetti(160,3.4);
+    burst(CX(),VH*.9,{n:36,speed:900,g:420,col:'#fde047',glow:14});
+    sfxFanfare(0);
+    beatCaption(it,q,tot,'#fde047');megaCount(q);
+  },
+  'Corgi':(c,it,q,tot)=>{
+    tint('rgba(253,224,71,A)',3400,.3);
+    hero('🐕',{size:150,anim:'fly',dur:3400});
+    for(let i=0;i<6;i++)at(i*380,()=>burst(VW*.1+i*VW*.16,VH*.66,{chs:['🐾','🦴'],n:4,speed:260,sz:22}));
+    rain(['🐾','⭐','❤️'],20,3);
+    sfxTone(620,.12,'square',.1);at(420,()=>sfxTone(620,.12,'square',.1));at(840,()=>sfxTone(380,.12,'square',.1));
+    beatCaption(it,q,tot,'#fde68a');megaCount(q);
+  },
+  'Money Gun':(c,it,q,tot)=>{
+    tint('rgba(34,197,94,A)',3200,.45);
+    hero('🔫',{size:150,anim:'pop',dur:2000});
+    at(300,()=>{shakeFX(8);flashFX(.2);rain(['💸','💵','💴','🤑'],Math.min(90,40+q/2),3.2,{speed:1.4})});
+    for(let i=0;i<8;i++)at(300+i*160,()=>sfxNoise(.05,.2,0,3000));
+    sfxTone(1568,.4,'sine',.1,.1);sfxTone(2093,.5,'sine',.1,.2);
+    beatCaption(it,q,tot,'#4ade80');megaCount(q);
+  },
+  'Swan':(c,it,q,tot)=>{
+    tint('rgba(96,165,250,A)',4200,.5);
+    hero('🦢',{size:210,anim:'fly',dur:4000,glow:'rgba(186,230,253,.9)'});
+    rain(['🪶','✨','🤍'],22,4.2);
+    [392,494,587,784].forEach((f,i)=>sfxTone(f,3.5,'sine',.07,i*.1,null,.7));
+    beatCaption(it,q,tot,'#cfe8ff');megaCount(q);
+  },
+  'Train':(c,it,q,tot)=>{
+    tint('rgba(245,158,11,A)',3800,.4);
+    hero('🚂',{size:170,anim:'fly',dur:3600});
+    shakeFX(12);
+    for(let i=0;i<6;i++)at(200+i*420,()=>{burst(VW*.2,VH*.6,{chs:['☁️','💨'],n:6,speed:200,sz:44,life:1.8});sfxNoise(.25,.12,0,900,500)});
+    beatCaption(it,q,tot,'#fde047');megaCount(q);
+  },
+  'Galaxy Globe':(c,it,q,tot)=>{
+    tint('rgba(49,46,129,A)',4400,.7);
+    hero('🔮',{size:190,anim:'pop',dur:4200,glow:'rgba(167,139,250,.9)'});
+    ring({col:'#a78bfa',w:6,dur:1400});
+    for(let i=0;i<5;i++)at(300+i*650,()=>sparkRing(CX(),CY(),32,140+i*30,pick(['#a78bfa','#818cf8','#c4b5fd']),1.6));
+    rain(['🪐','🌙','⭐','☄️'],12,4,{speed:.7});
+    beatCaption(it,q,tot,'#c4b5fd');megaCount(q);
+  },
+  'Whale Diving':(c,it,q,tot)=>{
+    tint('rgba(11,61,145,A)',5200,.7);
+    hero('🐋',{size:230,anim:'drop',dur:4400,glow:'rgba(56,189,248,.8)'});
+    at(1400,()=>{sfxBoom(0,.5);ring({col:'#38bdf8',w:10,dur:1600});shakeFX(10);burst(CX(),VH*.85,{chs:['🫧','💧'],n:30,speed:340,g:-120,sz:22})});
+    rise(['🫧','💧','🐟'],30,4.5);
+    beatCaption(it,q,tot,'#7dd3fc');megaCount(q);
+  },
+  'Leon the Kitty':(c,it,q,tot)=>{
+    tint('rgba(244,114,182,A)',3600,.5);
+    hero('🐱',{size:210,anim:'roar',dur:3400,glow:'rgba(249,168,212,.9)'});
+    rain(['🐾','❤️','🐟','✨'],26,3.4);
+    [500,900,1300,1580].forEach((f,i)=>sfxTone(f,.25,'triangle',.14,i*.22,f*.5));
+    beatCaption(it,q,tot,'#fbcfe8');megaCount(q);
+  },
+  'Flying Jets':(c,it,q,tot)=>{
+    tint('rgba(125,211,252,A)',3800,.4);
+    [0,260,520].forEach((t,i)=>at(t,()=>{hero('✈️',{y:VH*(.22+i*.14),size:110,anim:'fly',dur:2600});sfxNoise(2,.12,0,400,3500);
+      for(let k=0;k<8;k++)at(k*250,()=>burst(VW*.05,VH*(.22+i*.14),{chs:['💨','☁️'],n:3,speed:200,sz:30}))}));
+    beatCaption(it,q,tot,'#e0f2fe');megaCount(q);
+  },
+  'Sports Car':(c,it,q,tot)=>{
+    tint('rgba(239,68,68,A)',3200,.4);shakeFX(14);
+    hero('🏎️',{size:170,anim:'fly',dur:2600});
+    for(let i=0;i<10;i++)at(i*140,()=>burst(VW*(i/10),VH*.6,{chs:['💨','🔥'],n:4,speed:280,sz:28}));
+    sfxTone(70,1.6,'sawtooth',.14,0,400);sfxTone(400,.8,'sawtooth',.1,1.5,120);
+    beatCaption(it,q,tot,'#fca5a5');megaCount(q);
+  },
+  'Falcon':(c,it,q,tot)=>{
+    tint('rgba(245,158,11,A)',3400,.4);
+    hero('🦅',{size:200,anim:'drop',dur:3000,glow:'rgba(253,230,138,.9)'});
+    at(900,()=>{ring({col:'#fde68a',w:8,dur:1100});shakeFX(7);sfxTone(2000,.5,'sawtooth',.06,.1,2800)});
+    rain(['🪶','✨'],22,3.2);
+    beatCaption(it,q,tot,'#fde68a');megaCount(q);
+  },
+  'Dragon Flame':(c,it,q,tot)=>{
+    tint('rgba(127,29,29,A)',4400,.8);
+    hero('🐉',{size:240,anim:'roar',dur:3800,glow:'rgba(251,146,60,.9)'});
+    at(300,()=>sfxRoar(0,2.2,.4));
+    for(let i=0;i<14;i++)at(600+i*120,()=>burst(VW*rnd(.1,.9),VH*.95,{chs:['🔥','🔥','💥'],n:4,speed:380,g:-200,sz:36,life:1.6}));
+    shakeFX(16);
+    beatCaption(it,q,tot,'#fb923c');megaCount(q);
+  },
+  'Lion':(c,it,q,tot)=>{
+    // Cinematic lion: gold dim → roar drop → shockwaves → mane fire → golden coin storm
+    tint('rgba(40,22,0,A)',4800,.85);
+    rays('rgba(250,204,21,.25)',4200,22,200);
+    hero('🦁',{size:260,anim:'drop',dur:2000,glow:'rgba(250,204,21,.95)'});
+    at(950,()=>{sfxRoar(0,2.4,.5);sfxBoom(0,.6);shakeFX(22);flashFX(.35);
+      ring({col:'#facc15',w:12,dur:1400});ring({col:'#f97316',w:8,dur:1500,delay:200});ring({col:'#fff',w:4,dur:1700,delay:420})});
+    at(1400,()=>{hero('🦁',{size:300,anim:'roar',dur:2300,glow:'rgba(250,204,21,1)'});
+      for(let i=0;i<24;i++)at(i*45,()=>sparkRing(CX(),CY(),18,160+(i%5)*22,pick(['#facc15','#f97316','#fde047']),1.1));});
+    at(1900,()=>{sfxRoar(0,1.6,.4);shakeFX(14);burst(CX(),CY(),{chs:['🔥','✨','👑'],n:34,speed:560,sz:34})});
+    rain(['🪙','✨','👑','🦁'],70,4.5,{speed:1.1});
+    rise(['🔥','✨'],24,3);
+    text('ROAAAR! 🦁',{y:VH*.18,size:Math.min(64,VW/8),col:'#facc15',delay:900,dur:3200});
+    beatCaption(it,q,tot,'#fde047',900);megaCount(q,900);
+  },
+  'Fairy Castle':(c,it,q,tot)=>{
+    tint('rgba(167,139,250,A)',4600,.6);
+    hero('🏰',{size:260,anim:'rise',dur:4400,glow:'rgba(232,121,249,.9)'});
+    rain(['✨','🦄','🌈','⭐'],30,4.2);
+    at(1200,()=>{for(let i=0;i<4;i++)at(i*280,()=>burst(VW*rnd(.2,.8),VH*rnd(.2,.4),{chs:['🎆','✨','⭐'],n:12,speed:300,sz:26}))});
+    [523,659,784,1046].forEach((f,i)=>sfxTone(f,.5,'square',.06,i*.18,null,.8));
+    beatCaption(it,q,tot,'#f5d0fe');megaCount(q);
+  },
+  'Universe':(c,it,q,tot)=>{
+    tint('rgba(30,27,75,A)',5400,.95);
+    for(let i=0;i<8;i++)at(i*300,()=>sparkRing(CX(),CY(),40,60+i*48,pick(['#c7d2fe','#818cf8','#fff']),1.8));
+    hero('🌌',{size:260,anim:'pop',dur:5000,spin:Math.PI*.6,glow:'rgba(165,180,252,.9)'});
+    ring({col:'#818cf8',w:6,dur:2000,delay:200});
+    rain(['⭐','✨'],30,5);
+    [130,196,261,392].forEach((f,i)=>sfxTone(f,4.5,'sine',.09,i*.38,null,.9));
+    beatCaption(it,q,tot,'#c7d2fe');megaCount(q);
+  },
+  'Yacht':(c,it,q,tot)=>{
+    tint('rgba(3,105,161,A)',4800,.6);
+    hero('🛥️',{size:220,anim:'fly',dur:4600});
+    rise(['🌊','🫧'],26,4.2);
+    rain(['🥂','🍾','✨','💎'],26,4);
+    sfxNoise(2.5,.1,0,500,900,.4);
+    beatCaption(it,q,tot,'#e0f2fe');megaCount(q);
+  },
+  'Rocket':(c,it,q,tot)=>{
+    ['3','2','1'].forEach((n,i)=>at(i*700,()=>{text(n,{y:VH*.36,size:Math.min(160,VW/3),col:'#fff',dur:650});sfxTick(660)}));
+    at(2100,()=>{hero('🚀',{size:180,anim:'fly',dur:2600,spin:-Math.PI/4});shakeFX(12);sfxBoom(0,.6);
+      for(let i=0;i<30;i++)at(i*70,()=>burst(CX(),VH*.85,{chs:['🔥','💨','✨'],n:3,speed:260,g:-120,sz:40,life:1.2}))});
+    at(2700,()=>text('LIFTOFF! 🚀',{y:VH*.2,size:Math.min(60,VW/8),col:'#fdba74',dur:2400}));
+    beatCaption(it,q,tot,'#fdba74',2100);megaCount(q,2100);
+  },
+  'Diamond Planet':(c,it,q,tot)=>{
+    tint('rgba(14,116,144,A)',4800,.8);
+    hero('💎',{size:240,anim:'pop',dur:4600,spin:Math.PI*3,glow:'rgba(103,232,249,.95)'});
+    ring({col:'#67e8f9',w:7,dur:1400});ring({col:'#fff',w:3,dur:1600,delay:300});
+    rain(['💎','✨'],40,4.4);
+    for(let i=0;i<12;i++)sfxTone(1500+Math.random()*2500,.35,'sine',.05,i*.16,null,.8);
+    beatCaption(it,q,tot,'#67e8f9');megaCount(q);
+  },
+  'Supernova':(c,it,q,tot)=>{
+    flashFX(.9);tint('rgba(249,115,22,A)',5400,.9);shakeFX(20);
+    [0,180,360,540].forEach((t,i)=>at(t,()=>ring({col:['#fff','#fde68a','#f97316','#ef4444'][i],w:14,dur:1300})));
+    burst(CX(),CY(),{chs:['☄️','🔥','💥','⭐'],n:50,speed:700,sz:40,life:2});
+    hero('💥',{size:240,anim:'pop',dur:3200});
+    sfxBoom(0,.7);
+    beatCaption(it,q,tot,'#fde68a');megaCount(q);
+    text('SUPERNOVA 🌠',{y:VH*.2,size:Math.min(64,VW/8),col:'#fde68a',dur:3200,delay:200});
+  },
+  'Pegasus Sovereign':(c,it,q,tot)=>{
+    flashFX(.4);tint('rgba(124,58,237,A)',5600,.9);
+    hero('🦄',{size:270,anim:'fly',dur:4400,glow:'rgba(253,224,71,1)'});
+    [0,.25,.5].forEach((t,i)=>at(t*1000,()=>ring({col:['#fde047','#c084fc','#fff'][i],w:10,dur:1600})));
+    rain(['👑','✨','🪽','💎'],60,4.4);
+    rays('rgba(253,224,71,.2)',4600,24,0);
+    [261,329,392,523,659,784,1046,1318].forEach((f,i)=>sfxTone(f,.9,'triangle',.09,i*.13,null,.8));
+    text('PEGASUS SOVEREIGN 👑',{y:VH*.18,size:Math.min(56,VW/9),col:'#fef08a',dur:3600,delay:600});
+    beatCaption(it,q,tot,'#fef08a',600);megaCount(q,600);
+  },
+
+  // ---------- New TikTok Live Gifts+ ----------
+  'Ice Cream Cake':(c,it,q,tot)=>{
+    tint('rgba(244,114,182,A)',3400,.4);
+    hero('🍰',{size:170,anim:'pop',dur:3200});
+    rain(['🍬','🍭','✨','🍓'],32,3.2);
+    beatCaption(it,q,tot,'#fbcfe8');megaCount(q);
+  },
+  'Hot Air Balloon':(c,it,q,tot)=>{
+    tint('rgba(56,189,248,A)',5200,.4);
+    hero('🎈',{size:200,anim:'rise',dur:5000});
+    at(800,()=>{hero('🎈',{x:VW*.2,y:VH*.7,size:90,anim:'rise',dur:4000});hero('🎈',{x:VW*.8,y:VH*.7,size:90,anim:'rise',dur:4000,delay:300})});
+    rise(['🎊','✨'],20,4.5);
+    beatCaption(it,q,tot,'#e0f2fe');megaCount(q);
+  },
+  'Phoenix Rising':(c,it,q,tot)=>{
+    tint('rgba(220,38,38,A)',4600,.7);shakeFX(10);
+    hero('🔥',{size:240,anim:'roar',dur:3600,glow:'rgba(251,146,60,1)'});
+    for(let i=0;i<10;i++)at(i*200,()=>sparkRing(CX(),CY(),24,80+i*36,pick(['#fb923c','#ef4444','#fde047']),1.4));
+    rise(['🔥','✨','🪶'],40,4.4,{speed:1.2});
+    sfxRoar(0,1.8,.3);
+    beatCaption(it,q,tot,'#fdba74');megaCount(q);
+  },
+  'Dragon Palace':(c,it,q,tot)=>{
+    tint('rgba(127,29,29,A)',5000,.8);
+    hero('🏯',{size:220,anim:'rise',dur:4400});
+    at(700,()=>hero('🐉',{size:230,anim:'fly',dur:3600,glow:'rgba(251,146,60,1)'}));
+    at(1400,()=>{sfxRoar(0,2,.45);shakeFX(18);flashFX(.2)});
+    rain(['🔥','🏮','✨'],34,4.2);
+    beatCaption(it,q,tot,'#fca5a5',700);megaCount(q);
+  },
+  'Thunder God':(c,it,q,tot)=>{
+    [0,260,720].forEach(t=>at(t,()=>{flashFX(.85);shakeFX(16);sfxBoom(0,.7);tint('rgba(253,224,71,A)',600,.55)}));
+    hero('⚡',{size:260,anim:'pop',dur:2600,glow:'rgba(253,224,71,1)'});
+    for(let i=0;i<12;i++)at(i*120,()=>burst(VW*rnd(.1,.9),VH*rnd(.1,.4),{chs:['⚡','✨'],n:4,speed:320,sz:30,life:.9}));
+    beatCaption(it,q,tot,'#fde047');megaCount(q);
+  },
+  'Golden Lion Crown':(c,it,q,tot)=>{
+    tint('rgba(250,204,21,A)',4400,.55);
+    rays('rgba(253,224,71,.22)',4000,20,0);
+    hero('👑',{size:200,anim:'drop',dur:2200,glow:'rgba(250,204,21,1)'});
+    at(900,()=>{ring({col:'#facc15',w:10,dur:1200});sfxFanfare(0);shakeFX(8);hero('🦁',{size:160,anim:'pop',dur:2600})});
+    rain(['🪙','👑','✨'],34,4);
+    beatCaption(it,q,tot,'#fde047',900);megaCount(q);
+  },
+  'Rainbow Lion Parade':(c,it,q,tot)=>{
+    ['rgba(239,68,68,A)','rgba(250,204,21,A)','rgba(34,197,94,A)','rgba(56,189,248,A)','rgba(168,85,247,A)'].forEach((col,i)=>tint(col,800,.35,i*650));
+    for(let i=0;i<6;i++)at(i*230,()=>hero('🦁',{x:-80,y:VH*(.3+(i%3)*.12),size:120,anim:'fly',dur:3200,delay:0}));
+    rain(['🌈','🎉','✨'],30,4.2);
+    sfxFanfare(0);
+    beatCaption(it,q,tot,'#fde047');megaCount(q);
+  },
+  'Golden Dove Choir':(c,it,q,tot)=>{
+    tint('rgba(253,230,138,A)',4400,.45);
+    for(let i=0;i<5;i++)at(i*240,()=>hero('🕊️',{x:VW*(.15+i*.17),y:VH*(.3+(i%2)*.1),size:120,anim:'fly',dur:3400}));
+    rays('rgba(255,250,220,.2)',4200,18,0);
+    rain(['✨','🌟','🪽'],30,4.2);
+    sfxFanfare(0);
+    beatCaption(it,q,tot,'#fef9c3');megaCount(q);
+  },
+  'Saturn Ring Orbit':(c,it,q,tot)=>{
+    tint('rgba(88,28,135,A)',4800,.8);
+    hero('🪐',{size:230,anim:'pop',dur:4400,spin:Math.PI*2});
+    for(let i=0;i<6;i++)at(i*450,()=>ring({col:pick(['#e9d5ff','#c084fc','#fbcfe8']),w:5,dur:1500,r1:VW*.45}));
+    rain(['✨','⭐','☄️'],24,4.4);
+    beatCaption(it,q,tot,'#e9d5ff');megaCount(q);
+  },
+  'Grand Fireworks Finale':(c,it,q,tot)=>{
+    tint('rgba(15,23,42,A)',5000,.7);
+    for(let i=0;i<10;i++)at(i*380,()=>{const x=rnd(VW*.15,VW*.85),y=rnd(VH*.12,VH*.5);
+      burst(x,y,{col:pick(['#f472b6','#fde047','#60a5fa','#34d399','#fb923c']),n:46,speed:460,glow:14});sfxBoom(0,.3);shakeFX(4)});
+    text('GRAND FINALE 🎆',{y:VH*.2,size:Math.min(60,VW/8),col:'#fde047',delay:200,dur:3600});
+    beatCaption(it,q,tot,'#fde047');megaCount(q);
+  },
+  'Royal Lion Sovereign':(c,it,q,tot)=>{
+    flashFX(.5);tint('rgba(60,30,0,A)',6200,.95);rays('rgba(250,204,21,.28)',6000,26,0);shakeFX(18);
+    hero('🦁',{size:320,anim:'drop',dur:2200,glow:'rgba(250,204,21,1)'});
+    at(1100,()=>{sfxRoar(0,3,.6);sfxBoom(0,.7);flashFX(.7);shakeFX(26);hero('👑',{size:200,anim:'pop',dur:3200,glow:'rgba(250,204,21,1)'});
+      [0,220,440,700].forEach((t,i)=>at(t,()=>ring({col:['#fff','#facc15','#f97316','#fde047'][i],w:14,dur:1500})))});
+    at(2200,()=>{for(let i=0;i<16;i++)at(i*70,()=>sparkRing(CX(),CY(),22,180+(i%4)*40,pick(['#facc15','#fde047','#fff']),1.3))});
+    rain(['🪙','👑','✨','🦁'],90,5,{speed:1.1});
+    text('ROYAL LION SOVEREIGN 🦁👑',{y:VH*.16,size:Math.min(52,VW/10),col:'#fef08a',delay:1200,dur:4200});
+    beatCaption(it,q,tot,'#fde047',1100);megaCount(q,1100);
+  },
+  'Earth Gift Planet':(c,it,q,tot)=>{
+    tint('rgba(6,95,70,A)',5600,.6);
+    hero('🌍',{size:300,anim:'pop',dur:4800,spin:Math.PI*.8,glow:'rgba(110,231,183,.9)'});
+    rays('rgba(110,231,183,.18)',5000,18,0);
+    ring({col:'#6ee7b7',w:10,dur:2200,r1:VW*.6});
+    rain(['🌿','🌸','🦋','✨'],40,5);
+    beatCaption(it,q,tot,'#a7f3d0');megaCount(q);
+  },
+  'Golden TikTok Castle':(c,it,q,tot)=>{
+    flashFX(.3);tint('rgba(253,224,71,A)',6000,.6);
+    hero('🏰',{size:300,anim:'rise',dur:4800,glow:'rgba(253,224,71,1)'});
+    at(1400,()=>{for(let i=0;i<6;i++)at(i*320,()=>burst(VW*rnd(.15,.85),VH*rnd(.12,.4),{col:'#fde047',n:40,speed:440,glow:16}));sfxFanfare(0)});
+    confetti(180,4.6);
+    text('GOLDEN TIKTOK CASTLE 🏰',{y:VH*.18,size:Math.min(52,VW/9),col:'#fde047',delay:900,dur:4000});
+    beatCaption(it,q,tot,'#fde047',900);megaCount(q,900);
+  }
+};
+
+// Dispatcher for animated gifts (live stream studio drives this too)
+function fireGift(c,it,q,tot){
+  audio();
+  const fn=GIFTS[it.n];
+  if(fn){fn(c,it,q,tot);return}
+  if(c.n=='YouTube')return ytGift(it,q,tot);
+  if(c.n=='Twitch')return twGift(it,q,tot);
+  return platformGift(c,it,q,tot);
+}
+
+// ---------- YouTube, Twitch and generic platform effects ----------
+function ytGift(it,q,tot){
+  const col=tot>=500?'#ef4444':tot>=100?'#eab308':tot>=50?'#f97316':tot>=20?'#22c55e':'#0ea5e9';
+  tint(`rgba(0,0,0,A)`,3200,.65);
+  if(it.n.includes('Cat')){hero('🐱',{size:200,anim:'pop',dur:3400});rain(['🐾','❤️','▶️','✨'],24,3.2);sfxTone(520,.22,'triangle',.14,0,940);sfxTone(940,.32,'triangle',.14,.22,480)}
+  else if(it.n.includes('Fire')){hero('🔥',{size:200,anim:'roar',dur:3600});shakeFX(12);rise(['🔥','💥','⚡'],40,3.6);sfxRoar(0,1.4,.3)}
+  else{
+    ring({col,w:10,dur:1200});hero(it.e,{size:190,anim:'pop',dur:3200,glow:col});
+    burst(CX(),CY(),{col,n:40,speed:460,glow:14});
+    rain(['💸','❤️','▶️'],Math.min(60,20+q),3.2);
+    sfxFanfare(0);
+  }
+  text(`SUPER CHAT ${fmt(tot)}`,{y:VH*.74,size:Math.min(44,VW/12),col:'#fde047',dur:2800});
+}
+function twGift(it,q,tot){
+  if(it.f=='h'||it.n.includes('Train')){
+    tint('rgba(145,70,255,A)',4000,.6);shakeFX(12);
+    hero('🚂',{x:-100,y:VH*.36,size:160,anim:'fly',dur:3400});
+    for(let i=0;i<5;i++)at(i*600,()=>{burst(VW*rnd(.2,.8),VH*.5,{chs:['💜','👑','🎉'],n:10,speed:340,sz:26});sfxTone(440+i*120,.2,'square',.08)});
+    text('HYPE TRAIN ROLLING 🚂',{y:VH*.18,size:Math.min(48,VW/10),col:'#d8b4fe',dur:3200});
+  }else{
+    tint('rgba(145,70,255,A)',3600,.5);
+    ring({col:'#9146ff',w:8,dur:1300});ring({col:'#00f5d4',w:5,dur:1500,delay:200});
+    hero('💎',{size:190,anim:'pop',dur:3400,glow:'rgba(167,139,250,1)'});
+    rain(['💎','💜','✨','⚡'],Math.min(60,20+q),3.4);
+    [880,1108,1318,1760].forEach((f,i)=>sfxTone(f,.3,'sine',.1,i*.09));
+  }
+  text(`${multTxt(q)}${it.n}!`,{y:VH*.74,size:Math.min(40,VW/12),col:'#c4b5fd',dur:2800});
+}
+function platformGift(c,it,q,tot){
+  tint(`${hexToRgba(c.c,.55)}`,3600,1);
+  ring({col:c.c,w:8,dur:1300});
+  hero(it.e,{size:180,anim:'pop',dur:3400,glow:c.c});
+  rain([it.e,'✨','🔥','💎','🎉'],Math.min(60,20+q),3.2);
+  if(tot>=1000)shakeFX(10);
+  sfxFanfare(0);
+  text(`${c.n}: ${multTxt(q)}${it.n}!`,{y:VH*.74,size:Math.min(40,VW/12),col:'#fff',dur:2800});
+}
+function hexToRgba(hex,a){
+  const h=hex.replace('#','');const n=parseInt(h.length==3?h.split('').map(x=>x+x).join(''):h,16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+
+// ---------- Everyday purchases: a themed reveal per category ----------
+function celebrate(c,it,q,tot){
+  const cat=c.cat,label=`${multTxt(q)}${it.n}`;
+  const fx={
+    Cars:()=>{tint('rgba(15,23,42,A)',3600,.5);hero(it.e,{size:200,anim:'fly',dur:3600});for(let i=0;i<8;i++)at(i*160,()=>burst(VW*(i/8),VH*.78,{chs:['💨','🔥'],n:4,speed:260,sz:30}));sfxTone(65,1.4,'sawtooth',.14,0,340);sfxNoise(.6,.14,1.2,2800,700)},
+    Space:()=>{tint('rgba(30,27,75,A)',4200,.9);stars(90);hero(it.e,{size:200,anim:'rise',dur:3600});shakeFX(8);sfxBoom(0,.5)},
+    Property:()=>{tint('rgba(15,118,110,A)',3800,.5);hero('🔑',{size:180,anim:'drop',dur:2800});at(900,()=>{ring({col:'#7dd3fc',w:8,dur:1200});sfxTone(392,.5,'triangle',.1)});rain(['🏡','📐','🔑','✨'],22,3.4)},
+    Luxury:()=>{tint('rgba(253,224,71,A)',3800,.35);hero(it.e,{size:190,anim:'pop',dur:3600,glow:'rgba(253,224,71,1)'});rain(['💎','✨','👑','🥂'],34,3.6);sfxSparkle(0)},
+    Fashion:()=>{tint('rgba(236,72,153,A)',3400,.35);hero(it.e,{size:190,anim:'fade',dur:3200});rain(['✨','💫','🌟'],26,3);sfxSparkle(0)},
+    Food:()=>{tint('rgba(251,146,60,A)',3200,.35);hero(it.e,{size:180,anim:'roar',dur:3000});rain(['🍽️','😋','✨','🔥'],30,3);sfxTone(587,.25,'sine',.1);sfxTone(880,.35,'sine',.1,.2)},
+    Tech:()=>{tint('rgba(5,46,22,A)',3400,.6);hero(it.e,{size:180,anim:'pop',dur:3200,glow:'rgba(52,211,153,1)'});ring({col:'#2be08f',w:6,dur:1200});rain(['⚡','💻','✨','🔊'],26,3);sfxTone(880,.1,'square',.05);sfxTone(1320,.1,'square',.05,.12)},
+    Gaming:()=>{tint('rgba(30,27,75,A)',3400,.6);hero(it.e,{size:180,anim:'pop',dur:3200});rain(['🎮','🕹️','✨','⭐'],26,3);sfxTone(523,.1,'square',.06);sfxTone(784,.1,'square',.06,.1);sfxTone(1046,.2,'square',.06,.2)},
+    Charity:()=>{tint('rgba(16,185,129,A)',3800,.5);ring({col:'#34d399',w:8,dur:1400});hero(it.e,{size:180,anim:'rise',dur:3400});rain(['💖','💚','🕊️','✨'],34,3.8);sfxFanfare(0)},
+    Sports:()=>{tint('rgba(29,78,216,A)',3500,.4);confetti(90,3.2);hero(it.e,{size:180,anim:'pop',dur:3200});sfxFanfare(0)},
+    Fun:()=>{tint('rgba(239,68,68,A)',3400,.35);confetti(70,3.2);hero(it.e,{size:180,anim:'pop',dur:3200});sfxFanfare(0)},
+    Finance:()=>{tint('rgba(5,150,105,A)',3600,.5);hero('📈',{size:170,anim:'rise',dur:3400});rain(['💰','🪙','💵','📈'],32,3.4);sfxTone(988,.15,'sine',.12);sfxTone(1318,.4,'sine',.12,.14)},
+    Pets:()=>{tint('rgba(56,189,248,A)',3400,.35);hero(it.e,{size:190,anim:'roar',dur:3200});rain(['🐾','❤️','✨'],24,3.2);sfxTone(620,.12,'square',.1);sfxTone(380,.12,'square',.1,.3)}
+  };
+  const run=fx[cat]||(()=>{tint('rgba(91,61,245,A)',3000,.45);hero(it.e,{size:180,anim:'pop',dur:3000});confetti(60,3)});
+  run();
+  if(tot>=50000){flashFX(.3);shakeFX(10)}
+  text(`${label} ✓`,{y:VH*.74,size:Math.min(40,VW/12),col:'#fff',dur:2800});
+  text(fmtS(tot),{y:VH*.8,size:Math.min(22,VW/20),col:'#e0e7ff',dur:2600,delay:100});
+  fxKick();
+}
+function stars(n){
+  for(let i=0;i<n;i++)emit({x:rnd(0,VW),y:rnd(0,VH),vx:0,vy:0,g:0,drag:1,life:rnd(1.5,3),sz:rnd(1.5,3.5),kind:'spark',col:'#fff',glow:8});
+  fxKick();
+}
+
+// =====================================================================
+// LIVE STREAM STUDIO — TikTok / YouTube / Twitch / other platforms
+// =====================================================================
 let liveTimer=null,liveCloseTimer=null;
 function openLiveStudio(c,it,q,tot,msg){
-  clearInterval(liveTimer);
-  clearTimeout(liveCloseTimer);
-
-  const isTT=c.n=='TikTok',
-        isYT=c.n=='YouTube',
-        isTW=c.n=='Twitch',
-        platformMode=isYT?'yt-mode':isTW?'tw-mode':'';
-
+  clearInterval(liveTimer);clearTimeout(liveCloseTimer);
+  const isYT=c.n=='YouTube',isTW=c.n=='Twitch',isTT=/TikTok/.test(c.n),
+        mode=isYT?'yt-mode':isTW?'tw-mode':'';
   const creators=isYT?[
     {n:'@LinusTechTipsLive',av:'💻',title:'WAN SHOW LIVE · READING SUPER CHATS 🔴'},
     {n:'@LudwigLive',av:'🎙️',title:'SUBATHON FINALE · DONO WALL ON 🔥'},
@@ -1043,164 +1478,101 @@ function openLiveStudio(c,it,q,tot,msg){
     {n:'speed_streams',av:'⚡',title:'DONO WALL = INSANE REACTION'}
   ];
   const cr=pick(creators);
-
-  let viewers=Math.round(rnd(16400,54900)),
-      likes=Math.round(rnd(95000,480000)),
-      pkPct=Math.min(96,54+Math.round(Math.log10(tot+1)*10));
-
-  const th=[5,10,20,50,100,200,500],
-        cl=['#1e88e5','#00bcd4','#10b981','#f59e0b','#f97316','#ec4899','#ef4444'],
-        scColor=cl[Math.min(6,th.filter(x=>tot>=x).length)];
-
-  const meterLeft=isYT?`🔴 Super Chat Goal · ${(tot*150).toLocaleString()} pts`:isTW?`🚂 Hype Train Lv.${Math.min(10,1+Math.floor(Math.log10(tot+1)*2))} · 100%`:`🔥 ${cr.n} · ${(tot*120).toLocaleString()} pts`;
+  let viewers=Math.round(rnd(16400,54900)),likes=Math.round(rnd(95000,480000));
+  const pkPct=clamp(54+Math.round(Math.log10(tot+1)*10),5,96);
+  const meterLeft=isYT?`🔴 Super Chat Goal · ${(tot*150).toLocaleString()} pts`:isTW?`🚂 Hype Train Lv.${clamp(1+Math.floor(Math.log10(tot+1)*2),1,10)} · 100%`:`🔥 ${cr.n} · ${(tot*120).toLocaleString()} pts`;
   const meterRight=isYT?'Milestone Unlocked 🏆':isTW?'Conductor: YOU 👑':'Rival · 14,200 pts';
+  const scColor=['#1e88e5','#00bcd4','#10b981','#f59e0b','#f97316','#ec4899','#ef4444'][clamp([5,10,20,50,100,200,500].filter(x=>tot>=x).length,0,6)];
 
-  const e=show('lay',`
-    <div class="tt-live ${platformMode}">
+  show('lay',`
+    <div class="tt-live ${mode}">
       <div class="tt-stage">
         <div class="tt-avatar-ring"><div class="tt-avatar">${cr.av}</div></div>
         <div style="margin-top:12px;font-weight:800;font-size:13.5px;letter-spacing:.03em;opacity:.92;text-align:center;padding:0 16px">${cr.title}</div>
         <div class="tt-eq"><i></i><i></i><i></i><i></i><i></i></div>
       </div>
-
       <div class="tt-top">
         <div class="tt-bar">
           <div class="tt-creator">
             <div class="av">${cr.av}</div>
             <div><b>${cr.n}</b><small id="ttLikes">❤️ ${likes.toLocaleString()}</small></div>
-            <button class="tt-follow" id="ttFollow">${isYT?'Subscribe':isTW?'Follow':'Follow'}</button>
+            <button class="tt-follow" id="ttFollow">${isYT?'Subscribe':'Follow'}</button>
           </div>
           <div class="tt-stats">
             <div class="tt-pill"><span class="tt-live-tag">LIVE</span> 👁️ <span id="ttViewers">${viewers.toLocaleString()}</span></div>
             <button class="tt-close" id="ttClose">✕</button>
           </div>
         </div>
-
         <div class="tt-pk">
-          <div class="tt-pk-labels">
-            <span style="color:${isYT?'#fca5a5':isTW?'#d8b4fe':'#fda4af'}">${meterLeft}</span>
-            <span style="color:#93c5fd">${meterRight}</span>
-          </div>
+          <div class="tt-pk-labels"><span style="color:${isYT?'#fca5a5':isTW?'#d8b4fe':'#fda4af'}">${meterLeft}</span><span style="color:#93c5fd">${meterRight}</span></div>
           <div class="tt-pk-track"><div class="tt-pk-fill" id="ttPkFill" style="width:48%"></div></div>
         </div>
-
-        ${isYT?`
-          <div class="yt-ticker">
+        ${isYT?`<div class="yt-ticker">
             <div class="yt-chip" style="background:${scColor};color:#fff">${it.e} YOU · ${fmt(tot)}</div>
             <div class="yt-chip" style="background:#1e88e5;color:#fff">🍁 MapleFan · $20</div>
-            <div class="yt-chip" style="background:#10b981;color:#fff">🎮 RetroKid · $50</div>
-          </div>`:`<div class="tt-vip">👑 #1 TOP SUPPORTER: YOU (${fmt(tot)})</div>`}
-
+            <div class="yt-chip" style="background:#10b981;color:#fff">🎮 RetroKid · $50</div></div>`
+          :`<div class="tt-vip">👑 #1 TOP SUPPORTER: YOU (${fmt(tot)})</div>`}
         <div class="tt-gift-combo">
           <div class="gi">${it.e}</div>
-          <div style="flex:1">
-            <div style="font-weight:900;font-size:13.5px">YOU sent ${it.n}</div>
-            <div style="font-size:11.5px;opacity:.9">${c.n} Live · ${fmt(tot)}</div>
-          </div>
+          <div style="flex:1"><div style="font-weight:900;font-size:13.5px">YOU sent ${it.n}</div>
+            <div style="font-size:11.5px;opacity:.9">${c.n} Live · ${fmt(tot)}</div></div>
           <div class="gx">×${q.toLocaleString()}</div>
         </div>
       </div>
-
       <div class="tt-fountain" id="ttFountain"></div>
-
       <div class="tt-bot">
-        ${it.f=='s'||msg||isYT?`
-          <div class="tt-sc-pin" style="--c:${scColor}">
+        ${it.f=='s'||msg||isYT?`<div class="tt-sc-pin" style="--c:${scColor}">
             <div class="hd"><span>${isYT?'💬 YOUTUBE SUPER CHAT':'💬 PINNED MESSAGE'} · YOU</span><span>${fmt(tot)}</span></div>
             <div class="bd">${msg?msg.replace(/</g,'&lt;'):`Dropped ${fmt(tot)} (${q>1?q+'× ':''}${it.n}) live on stream! 🔥`}</div>
-            <u></u>
-          </div>`:''}
-        <div class="tt-chat-wrap">
-          <div class="tt-chat" id="ttChat"></div>
-        </div>
+            <u></u></div>`:''}
+        <div class="tt-chat" id="ttChat"></div>
         <div class="tt-rx" id="ttRx">🎙️ Connecting to creator mic…</div>
         <div class="tt-actions">
           <button class="tt-fake-in" id="ttHypeBtn">🔥 Hype in chat: "W STREAM!!"</button>
           <button class="tt-heart-btn" id="ttHeartBtn">${isYT?'👍':isTW?'💜':'❤️'}</button>
         </div>
       </div>
-    </div>
-  `);
+    </div>`);
 
   $('#ttClose').onclick=()=>{clearInterval(liveTimer);clearTimeout(liveCloseTimer);cls('lay')};
-  $('#ttFollow').onclick=function(){this.textContent=isYT?'Subscribed ✓':'Following ✓';this.style.background='#ffffff33';ding(880,.08)};
+  $('#ttFollow').onclick=function(){this.textContent=isYT?'Subscribed ✓':'Following ✓';this.style.background='#ffffff33';sfxDing(880,.08)};
 
   const spawnHeart=(emoji='❤️')=>{
     const h=document.createElement('div');
-    h.className='tt-fheart';
-    h.textContent=emoji;
-    h.style.right=rnd(4,34)+'px';
-    $('#ttFountain').append(h);
-    setTimeout(()=>h.remove(),2200);
+    h.className='tt-fheart';h.textContent=emoji;h.style.right=rnd(4,34)+'px';
+    $('#ttFountain').append(h);setTimeout(()=>h.remove(),2200);
     likes+=Math.round(rnd(25,160));
     if($('#ttLikes'))$('#ttLikes').textContent='❤️ '+likes.toLocaleString();
   };
-
   $('#ttHeartBtn').onclick=()=>{
     spawnHeart(isYT?pick(['👍','❤️','🔥','🎉','💯']):isTW?pick(['💜','💎','🚂','🔥','👑']):pick(['❤️','💖','🔥','✨','👑']));
-    ding(740+Math.random()*300,.05);
+    sfxDing(740+Math.random()*300,.05);
   };
-
-  const USERS=[
-    ['xX_Gamer','MOD','#10b981'],
-    ['mochi_to','VIP','#f59e0b'],
-    ['TorontoMans','MEMBER','#3b82f6'],
-    ['kayla_k','LVL 48','#ec4899'],
-    ['NightOwl','TOP 3','#8b5cf6'],
-    ['lofi_girl','SUB','#06b6d4'],
-    ['楓_maple','MOD','#10b981']
-  ];
-  const MSGS=[
-    'NO WAY HE JUST SENT THAT 😱😱',
-    'W MANS IN THE CHAT 🔥🔥🔥',
-    'CLIP IT RIGHT NOW!!',
-    'WHO IS THIS CANADIAN BILLIONAIRE?! 🍁💸',
-    'INSTANT LEGEND IN CHAT 🏆',
-    'BRO IS CARRYING THE WHOLE STREAM',
-    'SHEEEESH 🥶🥶🥶'
-  ];
-
+  const USERS=[['xX_Gamer','MOD','#10b981'],['mochi_to','VIP','#f59e0b'],['TorontoMans','MEMBER','#3b82f6'],['kayla_k','LVL 48','#ec4899'],['NightOwl','TOP 3','#8b5cf6'],['lofi_girl','SUB','#06b6d4'],['楓_maple','MOD','#10b981']];
+  const MSGS=['NO WAY HE JUST SENT THAT 😱😱','W MANS IN THE CHAT 🔥🔥🔥','CLIP IT RIGHT NOW!!','WHO IS THIS CANADIAN BILLIONAIRE?! 🍁💸','INSTANT LEGEND IN CHAT 🏆','BRO IS CARRYING THE WHOLE STREAM','SHEEEESH 🥶🥶🥶'];
   const addChat=(u,badge,bcol,text)=>{
-    const ch=$('#ttChat');
-    if(!ch)return;
+    const ch=$('#ttChat');if(!ch)return;
     ch.insertAdjacentHTML('beforeend',`<div class="tt-msg"><span class="tt-badge" style="background:${bcol}">${badge}</span><b>${u}:</b> ${text}</div>`);
     if(ch.children.length>7)ch.firstChild.remove();
   };
+  $('#ttHypeBtn').onclick=()=>{addChat('YOU','👑 #1','#eab308','W STREAM!! LETS GOOOO 🔥🚀');spawnHeart('🔥');spawnHeart('🚀');sfxDing(980,.08)};
 
-  $('#ttHypeBtn').onclick=()=>{
-    addChat('YOU','👑 #1','#eab308','W STREAM!! LETS GOOOO 🔥🚀');
-    spawnHeart('🔥');spawnHeart('🚀');
-    ding(980,.08);
-  };
+  // Live spectacle: the same cinematic engine that drives the shop
+  fireGift(c,it,q,tot);
 
-  // Trigger platform-specific visual & synthesized audio effects!
-  if(isTT&&G[it.n]){
-    tikgift(it,q);
-  }else if(isYT){
-    playYouTubeGiftFX(it,q,tot,scColor);
-  }else if(isTW){
-    playTwitchGiftFX(it,q,tot);
-  }else{
-    playPlatformGiftFX(c,it,q,tot);
-  }
-
-  // Surge meter & viewers
   setTimeout(()=>{
     if($('#ttPkFill'))$('#ttPkFill').style.width=pkPct+'%';
     viewers+=Math.round(tot*2.2+rnd(2000,7500));
     if($('#ttViewers'))$('#ttViewers').textContent=viewers.toLocaleString();
   },320);
 
-  // Typewriter streamer reaction
   const rxLine=`YO WHAT?! ${q>1?q.toLocaleString()+'× ':''}${it.n} (${fmt(tot)}) FROM YOU?! ${msg?'“'+msg+'” — ':''}CHAT SPAM W’S RIGHT NOW!!`;
-  let charIdx=0;
-  const ty=setInterval(()=>{
+  let ci=0;const ty=setInterval(()=>{
     if(!$('#ttRx')){clearInterval(ty);return}
-    $('#ttRx').textContent='🎙️ '+rxLine.slice(0,++charIdx);
-    if(charIdx>=rxLine.length)clearInterval(ty);
+    $('#ttRx').textContent='🎙️ '+rxLine.slice(0,++ci);
+    if(ci>=rxLine.length)clearInterval(ty);
   },22);
 
-  // Fast live chat + floating heart fountain loop
   liveTimer=setInterval(()=>{
     const[u,bg,bc]=pick(USERS);
     addChat(u,bg,bc,pick(MSGS));
@@ -1208,417 +1580,286 @@ function openLiveStudio(c,it,q,tot,msg){
     viewers+=Math.round(rnd(50,420));
     if($('#ttViewers'))$('#ttViewers').textContent=viewers.toLocaleString();
   },380);
-
-  liveCloseTimer=setTimeout(()=>{clearInterval(liveTimer);cls('lay')},9500);
+  liveCloseTimer=setTimeout(()=>{clearInterval(liveTimer);cls('lay')},11000);
 }
 
-// Bespoke YouTube Live Super Chat & Super Sticker Full-Screen Animations
-function playYouTubeGiftFX(it,q,tot,scColor){
-  K=1+Math.min(1.8,Math.log10(q));
-  if(it.n.includes('Cat')){
-    tint('radial-gradient(#ff000055,#000c)',3600);
-    big('🐱',190,3400,[{transform:'scale(.2) rotate(-18deg)',opacity:0},{transform:'scale(1.25) rotate(8deg)',opacity:1,offset:.2},{transform:'scale(1) rotate(-6deg)',offset:.45},{transform:'scale(1.12) rotate(5deg)',offset:.7},{opacity:0}]);
-    pops(['🐾','❤️','▶️','✨'],26,300,32,1800,.15);
-    cap('Super Sticker Cat! 🐱','#fca5a5');
-    tone(520,.22,'triangle',.14,0,940);
-    tone(940,.32,'triangle',.14,.22,480);
-  }else if(it.n.includes('Fire')){
-    tint('radial-gradient(#f9731677,#7f1d1dcc 55%,#000d)',3800);
-    row('🔥',86,'0',3800,[{transform:'translateY(90px)'},{transform:'translateY(0)',offset:.2},{transform:'translateY(-10px)',offset:.8},{transform:'translateY(90px)'}]);
-    big('🔥',190,3400,POP);
-    pops(['🔥','💥','▶️','⚡'],32,380,34,1900,.1);
-    shk();
-    cap('Super Sticker LIT! 🔥','#fdba74');
-    noise(1.8,.22,0,1400,300);
-    tone(130,.9,'sawtooth',.16,0,65);
-  }else{
-    tint(`radial-gradient(${scColor}66,#000c)`,3600);
-    ring(scColor,0);
-    ring('#ffffff',.22);
-    big(it.e,165,3200,POP);
-    pops(['▶️','💸','❤️','🔥','👑'],34,400,34,2000,.1);
-    rain(['💸','❤️','▶️'],26,0,3400);
-    if(tot>=100)shk();
-    cap(`SUPER CHAT ${fmt(tot)}!`,'#fde047');
-    [523.25,659.25,783.99,1046.5,1318.5].forEach((hz,idx)=>tone(hz,.35,'triangle',.11,idx*.08));
-  }
-}
-
-// Bespoke Twitch Hype Train & Bits Cheer Full-Screen Animations
-function playTwitchGiftFX(it,q,tot){
-  K=1+Math.min(1.8,Math.log10(q));
-  tint('radial-gradient(#9146ff77,#1e1b4bdd 55%,#000e)',4000);
-  if(it.f==='h'||it.n.includes('Train')){
-    shk();
-    cross('🚂',135,54,3.6,-1,0,0);
-    [0,.35,.7,1.05,1.4].forEach(t=>cross('💜',62,46,2.2,-1,t,-20));
-    pops(['🚂','💜','🎉','👑','⚡'],36,420,34,2100,.2);
-    cap('🚂 HYPE TRAIN CONDUCTOR!','#d8b4fe');
-    tone(440,.25,'square',.1,0);
-    tone(554.37,.25,'square',.1,.25);
-    tone(659.25,.55,'square',.11,.5);
-  }else{
-    ring('#9146ff',0);
-    ring('#00f5d4',.2);
-    big('💎',175,3400,POP);
-    rain(['💎','💜','✨','⚡'],34,0,3400);
-    cap(`💎 ${q>1?q+'× ':''}${it.n}!`,'#c4b5fd');
-    [880,1108.73,1318.51,1760].forEach((hz,idx)=>tone(hz,.3,'sine',.1,idx*.09));
-  }
-}
-
-// Bespoke Discord, Reddit, Roblox, Epic Games, Riot & Kick Gift Animations
-function playPlatformGiftFX(c,it,q,tot){
-  K=1+Math.min(1.6,Math.log10(q));
-  tint(`radial-gradient(${c.c}77,#000d)`,3600);
-  ring(c.c,0);
-  big(it.e,165,3200,POP);
-  pops([it.e,'✨','🔥','💎','🎉'],32,380,32,1900,.1);
-  rain([it.e,'✨'],24,0,3400);
-  if(tot>=1000)shk();
-  cap(`${c.n}: ${q>1?q+'× ':''}${it.n}!`,'#fff');
-  [587.33,739.99,880,1174.66].forEach((hz,idx)=>tone(hz,.3,'triangle',.1,idx*.09));
-}
-
-// =========================================================
-// UPGRADED SOCIAL MEDIA AD CAMPAIGN / VIRAL FEED SIMULATOR
-// =========================================================
+// =====================================================================
+// VIRAL AD CAMPAIGN SIMULATOR
+// =====================================================================
 function openViralAdSim(c,it,tot){
   const imp=Math.round(tot/6*1000*rnd(.85,1.25)),
         clk=Math.round(imp*rnd(.018,.034)),
         sal=Math.round(clk*rnd(.03,.07)),
         lks=Math.round(imp*rnd(.04,.09)),
         shs=Math.round(lks*rnd(.08,.18));
-
-  S.imp+=imp;
-  S.c+=Math.log10(imp+1)*2.5;
-
+  S.imp+=imp;S.c+=Math.log10(imp+1)*2.5;
   const e=show('lay',`
     <div class="ad-phone">
       <div class="ad-hdr" style="background:${c.c}">
         <span>${c.e} ${c.n} Ads Manager</span>
         <span style="background:#0004;padding:3px 9px;border-radius:99px;font-size:11px">● BOOSTING LIVE</span>
       </div>
-
       <div class="ad-post">
         <div class="ad-user">
           <div class="uav">YOU</div>
-          <div style="flex:1;line-height:1.2">
-            <b style="font-size:13.5px">@you_official ✓</b>
-            <small style="display:block;color:var(--mut);font-size:11px">Sponsored · ${it.n}</small>
-          </div>
+          <div style="flex:1;line-height:1.2"><b style="font-size:13.5px">@you_official ✓</b>
+            <small style="display:block;color:var(--mut);font-size:11px">Sponsored · ${it.n}</small></div>
           <span style="background:var(--acc);color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px">Trending #1</span>
         </div>
-        <div class="ad-media" style="background:linear-gradient(135deg,${c.c},#1e1b4b)">
-          ${it.e}
-          <span>Budget: ${fmt(tot)}</span>
-        </div>
+        <div class="ad-media" style="background:linear-gradient(135deg,${c.c},#1e1b4b)">${it.e}<span>Budget: ${fmt(tot)}</span></div>
         <div class="ad-eng">
           <span>❤️ <i data-v="${lks}">0</i></span>
           <span>🔁 <i data-v="${shs}">0</i></span>
           <span>🚀 Viral Score 99/100</span>
         </div>
       </div>
-
       <div class="cnt">
         <div><b data-v="${imp}">0</b><small>Impressions</small></div>
         <div><b data-v="${clk}">0</b><small>Profile Clicks</small></div>
         <div><b data-v="${sal}">0</b><small>Conversions</small></div>
       </div>
-
       <div class="pb"><i></i></div>
       <div style="padding:12px 16px 16px;text-align:center">
-        <small style="color:var(--mut)">Clout &amp; Impressions added to your profile. Tap outside to close.</small>
+        <small style="color:var(--mut)">Clout &amp; impressions added to your profile. Tap outside to close.</small>
       </div>
-    </div>
-  `);
-
-  burst('📈',1,tot,'');
+    </div>`);
+  // Ad campaigns get a feed-reveal flourish on the canvas
+  rain(['📈','🔥','👀','❤️'],Math.min(40,10+Math.round(Math.log10(tot+1)*4)),2.6);
+  flashFX(.15);sfxDing(660,.12);at(150,()=>sfxDing(990,.16));
   const t0=performance.now();
   (function s(t){
-    const k=Math.min(1,(t-t0)/3200);
-    const ease=1-Math.pow(1-k,3);
+    const k=Math.min(1,(t-t0)/3200),ease=1-Math.pow(1-k,3);
     e.querySelectorAll('[data-v]').forEach(b=>b.textContent=Math.round(b.dataset.v*ease).toLocaleString());
     if(k<1)requestAnimationFrame(s);
   })(t0);
-  ding(660,.12);
-  setTimeout(()=>ding(990,.16),150);
   renderTabs();
 }
 
-// ---- TikTok Gift Animations (Visuals + Synthesized Audio)
-const GF=document.createElement('div');
-GF.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:55;overflow:hidden';
-document.body.append(GF);
-let K=1;
-const shk=()=>{document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),600)},
-      C42='left:50%;top:42%;';
+// =====================================================================
+// VENTURES & MARKETS — stocks, property, startups, businesses, philanthropy
+// =====================================================================
+function receipt(e,n,s,tot,credit=false){
+  S.rec.unshift({e,n,s,q:1,tot:credit?-Math.abs(tot):Math.abs(tot),t:Date.now(),d:1});
+  S.rec=S.rec.slice(0,150);
+}
+function spend(amount,label){
+  if(amount>S.bal+1e-9){toast(`Not enough cash for ${label} (need ${fmt(amount)})`);sfxTone(150,.25,'sawtooth');return false}
+  S.bal=+(S.bal-amount).toFixed(2);S.spent+=amount;setBal(-1);flt('−'+fmt(amount));return true;
+}
+function earn(amount,e,label,s){
+  S.bal=+(S.bal+amount).toFixed(2);setBal(1);flt('+'+fmt(amount),1);receipt(e,label,s,amount,true);
+}
+function sparkSVG(hist,col){
+  if(hist.length<2)return '';
+  const mn=Math.min(...hist),mx=Math.max(...hist),rg=mx-mn||1;
+  const pts=hist.map((v,i)=>`${(i/(hist.length-1)*120).toFixed(1)},${(38-(v-mn)/rg*34).toFixed(1)}`);
+  return `<svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none"><defs><linearGradient id="g${col.slice(1)}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".35"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs><polygon points="0,40 ${pts.join(' ')} 120,40" fill="url(#g${col.slice(1)})"/><polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+}
+function delta(x){const d=(x.p-x.prev)/x.prev*100;return d}
 
-function tone(f,d,ty='sine',v=.15,at=0,f2){
-  try{
-    ac=ac||new AudioContext();
-    const t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();
-    o.type=ty;o.frequency.setValueAtTime(f,t);
-    if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
-    g.gain.setValueAtTime(.0001,t);
-    g.gain.linearRampToValueAtTime(v,t+Math.min(.04,d/3));
-    g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.05);
-  }catch(e){}
+function renderVentures(){
+  const pw=portfolioValue();
+  const stockRows=mkt.map(x=>{
+    const h=S.stk[x.t],d=delta(x),col=d>=0?'var(--ok)':'var(--bad)';
+    const held=h?`<small>Held: ${h.q.toLocaleString()} sh · Avg ${fmt(h.cost)} · Value ${fmt(h.q*x.p)}</small>`:'<small>Not held</small>';
+    return `<div class="stock-row">
+      <span style="width:42px;height:42px;border-radius:12px;background:${x.c}2e;display:grid;place-items:center;font-weight:900;font-size:12px;color:${x.c}">${x.t}</span>
+      <div><b>${x.name}</b><small>${x.theme} · <span style="color:${col};font-weight:800">${d>=0?'▲':'▼'} ${Math.abs(d).toFixed(2)}%</span> · ${fmt(x.p)}</small>
+        ${sparkSVG(x.hist,x.c)}${held}
+        <div class="qbtns">
+          <button class="buy" data-act="buyStock|${x.t}|1">Buy 1</button>
+          <button class="ghost" data-act="buyStock|${x.t}|10">+10</button>
+          <button class="ghost" data-act="buyStock|${x.t}|100">+100</button>
+          ${h?`<button class="ghost" data-act="sellStock|${x.t}|1">Sell 1</button><button class="ghost" data-act="sellStock|${x.t}|all">Sell all</button>`:''}
+        </div></div></div>`;
+  }).join('');
+
+  const propRows=PROPERTIES.map(p=>`<div class="row"><span>${p.e}</span>
+      <div><b>${p.n}</b><small>${fmt(p.price)} · Rent +${fmt(p.rent)}/20s · Tax −${fmt(p.tax)}/20s · Appreciates ${(p.apprec*100).toFixed(2)}%/cycle</small></div>
+      <button class="buy" data-act="buyProp|${p.id}|1">Buy</button></div>`).join('');
+  const ownProps=S.prop.map((p,i)=>`<div class="rec"><span style="font-size:24px">${p.e}</span>
+      <div><b>${p.n}</b><small>Value ${fmt(p.value)} · +${fmt(p.rent)} rent −${fmt(p.tax)} tax /20s</small></div>
+      <button class="sell-btn" data-act="sellProp|${i}|1">Sell ${fmt(p.value*.96)}</button></div>`).join('');
+
+  const startupRows=STARTUPS.map(s=>`<div class="row"><span>${s.e}</span>
+      <div><b>${s.n}</b><small>${s.stage} · ${Math.round(s.win*100)}% chance to close up · Risk: ${s.risk}</small></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><button class="buy" data-act="investStartup|${s.id}|10000">$10k</button><button class="ghost" data-act="investStartup|${s.id}|250000">$250k</button></div></div>`).join('');
+  const startupOwned=S.biz.map((b,i)=>b.kind!='startup'?'':`<div class="rec"><span style="font-size:24px">${b.e}</span>
+      <div><b>${b.name}</b><small>Invested ${fmt(b.invested)} · Stake value ${b.dead?'—':fmt(b.val)} · ${b.notes||'Live'}</small></div>
+      ${b.dead?`<b style="color:var(--bad)">Failed</b>`:`<button class="sell-btn" data-act="exitStartup|${i}|1">Exit ${fmt(b.val*.9)}</button>`}</div>`).join('');
+
+  const bizRows=BIZ_TYPES.map(b=>`<div class="row"><span>${b.e}</span>
+      <div><b>${b.n}</b><small>${fmt(b.cost)} · Income ${fmt(b.income)}/20s · Upkeep ${fmt(b.upkeep)}/20s · Staff pay ${fmt(b.staffPay)}/20s each</small></div>
+      <button class="buy" data-act="buyBiz|${b.id}|1">Buy</button></div>`).join('');
+  const ownBiz=S.biz.map((b,i)=>b.kind!='biz'?'':`<div class="rec"><span style="font-size:24px">${b.e}</span>
+      <div><b>${b.name}</b><small>${b.staff||0} staff · Net ${fmtS(b.income*(1+(b.staff||0)*.15)-b.upkeep-(b.staff||0)*b.staffPay)}/20s</small></div>
+      <button class="ghost" data-act="hireStaff|${i}|1">Hire +1 (${fmt(5000)})</button>
+      ${(b.staff||0)>0?`<button class="ghost" data-act="fireStaff|${i}|1">Let go</button>`:''}
+      <button class="sell-btn" data-act="sellBiz|${i}|1">Sell ${fmt(b.val*.6)}</button></div>`).join('');
+
+  const causes=[['🩺','Hospital wing gift',10000],['🐶','Animal shelter drive',100000],['🏫','Build a school',1000000],['🌊','Flood relief',10000000]];
+  const donateRows=causes.map(([e,n,a])=>`<div class="row"><span>${e}</span><div><b>${n}</b><small>Earns karma ${Math.round(Math.log10(a+1)*3)} · Clout +${Math.round(Math.log10(a+1))}</small></div>
+      <button class="buy" data-act="donate|${a}|1">${fmt(a)}</button></div>`).join('');
+
+  $('#v').innerHTML=`
+    <div class="rec"><div>
+      <b style="font-size:16px">📊 Markets & ventures</b>
+      <small>Cash ${fmt(S.bal)} · Portfolio ${fmt(pw)} · Property ${fmt(propValue())} · Business & startups ${fmt(bizValue())}</small>
+    </div></div>
+    <div class="sec-h">📈 Stock market · ticks every 3s · news shocks happen</div>
+    <div class="grid" style="grid-template-columns:1fr">${stockRows}</div>
+    <div class="sec-h">🏠 Real estate · rent every 20s, values appreciate</div>
+    <div class="grid" style="grid-template-columns:1fr">${propRows}</div>
+    ${ownProps?`<div class="sec-h">Your properties</div>${ownProps}`:''}
+    <div class="sec-h">🚀 Startups · funding rounds resolve every 60s</div>
+    <div class="grid" style="grid-template-columns:1fr">${startupRows}</div>
+    ${startupOwned?`<div class="sec-h">Your startup stakes</div>${startupOwned}`:''}
+    <div class="sec-h">🏢 Businesses · hire staff to multiply income</div>
+    <div class="grid" style="grid-template-columns:1fr">${bizRows}</div>
+    ${ownBiz?`<div class="sec-h">Your businesses</div>${ownBiz}`:''}
+    <div class="sec-h">💚 Philanthropy · earns karma and clout</div>
+    <div class="grid" style="grid-template-columns:1fr">${donateRows}</div>`;
 }
 
-function noise(d,v=.1,at=0,hz=1000,hz2){
-  try{
-    ac=ac||new AudioContext();
-    const t=ac.currentTime+at,n=ac.sampleRate*d|0,b=ac.createBuffer(1,n,ac.sampleRate),x=b.getChannelData(0);
-    for(let i=0;i<n;i++)x[i]=Math.random()*2-1;
-    const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();
-    s.buffer=b;f.frequency.setValueAtTime(hz,t);
-    if(hz2)f.frequency.exponentialRampToValueAtTime(hz2,t+d);
-    g.gain.setValueAtTime(v,t);
-    g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    s.connect(f);f.connect(g);g.connect(ac.destination);s.start(t);
-  }catch(e){}
-}
-
-function el(h,css,kf,o){
-  const e=document.createElement('div');
-  e.innerHTML=h;
-  e.style.cssText='position:absolute;'+css;
-  GF.append(e);
-  e.animate(kf,{fill:'both',easing:'ease-out',...o}).onfinish=()=>e.remove();
-  return e;
-}
-
-function rain(a,n,up,T=3000){
-  n=Math.round(n*K);
-  for(let i=0;i<n;i++)el(pick(a),`left:${rnd(2,94)}vw;top:0;font-size:${rnd(18,50)}px`,[{transform:`translateY(${up?105:-12}vh)`},{transform:`translate(${rnd(-40,40)}px,${up?-12:105}vh) rotate(${rnd(-250,250)}deg)`}],{duration:rnd(T*.6,T),delay:rnd(0,T/2),easing:'linear'});
-}
-function pops(a,n,r,sz=36,d=1400,at=0){
-  n=Math.round(n*K);
-  for(let i=0;i<n;i++){
-    const an=i/n*6.28+rnd(-.2,.2),R=rnd(r*.5,r);
-    el(pick(a),C42+`font-size:${rnd(sz*.6,sz*1.4)}px;line-height:1`,[{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:`translate(calc(-50% + ${Math.cos(an)*R}px),calc(-50% + ${Math.sin(an)*R}px)) scale(1) rotate(${rnd(-180,180)}deg)`,opacity:0}],{duration:d,delay:at*1000+rnd(0,300)});
+// ---------- Action handlers (event delegation) ----------
+const ACTS={
+  buyStock(t,q){
+    const x=tickerOf(t);const n=q==='all'?0:+q;
+    const cost=x.p*n;
+    if(!spend(cost,x.name))return;
+    const h=S.stk[t]||{q:0,cost:0};
+    h.cost=(h.cost*h.q+x.p*n)/(h.q+n);h.q+=n;S.stk[t]=h;
+    receipt('📈',`Bought ${n} × ${t}`,x.name,cost);
+    burst(VW*.5,VH*.4,{col:x.c,n:10,speed:200});
+    sfxTick(880);
+  },
+  sellStock(t,q){
+    const x=tickerOf(t),h=S.stk[t];if(!h)return;
+    const n=q==='all'?h.q:Math.min(+q,h.q),gain=x.p*n;
+    h.q-=n;if(h.q<=0)delete S.stk[t];
+    const pnl=(x.p-(h.cost||x.p))*n;
+    earn(gain,pnl>=0?'💰':'📉',`Sold ${n} × ${t} (${pnl>=0?'+':'−'}${fmt(Math.abs(pnl))})`,x.name);
+    sfxDing(pnl>=0?990:330,.1);
+    renderVentures();
+  },
+  buyProp(id){
+    const p=propOf(id);
+    if(!spend(p.price,p.n))return;
+    S.prop.push({pid:p.id,n:p.n,e:p.e,cost:p.price,value:p.price,rent:p.rent,tax:p.tax});
+    receipt('🔑','Bought: '+p.n,'Real estate',p.price);
+    celebrateRaw(p.e,'Keys in hand!','#7dd3fc');
+  },
+  sellProp(idx){
+    const p=S.prop[idx];if(!p)return;const v=p.value*.96;
+    S.prop.splice(idx,1);earn(v,'🏷️','Sold: '+p.n,'Real estate');
+    renderVentures();
+  },
+  investStartup(sid,amt){
+    amt=+amt;const s=stupOf(sid);
+    if(!spend(amt,s.n))return;
+    let b=S.biz.find(x=>x.kind=='startup'&&x.sid==sid&&!x.dead);
+    if(!b){b={kind:'startup',sid,name:s.n,e:s.e,invested:0,val:0,win:s.win,mult:s.mult,dead:false,notes:'Round closed'};S.biz.push(b)}
+    b.invested+=amt;b.val+=amt;
+    receipt('🚀','Invested: '+s.n,s.stage,amt);
+    burst(VW*.5,VH*.45,{chs:['🚀','✨','💫'],n:18,speed:300});
+    renderVentures();
+  },
+  exitStartup(idx){
+    const b=S.biz[idx];if(!b||b.kind!='startup')return;
+    const v=b.val*.9;S.biz.splice(idx,1);
+    earn(v,'🎉','Exit: '+b.name,'Startup');
+    celebrateRaw('🎉','Exit closed!','#fde047');
+    renderVentures();
+  },
+  buyBiz(id){
+    const b=bizOf(id);
+    if(!spend(b.cost,b.n))return;
+    S.biz.push({kind:'biz',bid:b.id,name:b.n,e:b.e,income:b.income,upkeep:b.upkeep,staffPay:b.staffPay,staff:0,val:b.cost});
+    receipt('🏢','Opened: '+b.n,'Business',b.cost);
+    celebrateRaw(b.e,'Business open!','#fbbf24');
+    renderVentures();
+  },
+  hireStaff(idx){
+    const b=S.biz[idx];if(!b||b.kind!='biz')return;
+    if(!spend(5000,'recruiting'))return;
+    b.staff=(b.staff||0)+1;receipt('🧑‍💼','Hired staff: '+b.name,'Payroll',5000);
+    renderVentures();
+  },
+  fireStaff(idx){
+    const b=S.biz[idx];if(!b||!b.staff)return;b.staff--;renderVentures();
+  },
+  sellBiz(idx){
+    const b=S.biz[idx];if(!b||b.kind!='biz')return;const v=b.val*.6;
+    S.biz.splice(idx,1);earn(v,'🏷️','Sold: '+b.name,'Business');renderVentures();
+  },
+  donate(amt){
+    amt=+amt;if(!spend(amt,'donation'))return;
+    S.k+=Math.log10(amt+1)*3;S.karma+=Math.log10(amt+1)*3;S.c+=Math.log10(amt+1);
+    receipt('💚','Donation','Philanthropy',amt);
+    confetti(60,2.6);sfxFanfare(0);
+    toast('💚 Thank you for your generosity!');
+    renderVentures();
   }
-}
-function ring(c,at=0){el('',C42+`width:90px;height:90px;margin:-45px;border:6px solid ${c};border-radius:50%`,[{transform:'scale(0)',opacity:1},{transform:'scale(16)',opacity:0}],{duration:1300,delay:at*1000})}
-function cap(t,c='#fff'){el(t,`left:0;width:100%;text-align:center;bottom:14%;font:900 clamp(22px,6vw,40px) sans-serif;color:${c};text-shadow:0 3px 14px #000`,[{transform:'scale(.4)',opacity:0},{transform:'scale(1.1)',opacity:1,offset:.1},{transform:'scale(1)',opacity:1,offset:.8},{opacity:0}],{duration:3800})}
-function tint(b,d=4000){el('',`inset:0;background:${b}`,[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:d})}
-function cross(h,sz,top,d,dir=1,at=0,wob=0){el(h,`left:0;top:${top}%;font-size:${sz}px;line-height:1`,[{transform:`translate(${dir>0?'-25vw':'105vw'},0)`},{transform:`translate(${dir>0?'105vw':'-25vw'},${wob}px)`}],{duration:d*1000,delay:at*1000,easing:'ease-in-out'})}
-function big(h,sz,d,kf){el(h,`left:0;width:100%;text-align:center;top:26%;font-size:${sz}px;line-height:1.1`,kf,{duration:d})}
-function stars(n,c='#fff',d=2600,at=0){
-  n=Math.round(n*K);
-  for(let i=0;i<n;i++){
-    const an=rnd(0,6.28),R=rnd(30,90),z=rnd(2,5);
-    el('',C42+`width:${z}px;height:${z}px;border-radius:50%;background:${c};box-shadow:0 0 8px ${c}`,[{transform:'translate(0,0) scale(.3)',opacity:0},{opacity:1,offset:.3},{transform:`translate(${Math.cos(an)*R}vw,${Math.sin(an)*R}vh) scale(3)`,opacity:0}],{duration:d,delay:at*1000+rnd(0,900),easing:'ease-in'});
-  }
-}
-function orbit(a,r,d,sz){a.forEach((h,i)=>{const th=i/a.length*360;el(h,C42+`font-size:${sz}px;margin:-.6em 0 0 -.6em;line-height:1`,[{transform:`rotate(${th}deg) translateX(${r}px) rotate(${-th}deg)`},{transform:`rotate(${th+360}deg) translateX(${r}px) rotate(${-th-360}deg)`}],{duration:d,easing:'linear'})})}
-const row=(h,sz,bot,d,kf)=>el(h.repeat(30),`left:0;bottom:${bot};font-size:${sz}px;white-space:nowrap;line-height:1`,kf,{duration:d});
-const POP=[{transform:'scale(.1)',opacity:0},{transform:'scale(1.15)',opacity:1,offset:.15},{transform:'scale(1)',opacity:1,offset:.85},{opacity:0}],
-      WAVE=[{transform:'translateY(75vh)'},{transform:'translateY(0)',offset:.3},{transform:'translateY(0)',offset:.78},{transform:'translateY(75vh)'}];
-
-const G={
-  'Rose':()=>{tint('radial-gradient(#ff2c5544,#0009)',4200);rain(['🌹','🌸','🥀','✨'],30,0,4200);pops(['🌹','❤️'],14,220,30,1600,.2);cap('A rose for you 🌹','#ff6b8b');[523,659,784,1046].forEach((f,i)=>tone(f,.9,'sine',.1,i*.16))},
-  'Finger Heart':()=>{tint('radial-gradient(#ec489944,#0009)',3400);rain(['💖','💗','💕','💓'],24,1,3200);pops(['❤️','✨'],16,200,32,1500,.1);cap('Finger heart! 💖','#f9a8d4');[1046,1318,1568].forEach((f,i)=>tone(f,.18,'sine',.1,i*.09))},
-  'Doughnut':()=>{rain(['🍩','🍩','🍬','🍪','🧁'],28,0,3600);big('🍩',145,2800,POP);cap('Sweet doughnut time 🍩','#fdba74');[330,440,660,880].forEach((f,i)=>tone(f,.3,'triangle',.12,i*.13))},
-  'Confetti':()=>{pops(['🎊','🎉','✨','🎈'],40,440,36,1800);pops(['🎊','🎉','🥳'],34,560,42,2200,.3);rain(['🎊','🎉'],24,0,3200);cap('Party time!!','#fde047');noise(.2,.25,0,6000);noise(.2,.2,.35,5000)},
-  'Corgi':()=>{tint('linear-gradient(#fef08a33,#0008)',3400);cross('🐕',105,66,3.4,1);cross('🦴',48,64,3.4,1,.32);pops(['🐾','❤️','⭐'],14,220,30,1500,.45);cap('Corgi zoomies 🐶','#fde68a');[0,.45,.9].forEach(t=>tone(620,.12,'square',.1,t,380))},
-  'Money Gun':()=>{tint('radial-gradient(#22c55e44,#000a)',3200);rain(['💸','💵','💴','🤑'],56,0,2800);big('🔫',130,2500,POP);cap('Make it rain 💸','#4ade80');for(let i=0;i<16;i++)noise(.05,.2,i*.07,3000);tone(1568,.4,'sine',.1,1);tone(2093,.5,'sine',.1,1.12)},
-  'Swan':()=>{tint('linear-gradient(#bfe3ffcc,#1e3a8a66)',4200);cross('🦢',165,44,4,1,0,-40);rain(['🪶','✨','🤍'],20,0,4000);cap('Graceful swan 🦢','#cfe8ff');[392,494,587,784].forEach((f,i)=>tone(f,3.5,'sine',.07,i*.1))},
-  'Train':()=>{shk();tint('radial-gradient(#f59e0b44,#000b)',3800);cross('🚂',145,58,3.8,-1);[0,.35,.7,1.05,1.4].forEach(t=>cross('☁️',64,48,2.2,-1,t));cap('Choo choo! 🚂','#fde047');for(let i=0;i<10;i++)noise(.12,.2,i*.3,900);tone(880,.8,'triangle',.1,.4,990)},
-  'Galaxy Globe':()=>{tint('radial-gradient(#312e81dd,#000e)',4400);ring('#a78bfa',0);orbit(['🪐','🌍','🌙','☄️','⭐'],180,4200,58);stars(65,'#c4b5fd');cap('Galaxy Globe 🔮','#c4b5fd');[262,330,392,523,659,784,1046].forEach((f,i)=>tone(f,.8,'sine',.08,i*.14))},
-  'Whale Diving':()=>{tint('linear-gradient(#0b3d91bb,#021a4ddd)',5200);el('','left:0;right:0;bottom:0;height:70vh;background:linear-gradient(#38bdf8cc,#0369a1ee 35%,#082f6b)',WAVE,{duration:5200});row('🌊',56,'calc(70vh - 30px)',5200,WAVE);cross('🐋',220,44,4.6,1,.45,-75);rain(['🫧','💧','🐟'],30,1,4200);cap('Whale Diving 🐋','#7dd3fc');tone(80,3.2,'sine',.3,.3,200);tone(200,2.4,'sine',.16,1.1,90);tone(120,2,'triangle',.1,2,260);noise(2,.14,0,300,900);noise(2.6,.12,2.4,900,200)},
-  'Leon the Kitty':()=>{tint('radial-gradient(#f472b655,#000b)',3600);big('🐱',200,3400,[{transform:'scale(.2) rotate(-20deg)',opacity:0},{transform:'scale(1.25) rotate(8deg)',opacity:1,offset:.2},{transform:'scale(1) rotate(-6deg)',offset:.4},{transform:'scale(1.15) rotate(6deg)',offset:.6},{transform:'scale(1)',opacity:1,offset:.85},{opacity:0}]);pops(['🐾','❤️','🐟','✨'],24,280,32,1700,.2);cap('Meow! Leon the Kitty 🐱','#fbcfe8');tone(500,.25,'triangle',.14,0,900);tone(900,.35,'triangle',.14,.25,450);tone(480,.25,'triangle',.14,1.3,860);tone(860,.35,'triangle',.14,1.55,430)},
-  'Flying Jets':()=>{tint('linear-gradient(#7dd3fc99,#0284c744)',3600);[0,.22,.44].forEach((t,i)=>{cross('✈️',100,15+i*16,2.2,1,t);cross('💨',66,17+i*16,2.2,1,t+.14);noise(2,.12,t,400,3500)});cap('Flying jets ✈️','#e0f2fe')},
-  'Sports Car':()=>{shk();tint('linear-gradient(transparent 50%,#000b)',3000);cross('🏎️',160,62,2.4,1);cross('💨',85,65,2.4,1,.18);pops(['✨','🔥'],18,280,32,1000,1.1);cap('Vroom! 🏎️','#fca5a5');tone(70,1.6,'sawtooth',.14,0,400);tone(400,.8,'sawtooth',.1,1.5,120);noise(.8,.15,1.4,3000,800)},
-  'Falcon':()=>{tint('radial-gradient(#f59e0b44,#000a)',3400);cross('🦅',165,20,2.2,1,0,120);cross('🦅',100,38,2.4,1,.28,90);rain(['🪶','✨'],24,0,3200);cap('Falcon strike 🦅','#fde68a');tone(2000,.5,'sawtooth',.07,.1,2800);tone(2400,.45,'sawtooth',.07,.9,1800)},
-  'Dragon Flame':()=>{tint('radial-gradient(#7f1d1ddd,#000e)',4400);cross('🐉',225,22,3.6,-1,0,40);row('🔥',95,'0',4400,[{transform:'translateY(100px)'},{transform:'translateY(0)',offset:.22},{transform:'translateY(-14px)',offset:.78},{transform:'translateY(100px)'}]);rain(['🔥','💥'],24,1,3200);shk();cap('Dragon flame 🐉','#fb923c');tone(110,1.2,'sawtooth',.18,0,50);noise(2.5,.22,.3,1200,300);tone(90,1,'sawtooth',.15,1.6,40)},
-  'Lion':()=>{tint('radial-gradient(#facc15aa,#000d)',3800);big('🦁',225,3800,[{transform:'scale(.1)',opacity:0},{transform:'scale(1.65)',opacity:1,offset:.3},{transform:'scale(1.3) rotate(-3deg)',offset:.5},{transform:'scale(1.45) rotate(3deg)',offset:.7},{transform:'scale(1.35)',opacity:1,offset:.85},{opacity:0}]);ring('#facc15');ring('#f97316',.22);ring('#fff',.45);shk();pops(['🔥','✨','👑'],24,330,36,1600,.25);cap('ROAAAR! 🦁','#facc15');tone(220,.2,'sawtooth',.25,0,300);tone(160,1.6,'sawtooth',.28,.15,55);tone(240,1.4,'square',.08,.2,70);noise(1.8,.3,.1,1500,200);tone(150,1,'sawtooth',.2,1.9,60);noise(1,.2,1.9,1000,200)},
-  'Fairy Castle':()=>{tint('linear-gradient(#a78bfaaa,#f9a8d4aa)',4600);big('🏰',240,4600,[{transform:'translateY(60vh) scale(.5)',opacity:0},{transform:'translateY(0) scale(1)',opacity:1,offset:.28},{transform:'translateY(0) scale(1.06)',opacity:1,offset:.82},{opacity:0}]);pops(['✨','🎆','⭐','👑'],34,400,36,1900,.5);rain(['✨','🦄','🌈'],22,0,4200);cap('Fairy Castle 🏰','#f5d0fe');[523,659,784,1046].forEach((f,i)=>tone(f,.5,'square',.07,i*.18));tone(1046,1.2,'square',.07,.85)},
-  'Universe':()=>{tint('radial-gradient(#1e1b4b,#000)',5400);stars(110,'#fff',3400);stars(50,'#a5b4fc',3600,.7);orbit(['🪐','🌍','🌙','☄️'],210,5200,72);big('🌌',245,5400,POP);ring('#818cf8',.2);cap('TikTok Universe 🌌','#c7d2fe');[130,196,261,392].forEach((f,i)=>tone(f,4.5,'sine',.09,i*.38));[1568,2093,2637].forEach((f,i)=>tone(f,1,'sine',.05,1+i*.28))},
-  'Yacht':()=>{tint('linear-gradient(#7dd3fc99,#0369a1dd)',4800);cross('🛥️',185,50,4.2,1,0,10);row('🌊',74,'0',4800,[{transform:'translateY(0)'},{transform:'translateY(-14px)',offset:.5},{transform:'translateY(0)'}]);rain(['🥂','🍾','✨','💎'],20,1,3800);cap('Yacht life 🛥️','#e0f2fe');tone(130,1,'sawtooth',.12,0,125);noise(2.5,.1,0,500,900);noise(.15,.3,1.4,6000)},
-  'Rocket':()=>{[3,2,1].forEach((n,i)=>{el(n,'left:0;width:100%;text-align:center;top:22%;font:900 150px sans-serif;color:#fff;text-shadow:0 0 30px #f97316',[{transform:'scale(2)',opacity:0},{transform:'scale(1)',opacity:1,offset:.3},{opacity:0}],{duration:700,delay:i*700});tone(660,.15,'square',.1,i*.7)});tone(1100,.5,'square',.1,2.1);el('🚀','left:50%;bottom:0;margin-left:-.6em;font-size:130px;line-height:1',[{transform:'translateY(0) rotate(-45deg)'},{transform:'translateY(-125vh) rotate(-45deg)'}],{duration:2300,delay:2100,easing:'ease-in'});for(let i=0;i<18;i++)el(pick(['🔥','💨','✨']),`left:50%;margin-left:-.5em;bottom:${i*6.2}vh;font-size:74px;line-height:1`,[{opacity:1,transform:'scale(.6)'},{opacity:0,transform:'scale(1.7)'}],{duration:900,delay:2100+i*120});setTimeout(()=>{shk();cap('LIFTOFF! 🚀','#fdba74')},2100);noise(3,.3,2,500,3500);tone(60,3,'sawtooth',.18,2,200)},
-  'Diamond Planet':()=>{tint('radial-gradient(#0e7490dd,#000e)',4800);big('💎',215,4800,[{transform:'scale(.1) rotate(0)',opacity:0},{transform:'scale(1.25) rotate(180deg)',opacity:1,offset:.3},{transform:'scale(1) rotate(360deg)',opacity:1,offset:.85},{opacity:0}]);orbit(['💎','✨','💎','✨','💎','✨','💎','✨'],240,4200,42);rain(['💎','✨'],32,0,3800);ring('#67e8f9');ring('#fff',.3);cap('Diamond Planet 💎','#67e8f9');for(let i=0;i<12;i++)tone(1500+Math.random()*2500,.35,'sine',.05,i*.16);tone(220,3,'sine',.1)},
-  'Supernova':()=>{tint('#fff',750);tint('radial-gradient(#f97316,#7c2d12 40%,#000)',5400);[0,.18,.36,.54].forEach((t,i)=>ring(['#fff','#fde68a','#f97316','#ef4444'][i],t));stars(140,'#fde68a',2600);pops(['☄️','🔥','💥','⭐'],48,580,48,2100,.1);big('💥',240,3200,POP);shk();cap('SUPERNOVA 🌠','#fde68a');tone(80,2.5,'sawtooth',.3,0,25);noise(3,.4,0,2000,60);for(let i=0;i<8;i++)noise(.1,.2,1+i*.2,4000)},
-  'Pegasus Sovereign':()=>{tint('radial-gradient(#fde047bb,#7c3aedee 50%,#000)',5600);cross('🦄',245,28,4.4,1,0,-50);ring('#fde047');ring('#c084fc',.25);ring('#fff',.5);stars(130,'#fef08a',3200);rain(['👑','✨','🪽','💎'],40,0,4400);shk();cap('PEGASUS SOVEREIGN 👑','#fef08a');[261,329,392,523,659,784,1046,1318].forEach((f,i)=>tone(f,.9,'triangle',.1,i*.13))}
 };
-
-function tikgift(it,q){
-  K=1+Math.min(2,Math.log10(q));
-  G[it.n]();
-  if(q>1)el('×'+q.toLocaleString(),'right:6%;top:16%;font:900 clamp(40px,12vw,90px) sans-serif;color:#fff;text-shadow:0 0 24px #f0f',POP,{duration:3200});
-  toast(`Sent ${q.toLocaleString()}× ${it.n} on TikTok Live!`);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const[a,x,y]=b.dataset.act.split('|');
+  const fn=ACTS[a];if(!fn)return;
+  if(a=='buyStock'||a=='sellStock'){
+    if(a=='sellStock'&&y==='all')fn(x,'all');else fn(x,y);
+  }else fn(x,y);
+  save();stats();
+});
+function celebrateRaw(e,label,col){
+  tint('rgba(15,23,42,A)',2600,.35);hero(e,{size:180,anim:'pop',dur:2800,glow:col});
+  text(label,{y:VH*.74,size:Math.min(40,VW/12),col:'#fff',dur:2400});
+  rain([e,'✨'],20,2.6);sfxFanfare(0);fxKick();
 }
 
-// ---- My Stuff, Asset Liquidation & Receipts
+// ---------- My stuff & receipts (dashboard + inventory) ----------
 function renderTabs(){
-  const inv=Object.keys(S.inv),
-        subs=Object.keys(S.subs),
-        netCycle=getCycleNet();
-
+  const inv=Object.keys(S.inv),subs=Object.keys(S.subs),netCycle=getCycleNet();
   $('#m').innerHTML=`
-    <div class="rec">
-      <div>
-        <b style="color:var(--ink);font-size:16px">📊 Wealth &amp; Life Dashboard</b>
-        <small>Net Worth: <b>${fmt(getNetWorth())}</b> · Total Spent: <b>${fmt(S.spent)}</b> · Cashflow: <b style="color:${netCycle>=0?'var(--ok)':'var(--bad)'}">${netCycle>=0?'+':''}${fmt(netCycle)}/20s</b></small>
-        <small style="margin-top:2px">😊 Happiness ${Math.round(S.h)} · 📣 Clout ${Math.round(S.c)} · 💖 Karma ${Math.round(S.k)} · 📈 Ad Reach ${S.imp.toLocaleString()}</small>
-      </div>
-    </div>
-    ${subs.length?'<h3>Active Subscriptions (billed every 20 seconds)</h3>':''}
-    ${subs.map(k=>{
-      const[c,it]=ITM(k);
-      return`<div class="rec"><span>${it.e}</span><div><b>${it.n}</b><small>${c.n} · −${fmt(it.p)}/20s</small></div><button class="buy" data-k="${k}">Cancel</button></div>`;
-    }).join('')}
-    <h3>Owned Assets &amp; Inventory (Resell for 70% cash)</h3>
+    <div class="rec"><div>
+      <b style="color:var(--ink);font-size:16px">📊 Wealth &amp; life dashboard</b>
+      <small>Net worth <b>${fmt(getNetWorth())}</b> · Total spent <b>${fmt(S.spent)}</b> · Cashflow <b style="color:${netCycle>=0?'var(--ok)':'var(--bad)'}">${netCycle>=0?'+':''}${fmt(netCycle)}/20s</b></small>
+      <small style="margin-top:2px">😊 Happiness ${Math.round(S.h)} · 📣 Clout ${Math.round(S.c)} · 💖 Karma ${Math.round(S.k+S.karma)} · 📈 Ad reach ${S.imp.toLocaleString()} · 🏅 XP ${Math.round(S.xp)}</small>
+    </div></div>
+    ${subs.length?'<div class="sec-h">Active subscriptions (billed every 20s)</div>':''}
+    ${subs.map(k=>{const[c,it]=ITM(k);return`<div class="rec"><span>${it.e}</span><div><b>${it.n}</b><small>${c.n} · −${fmt(it.p)}/20s</small></div><button class="buy" data-cancel="${k}">Cancel</button></div>`}).join('')}
+    <div class="sec-h">Inventory (resell for 70% cash)</div>
     ${inv.length?inv.map(k=>{
-      const[c,it]=ITM(k),qty=S.inv[k],isSub=it.f=='m',isCons=/[sgha]/.test(it.f);
-      const cfTxt=it.cf>0?` · <span style="color:var(--ok)">+${fmt(it.cf*qty)}/20s</span>`:it.cf<0?` · <span style="color:var(--bad)">−${fmt(Math.abs(it.cf)*qty)}/20s</span>`:'';
-      const sellVal=+(it.p*0.7).toFixed(2);
-      return`<div class="rec">
-        <span style="font-size:26px">${it.e}</span>
+      const[c,it]=ITM(k),qty=S.inv[k],isCons=/[mshag]/.test(it.f);
+      const cfTxt=it.cf>0?` · <span class="good">+${fmt(it.cf*qty)}/20s</span>`:it.cf<0?` · <span class="bad">−${fmt(Math.abs(it.cf)*qty)}/20s</span>`:'';
+      return`<div class="rec"><span style="font-size:26px">${it.e}</span>
         <div><b>${it.n}</b> <span style="color:var(--mut)">×${qty.toLocaleString()}</span><small>${c.n}${cfTxt}</small></div>
-        ${!isSub&&!isCons?`<button class="sell-btn" data-sell="${k}">Sell 1 (+${fmt(sellVal)})</button>`:''}
-      </div>`;
+        ${!isCons?`<button class="sell-btn" data-sell="${k}">Sell 1 (+${fmt(+(it.p*.7).toFixed(2))})</button>`:''}</div>`
     }).join(''):'<div class="empty">Nothing owned yet. Open a store and start spending!</div>'}
-  `;
+    ${(S.prop.length||S.biz.length||Object.keys(S.stk).length)?`<div class="sec-h">Ventures summary</div>
+      <div class="rec"><div><b>Stocks</b><small>${Object.keys(S.stk).length} positions · ${fmt(portfolioValue())}</small></div></div>
+      <div class="rec"><div><b>Real estate</b><small>${S.prop.length} properties · ${fmt(propValue())}</small></div></div>
+      <div class="rec"><div><b>Business & startups</b><small>${S.biz.length} holdings · ${fmt(bizValue())}</small></div></div>`:''}`;
 
-  $('#m').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
-    delete S.subs[b.dataset.k];
-    save();stats();renderTabs();
-    toast('Subscription cancelled');
-  });
-
+  $('#m').querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{delete S.subs[b.dataset.cancel];save();stats();renderTabs();toast('Subscription cancelled')});
   $('#m').querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>{
-    const k=b.dataset.sell,[c,it]=ITM(k);
-    if(!S.inv[k])return;
-    const gain=+(it.p*0.7).toFixed(2);
-    S.inv[k]--;
-    if(S.inv[k]<=0)delete S.inv[k];
-    S.bal=+(S.bal+gain).toFixed(2);
-    S.rec.unshift({e:'💰',n:'Liquidated: '+it.n,s:c.n,q:1,tot:-gain,t:Date.now(),d:1});
-    setBal(1);
-    flt('+'+fmt(gain),1);
-    ding(780,.12,'triangle');
-    renderTabs();
-    toast(`Sold ${it.n} for ${fmt(gain)} (70% resale)`);
+    const k=b.dataset.sell,[c,it]=ITM(k);if(!S.inv[k])return;
+    const gain=+(it.p*.7).toFixed(2);
+    S.inv[k]--;if(S.inv[k]<=0)delete S.inv[k];
+    earn(gain,'💰','Liquidated: '+it.n,c.n);
+    sfxDing(780,.12,'triangle');renderTabs();toast(`Sold ${it.n} for ${fmt(gain)} (70% resale)`);
   });
 
   const now=Date.now();
   $('#r').innerHTML=S.rec.length?S.rec.map(r=>{
-    const s=(now-r.t)/1000,
-          isCredit=r.tot<0,
+    const s=(now-r.t)/1000,isCredit=r.tot<0,
           st=isCredit?'💰 Asset liquidated':r.d?'⚡ Delivered instantly':s<8?'📦 Order placed':s<16?'🚚 Out for delivery':'✅ Delivered';
-    return`<div class="rec">
-      <span style="font-size:24px">${r.e}</span>
-      <div><b>${r.q>1?r.q.toLocaleString()+'× ':''}${r.n}</b><small>${r.s} · ${new Date(r.t).toLocaleTimeString()} · ${st}</small></div>
-      <b style="color:${isCredit?'var(--ok)':'var(--bad)'}">${isCredit?'+'+fmt(Math.abs(r.tot)):'−'+fmt(r.tot)}</b>
-    </div>`;
+    return`<div class="rec"><span style="font-size:24px">${r.e}</span>
+      <div><b>${r.q>1?r.q.toLocaleString()+'× ':''}${r.n}</b><small>${r.s} · ${new Date(r.t).toLocaleTimeString('en-CA')} · ${st}</small></div>
+      <b style="color:${isCredit?'var(--ok)':'var(--bad)'}">${isCredit?'+'+fmt(Math.abs(r.tot)):'−'+fmt(r.tot)}</b></div>`;
   }).join(''):'<div class="empty">No receipts yet.</div>';
 }
-
-document.querySelectorAll('.tabs [data-t]').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tabs [data-t]').forEach(x=>x.className=x==b?'on':'');
-  ['s','m','r'].forEach(i=>$('#'+i).hidden=i!=b.dataset.t);
-  renderTabs();
-});
-
-// ---- Starting Balance Mode Selector & Reset Modal
-function openResetModal(){
-  show('lay',`
-    <div class="sheet">
-      <div class="res">
-        <div style="font-size:48px">🏦</div>
-        <h2>Select Wealth Tier / Reset</h2>
-        <p>Choose your starting CAD fortune to test different tiers of luxury &amp; mega-projects.</p>
-        <div class="preset-grid">
-          <button class="preset-btn" data-amt="1000000"><span>💼 Classic Millionaire</span><span style="color:var(--ok)">$1,000,000 CAD</span></button>
-          <button class="preset-btn" data-amt="100000000"><span>🛩️ Centi-Millionaire</span><span style="color:var(--ok)">$100,000,000 CAD</span></button>
-          <button class="preset-btn" data-amt="1000000000"><span>🚀 Billionaire Mode</span><span style="color:var(--ok)">$1,000,000,000 CAD</span></button>
-        </div>
-        <button style="margin-top:14px;color:var(--mut);font-weight:700" onclick="cls('lay')">Cancel</button>
-      </div>
-    </div>
-  `);
-  $('#lay').querySelectorAll('[data-amt]').forEach(btn=>btn.onclick=()=>reset(+btn.dataset.amt));
-}
-
-$('#rs').onclick=openResetModal;
-
-function reset(amount=1e6){
-  S={start:amount,bal:amount,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0,cardStyle:S.cardStyle||0};
-  cls('lay');
-  setBal(1);
-  renderTabs();
-  if(openCo)openStore(openCo);
-  toast(`Fresh ${fmt(amount)} CAD loaded!`);
-}
-
-function broke(){
-  show('lay',`<div class="sheet"><div class="res"><div style="font-size:60px">🪦</div><h2>You’re out of cash!</h2><p>You turned ${fmt(S.start)} into memories, assets, and receipts.</p><p>Total fortune spent: <b>${fmt(S.spent)}</b></p><br><button class="pay" onclick="openResetModal()">Choose New Starting Fortune</button></div></div>`);
-}
-
-// ---- 20-Second Billing, Passive Income & Upkeep Cycle
-setInterval(()=>{
-  if(Date.now()>=next){
-    next=Date.now()+20000;
-    let delta=0;
-
-    // 1. Subscriptions
-    Object.keys(S.subs).forEach(k=>{
-      const[c,it]=ITM(k);
-      if(S.bal<it.p){
-        delete S.subs[k];
-        toast(`⚠️ ${it.n} cancelled: insufficient funds`);
-        return;
-      }
-      S.bal=+(S.bal-it.p).toFixed(2);
-      S.spent+=it.p;
-      delta-=it.p;
-      S.rec.unshift({e:'🔁',n:'Sub: '+it.n,s:c.n,q:1,tot:it.p,t:Date.now(),d:1});
-    });
-
-    // 2. Passive Income & Asset Upkeep
-    let passive=0,upkeep=0;
-    Object.keys(S.inv).forEach(k=>{
-      const[,it]=ITM(k);
-      if(it&&it.cf){
-        const amt=it.cf*S.inv[k];
-        if(amt>0)passive+=amt;
-        else upkeep+=Math.abs(amt);
-      }
-    });
-
-    if(passive>0){
-      S.bal=+(S.bal+passive).toFixed(2);
-      delta+=passive;
-      S.rec.unshift({e:'📈',n:'Passive Income & Dividends',s:'Portfolio',q:1,tot:-passive,t:Date.now(),d:1});
-    }
-    if(upkeep>0){
-      const payUp=Math.min(S.bal,upkeep);
-      S.bal=+(S.bal-payUp).toFixed(2);
-      S.spent+=payUp;
-      delta-=payUp;
-      if(payUp>0)S.rec.unshift({e:'🧾',n:'Asset Maintenance & Taxes',s:'Upkeep',q:1,tot:payUp,t:Date.now(),d:1});
-    }
-
-    if(delta!==0){
-      setBal(delta>0?1:-1);
-      flt((delta>0?'+':'−')+fmt(Math.abs(delta)),delta>0);
-      ding(delta>0?660:330,.1);
-      renderTabs();
-    }
-  }
-  stats();
-  if(!$('#r').hidden)renderTabs();
-},1000);
-
-$('#q').oninput=grid;
-chips();
-grid();
-renderTabs();
-$('#bal').textContent=fmt(shown);
-setBal();
 </script>
 </body>
 </html>
+
+</body></html>
