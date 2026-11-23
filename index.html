@@ -172,6 +172,14 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
   box-shadow:0 24px 60px #000a;border:1px solid #ffffff22;
   animation:pop .32s cubic-bezier(.2,1.3,.4,1)
 }
+.tt-live.yt-mode{
+  max-width:520px;background:#0f0f0f;border-color:#ff000044;
+  box-shadow:0 24px 60px #ff000022
+}
+.tt-live.tw-mode{
+  max-width:460px;background:#0e0e10;border-color:#9146ff55;
+  box-shadow:0 24px 60px #9146ff28
+}
 .tt-stage{
   position:absolute;inset:0;
   background:radial-gradient(circle at 50% 32%,#ff2c5555,#4f46e544 45%,#09090f 85%);
@@ -179,11 +187,25 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   pointer-events:none;z-index:0
 }
+.yt-mode .tt-stage{
+  background:radial-gradient(circle at 50% 28%,#ff000044,#28282866 48%,#0f0f0f 86%)
+}
+.tw-mode .tt-stage{
+  background:radial-gradient(circle at 50% 30%,#9146ff55,#1f1f2366 48%,#0e0e10 86%)
+}
 .tt-avatar-ring{
   width:136px;height:136px;border-radius:50%;padding:5px;
   background:linear-gradient(45deg,#ff2c55,#00f2fe,#ff2c55);
   animation:spinSlow 4s linear infinite;display:grid;place-items:center;
   box-shadow:0 0 40px #ff2c5566
+}
+.yt-mode .tt-avatar-ring{
+  background:linear-gradient(45deg,#ff0000,#ff8a00,#ff0000);
+  box-shadow:0 0 40px #ff000066
+}
+.tw-mode .tt-avatar-ring{
+  background:linear-gradient(45deg,#9146ff,#00f5d4,#9146ff);
+  box-shadow:0 0 40px #9146ff66
 }
 .tt-avatar{
   width:100%;height:100%;border-radius:50%;background:#13131f;
@@ -201,13 +223,19 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .tt-bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tt-creator{display:flex;align-items:center;gap:8px;background:#0007;backdrop-filter:blur(8px);padding:4px 10px 4px 5px;border-radius:99px;border:1px solid #ffffff1a}
 .tt-creator .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ff2c55,#7928ca);display:grid;place-items:center;font-size:18px}
+.yt-mode .tt-creator .av{background:linear-gradient(135deg,#ff0000,#991b1b)}
+.tw-mode .tt-creator .av{background:linear-gradient(135deg,#9146ff,#4c1d95)}
 .tt-creator div{line-height:1.15}
 .tt-creator b{font-size:12.5px;display:block}
 .tt-creator small{font-size:10.5px;color:#cbd5e1}
 .tt-follow{background:#fe2c55;color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px}
+.yt-mode .tt-follow{background:#ff0000}
+.tw-mode .tt-follow{background:#9146ff}
 .tt-stats{display:flex;align-items:center;gap:6px}
 .tt-pill{background:#0007;backdrop-filter:blur(8px);padding:5px 10px;border-radius:99px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px}
 .tt-live-tag{background:#fe2c55;padding:3px 7px;border-radius:6px;font-size:10.5px;font-weight:900;letter-spacing:.04em}
+.yt-mode .tt-live-tag{background:#ff0000}
+.tw-mode .tt-live-tag{background:#9146ff}
 .tt-close{width:30px;height:30px;border-radius:50%;background:#0007;color:#fff;display:grid;place-items:center;font-size:16px}
 
 /* PK Battle Bar & Top Gifter */
@@ -215,15 +243,25 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .tt-pk-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:800;padding:0 8px 3px}
 .tt-pk-track{height:10px;border-radius:99px;background:#2563eb;overflow:hidden;display:flex}
 .tt-pk-fill{height:100%;background:linear-gradient(90deg,#fe2c55,#f59e0b);transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.yt-mode .tt-pk-track{background:#27272a}
+.yt-mode .tt-pk-fill{background:linear-gradient(90deg,#ff0000,#f59e0b,#fde047)}
+.tw-mode .tt-pk-track{background:#26262c}
+.tw-mode .tt-pk-fill{background:linear-gradient(90deg,#9146ff,#ec4899,#00f5d4)}
 .tt-vip{align-self:flex-start;background:linear-gradient(90deg,#f59e0b,#eab308);color:#111;font-size:11.5px;font-weight:900;padding:4px 10px;border-radius:99px;box-shadow:0 4px 12px #f59e0b55}
+
+/* YouTube Pinned Super Chat Ticker Strip */
+.yt-ticker{display:flex;gap:6px;overflow:hidden;padding:2px 0}
+.yt-chip{padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:5px;white-space:nowrap;box-shadow:0 3px 10px #0006;animation:pop .3s}
 
 /* Gift Banner inside Stream */
 .tt-gift-combo{
-  position:relative;z-index:4;margin:6px 12px;
+  position:relative;z-index:4;margin:4px 12px;
   background:linear-gradient(90deg,#fe2c55dd,#7c3aedcc,transparent);
   border-radius:99px;padding:6px 14px;display:flex;align-items:center;gap:10px;
   animation:slideInLeft .4s cubic-bezier(.2,1.4,.4,1)
 }
+.yt-mode .tt-gift-combo{background:linear-gradient(90deg,#ff0000dd,#b91c1ccc,transparent)}
+.tw-mode .tt-gift-combo{background:linear-gradient(90deg,#9146ffdd,#4f46e5cc,transparent)}
 .tt-gift-combo .gi{font-size:34px;animation:bob .5s infinite alternate}
 .tt-gift-combo .gx{font-size:24px;font-weight:900;font-style:italic;color:#fde047;text-shadow:0 2px 10px #000}
 
@@ -275,6 +313,16 @@ input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:1
 .ban span{display:inline-block;background:var(--acc);color:#fff;padding:8px 18px;border-radius:99px;font-weight:800;font-size:17px}
 #fx s{position:absolute;top:-60px;text-decoration:none;animation:fall linear forwards}
 .flash{position:absolute;inset:0;background:#fff;animation:fade .7s forwards}
+
+/* Custom Bespoke Category Animation Helpers */
+.fx-road{position:absolute;left:0;right:0;bottom:14%;height:96px;background:linear-gradient(#1f2937,#111827);border-top:4px solid #fbbf24;border-bottom:4px solid #9ca3af;box-shadow:0 16px 40px #000a;overflow:hidden}
+.fx-road::after{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,#fde047 0 44px,transparent 44px 88px);animation:roadDash .35s linear infinite}
+.fx-blueprint{position:absolute;inset:0;background-color:#0c2d57dd;background-image:linear-gradient(#38bdf833 1px,transparent 1px),linear-gradient(90deg,#38bdf833 1px,transparent 1px);background-size:28px 28px}
+.fx-matrix{position:absolute;inset:0;background:radial-gradient(circle at center,#052e16cc,#020617ee)}
+.fx-chart{position:absolute;left:8%;right:8%;bottom:24%;height:180px;display:flex;align-items:flex-end;gap:8px;padding:12px;border-left:2px solid #2be08f88;border-bottom:2px solid #2be08f88}
+.fx-candle{flex:1;background:linear-gradient(#4ade80,#16a34a);border-radius:4px 4px 0 0;box-shadow:0 0 16px #2be08f66;transform-origin:bottom}
+.fx-vip-card{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1e1b4b,#5b3df5,#ec4899);color:#fff;padding:22px 28px;border-radius:22px;border:2px solid #ffffff55;box-shadow:0 20px 50px #000a;text-align:center;min-width:260px}
+@keyframes roadDash{from{transform:translateX(0)}to{transform:translateX(-88px)}}
 
 /* Inventory, Receipts & Reset Presets */
 .rec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
@@ -369,116 +417,116 @@ const $=s=>document.querySelector(s),
   flags:
     m = monthly subscription (recurring charge)
     s = live Super Chat (triggers Live Stream Studio + voice reaction)
-    g = animated gift burst (triggers TikTok Live Studio + full-screen gift animation)
-    h = hype train / mega gift (triggers PK Battle surge in Live Stream Studio)
+    g = animated gift burst (triggers TikTok/YouTube/Platform Live Studio + full-screen gift animation)
+    h = hype train / mega gift (triggers PK Battle / Hype Train surge in Live Stream Studio)
     a = ad campaign / viral boost (triggers Social Feed & Analytics Simulator)
   cashflow (optional):
-    positive number = passive income / dividend earned every 20s cycle (+$X/mo)
-    negative number = recurring upkeep / maintenance / property tax every 20s cycle (-$X/mo)
+    positive number = passive income / dividend earned every 20s cycle
+    negative number = recurring upkeep / maintenance / property tax every 20s cycle
 */
 
-const DATA=`Amazon|🛒|#ff9900|Shopping|📦 Prime Membership:9.99:m;🔊 Echo Dot:69.99;📖 Kindle Paperwhite:199.99;🎮 PlayStation 5 Pro:899.99;🚁 4K Camera Drone:1299;🤖 Astro Home Robot:2199;📦 Pallet of Mystery Returns:4500;🚚 Amazon Delivery Van Fleet:185000::3200;🏭 Automated Fulfillment Center:12500000::145000
-Walmart|🛍️|#0071ce|Shopping|🛒 Cart of Groceries:187.43;📺 75-inch Smart TV:698;🚲 Mountain Bicycle:279;🎄 Entire Seasonal Aisle:2999;🍗 100 Rotisserie Chickens:899;🧸 Toy Aisle Takeover:4200;🏪 Buy Out Local Supercentre Stock:180000
-Costco|🏬|#e31837|Shopping|🌭 Hot Dog + Drink Combo:1.99;🥩 Bulk Wagyu Meat Pallet:1450;🛞 Michelin Tires + Install:1250;💍 3-Carat Diamond Ring:14999;🥧 50 Pumpkin Pies:400;🛋️ Luxury Patio Set:2400;🪙 1 oz Gold Bullion Bar:3850::45;🚛 18-Wheeler Full of Kirkland Toilet Paper:42000
-IKEA|🪑|#0058a3|Shopping|🍝 40 Swedish Meatballs:79;🛋️ Kivik Sectional Sofa:1499;🛏️ Entire Designer Bedroom:2999;🕯️ Scented Candle Mountain:240;🍨 Soft Serve Ice Cream Machine:9000;🏠 Furnish a 12-Bedroom Mansion:95000;🏢 Build Your Own IKEA Maze:18000000::110000
-Canadian Tire|🍁|#e31937|Shopping|🏒 Pro Hockey Gear Set:1199;🛶 Kevlar Touring Canoe:2400;🧂 Bag of Driveway Salt:7.99;🛷 Ski-Doo Snowmobile:14500::-120;🔧 Mastercraft Pro Tool Wall:3200;⛺ Glamping Tent Village:18000
-Home Depot|🔨|#f96302|Shopping|🔨 Titanium Framing Hammer:49.99;🏊 In-Ground Heated Pool:58000::-350;🪵 Framing Lumber Truckload:7800;🏡 Cedar Backyard Deck Build:22000;🚜 Zero-Turn Ride-On Mower:4600;🏗️ Custom Dream Home Build:950000::-1800
-Temu|🧸|#fb7701|Shopping|🎁 Mystery Electronics Box:19.99;📦 10,000 Random Gadgets:4999;🧦 Sock Mountain (5,000 Pairs):299;💍 Bling Jewelry Heap:149;🛋️ Modular Furniture Pallet:7999;🚢 Shipping Container of Weirdness:65000
-eBay|🏷️|#e53238|Shopping|⌚ Vintage Omega Watch:2400;📼 Sealed 1985 VHS Tape:4500;🗿 Weird Easter Island Statue:850;🎸 Signed Jimi Hendrix Guitar:45000;🕹️ Complete Retro Console Vault:12500;🦖 Genuine Triceratops Skull Fossil:420000
-Netflix|🎬|#e50914|Streaming|📺 4K Premium Plan:24.99:m;🍿 Home Theater Snack Pack:49;🎁 25 Netflix Gift Cards:625;🎞️ License an Indie Series:250000::4500;🎬 Fund a Netflix Original Film:1200000::22000;🍿 Global Tudum Premiere Event:4500000
-Spotify|🎧|#1db954|Streaming|🎵 Individual Premium:11.99:m;👨‍👩‍👧 Family Plan:19.99:m;🎁 Gift 10 Years of Premium:1440;📻 Global Playlist Ad Campaign:15000:a;🎤 Exclusive Joe Rogan-Style Podcast Deal:2500000::38000;🎧 Buy Master Catalog Rights:8500000::115000
-Disney+|🏰|#113ccf|Streaming|✨ Disney+ Duo Bundle:19.99:m;🧚 Hulu + ESPN+ Mega Bundle:32:m;🎟️ VIP Plaid Vest Park Tour:6500;🎢 All-Inclusive Family Trip:12500;🎆 Rent Magic Kingdom After Hours:450000
-YouTube|▶️|#ff0000|Streaming|💬 Super Chat Blue:5:s;💬 Super Chat Green:20:s;💬 Super Chat Gold:100:s;💬 Super Chat RED:500:s;🐱 Super Sticker Cat:4:g;🔥 Super Sticker Fire:25:g;🏅 Channel Membership:6.99:m;⭐ YouTube Premium:15.99:m;🏆 Custom Gold Play Button Frame:450;🎬 Sponsor a Top Creator:25000:a;📢 National Pre-Roll Ad Blitz:75000:a;🏈 Big Game Takeover Ad Spot:9000000:a
-Twitch|💜|#9146ff|Streaming|💎 1,000 Bits Cheer:14:g;💎 25,000 Bits Mega Cheer:320:g;⭐ Tier 1 Subscription:7.99:m;😎 Custom Emote Slot:5.99:m;🎁 Gift 5 Subs:39.95:h;🚂 Gift 100 Subs (Hype Train):799:h;🚂 Gift 1,000 Subs (God Tier):7990:h;🎮 Title Sponsor Major Streamer:45000:a
-TikTok|🎵|#fe2c55|Social|🌹 Rose:0.02:g;❤️ Finger Heart:0.07:g;🍩 Doughnut:0.6:g;🎉 Confetti:2:g;🐕 Corgi:6:g;🔫 Money Gun:10:g;🦢 Swan:14:g;🚂 Train:18:g;🔮 Galaxy Globe:20:g;🐋 Whale Diving:45:g;🐱 Leon the Kitty:95:g;✈️ Flying Jets:100:g;🏎️ Sports Car:135:g;🦅 Falcon:280:g;🐉 Dragon Flame:350:g;🦁 Lion:600:g;🏰 Fairy Castle:750:g;🌌 Universe:900:g;🛥️ Yacht:1400:g;🚀 Rocket:2200:g;💎 Diamond Planet:5000:g;🌠 Supernova:40000:g;👑 Pegasus Sovereign:85000:g;📈 TikTok Promote Viral Campaign:5000:a
-Instagram|📸|#c13584|Social|✨ Meta Verified Blue Check:18:m;📈 Boost Viral Reel:150:a;📸 Editorial Studio Photo Shoot:3200;🤝 Mega-Influencer Collab Post:35000:a;🎯 Global Reels Takeover Campaign:120000:a
+const DATA=`Amazon|🛒|#ff9900|Shopping|📦 Prime Membership:9.99:m;🔊 Echo Dot (5th Gen):69.99;📖 Kindle Paperwhite:184.99;🎮 PlayStation 5 Pro:959.99;🚁 DJI Mini 4 Pro Drone:1099;🤖 Astro Home Robot:2199;📦 Pallet of Mystery Returns:4500;🚚 Amazon Delivery Van Fleet:195000::3200;🏭 Automated Fulfillment Center:12500000::145000
+Walmart|🛍️|#0071ce|Shopping|🛒 Cart of Groceries:192.50;📺 75-inch 4K Smart TV:798;🚲 Supercycle Mountain Bike:299.99;🎄 Entire Seasonal Aisle:3200;🍗 100 Rotisserie Chickens:897;🧸 Toy Aisle Takeover:4500;🏪 Buy Out Local Supercentre Stock:185000
+Costco|🏬|#e31837|Shopping|🌭 Hot Dog + Drink Combo:1.50;🥩 Bulk AAA Beef Pallet:1480;🛞 Michelin Tires + Install:1299;💍 3-Carat Diamond Ring:15999;🥧 50 Pumpkin Pies:349.50;🛋️ Luxury Patio Set:2499;🪙 1 oz Gold Bullion Bar:3920::45;🚛 18-Wheeler Full of Kirkland Toilet Paper:44000
+IKEA|🪑|#0058a3|Shopping|🍝 40 Swedish Meatballs:44.99;🛋️ Kivik Sectional Sofa:1499;🛏️ Entire Designer Bedroom:2999;🕯️ Scented Candle Mountain:249;🍨 Soft Serve Ice Cream Machine:9200;🏠 Furnish a 12-Bedroom Mansion:98000;🏢 Build Your Own IKEA Maze:18500000::110000
+Canadian Tire|🍁|#e31937|Shopping|🏒 Pro Bauer Hockey Gear Set:1249;🛶 Kevlar Touring Canoe:2499;🧂 Bag of Driveway Salt:8.99;🛷 Ski-Doo MXZ Snowmobile:15499::-120;🔧 Mastercraft Maximum Tool Wall:3299;⛺ Woods Glamping Tent Village:18500
+Home Depot|🔨|#f96302|Shopping|🔨 Titanium Framing Hammer:54.98;🏊 In-Ground Heated Pool:62000::-350;🪵 Framing Lumber Truckload:8200;🏡 Cedar Backyard Deck Build:24000;🚜 John Deere Ride-On Mower:4799;🏗️ Custom Dream Home Build:980000::-1800
+Temu|🧸|#fb7701|Shopping|🎁 Mystery Electronics Box:19.99;📦 10,000 Random Gadgets:4999;🧦 Sock Mountain (5,000 Pairs):299;💍 Bling Jewelry Heap:149;🛋️ Modular Furniture Pallet:7999;🚢 Shipping Container of Weirdness:68000
+eBay|🏷️|#e53238|Shopping|⌚ Vintage Omega Seamaster:2650;📼 Sealed 1985 VHS Tape:4800;🗿 Weird Easter Island Statue:890;🎸 Signed Jimi Hendrix Stratocaster:48000;🕹️ Complete Retro Console Vault:13500;🦖 Genuine Triceratops Skull Fossil:450000
+Netflix|🎬|#e50914|Streaming|📺 4K Premium Plan:23.99:m;🍿 Home Theater Snack Pack:49;🎁 25 Netflix Gift Cards:625;🎞️ License an Indie Series:250000::4500;🎬 Fund a Netflix Original Film:1250000::22000;🍿 Global Tudum Premiere Event:4500000
+Spotify|🎧|#1db954|Streaming|🎵 Individual Premium:12.69:m;👨‍👩‍👧 Family Plan:20.99:m;🎁 Gift 10 Years of Premium:1522.80;📻 Global Playlist Ad Campaign:15000:a;🎤 Exclusive Podcast Network Deal:2500000::38000;🎧 Buy Master Catalog Rights:8500000::115000
+Disney+|🏰|#113ccf|Streaming|✨ Disney+ Premium Monthly:15.99:m;🧚 Disney+ Annual Bundle:159.99:m;🎟️ VIP Plaid Vest Park Tour:7200;🎢 All-Inclusive Family Trip:13500;🎆 Rent Magic Kingdom After Hours:480000
+YouTube|▶️|#ff0000|Streaming|💬 Super Chat Blue:5:s;💬 Super Chat Green:20:s;💬 Super Chat Gold:100:s;💬 Super Chat RED:500:s;🐱 Super Sticker Cat:4:g;🔥 Super Sticker Fire:25:g;🏅 Channel Membership:6.99:m;⭐ YouTube Premium:13.99:m;🏆 Custom Gold Play Button Frame:450;🎬 Sponsor a Top Creator:25000:a;📢 National Pre-Roll Ad Blitz:75000:a;🏈 Big Game Takeover Ad Spot:9000000:a
+Twitch|💜|#9146ff|Streaming|💎 1,000 Bits Cheer:19.50:g;💎 25,000 Bits Mega Cheer:425:g;⭐ Tier 1 Subscription:7.99:m;😎 Custom Emote Slot:5.99:m;🎁 Gift 5 Subs:39.95:h;🚂 Gift 100 Subs (Hype Train):799:h;🚂 Gift 1,000 Subs (God Tier):7990:h;🎮 Title Sponsor Major Streamer:45000:a
+TikTok|🎵|#fe2c55|Social|🌹 Rose:0.02:g;❤️ Finger Heart:0.07:g;🍩 Doughnut:0.60:g;🎉 Confetti:2:g;🐕 Corgi:6:g;🔫 Money Gun:10:g;🦢 Swan:14:g;🚂 Train:18:g;🔮 Galaxy Globe:20:g;🐋 Whale Diving:45:g;🐱 Leon the Kitty:95:g;✈️ Flying Jets:100:g;🏎️ Sports Car:135:g;🦅 Falcon:280:g;🐉 Dragon Flame:350:g;🦁 Lion:600:g;🏰 Fairy Castle:750:g;🌌 Universe:900:g;🛥️ Yacht:1400:g;🚀 Rocket:2200:g;💎 Diamond Planet:5000:g;🌠 Supernova:40000:g;👑 Pegasus Sovereign:85000:g;📈 TikTok Promote Viral Campaign:5000:a
+Instagram|📸|#c13584|Social|✨ Meta Verified Blue Check:19.99:m;📈 Boost Viral Reel:150:a;📸 Editorial Studio Photo Shoot:3200;🤝 Mega-Influencer Collab Post:35000:a;🎯 Global Reels Takeover Campaign:120000:a
 X|✖️|#1d9bf0|Social|✅ X Premium:11:m;💬 X Premium+ Ad-Free:22:m;📣 Promoted Post Blitz:8500:a;🔥 #1 Global Trending Topic Takeover:250000:a
-Snapchat|👻|#eab308|Social|⭐ Snapchat+:5.99:m;🔦 Citywide Geofilter Campaign:1800:a;🎭 Custom AR Sponsored Lens:45000:a;🦄 Celebrity Story Takeover:75000:a
-Reddit|👽|#ff4500|Social|🤖 Reddit Premium:7:m;🥇 Golden Award Rain:75:g;📌 Promoted Subreddit Thread:2500:a;🏅 Front Page Global Takeover:65000:a
-Discord|🗨️|#5865f2|Social|⚡ Discord Nitro:13:m;🚀 Boost Server ×14 (Level 3):70:g;🎨 Custom Bot & Server Makeover:650;🎉 Global Sponsored Quest:15000:a
-Steam|🎮|#1b2838|Gaming|🕹️ Steam Deck OLED:849;📚 Buy Entire Steam Wishlist:1450;⌨️ Custom Mech Keyboard Rig:550;🎁 Gift 100 AAA Games to Chat:6500;🖥️ Liquid-Cooled 4K Gaming PC:5800
-Nintendo|🍄|#e60012|Gaming|🎮 Nintendo Switch 2:629;🏎️ Mario Kart World:99;🎮 Switch Online + Expansion:64:m;🏰 Zelda Collector Statue Set:520;🎻 Hyrule Symphony VIP Box:1800
-Xbox|🟢|#107c10|Gaming|🎮 Xbox Series X Galaxy:729;🎟️ Game Pass Ultimate:24.99:m;🎮 Elite Series 2 Core Pack:289;🖥️ Ultimate Cloud + Sim Rig:4200
-PlayStation|🔷|#003791|Gaming|🥽 PS VR2 Horizon Bundle:799;🎧 Pulse Elite Headset:199;🎮 PS Plus Deluxe:18:m;🎮 DualSense Edge 4-Pack:960;🏆 Complete Platinum Library:3800
-Roblox|🧱|#e2231a|Gaming|💰 10,000 Robux:150:g;🛍️ 100 Roblox Gift Cards:2500:g;🎩 Dominus Empyreus Hat:28000:g;🏰 Branded Sponsored Metaverse World:45000:a::1200
-Epic Games|⚔️|#7a3cff|Gaming|🎫 Fortnite Crew Pass:15.99:m;💎 13,500 V-Bucks Pack:130:g;🎁 Gift 50 Icon Skins:2400:g;📢 FNCS Tournament Sponsor:95000:a
-Pokémon Center|⚡|#eab308|Gaming|🃏 Booster Box Case (6 Boxes):1350;🧸 100 Giant Pikachu Plushies:4500;💎 First Edition Shadowless Box:85000;🔥 PSA 10 1st Ed Charizard:480000
-Apple|🍎|#8e8e93|Tech|📱 iPhone 17 Pro Max 1TB:2299;💻 MacBook Pro M4 Max:5499;🥽 Apple Vision Pro:4999;🎧 AirPods Max USB-C:779;⌚ Apple Watch Ultra 3:1099;🖥️ Mac Pro + Pro Display XDR:16500
-Samsung|📲|#1428a0|Tech|📱 Galaxy S25 Ultra:1899;🥽 Galaxy Z Fold Special:2699;🖥️ 57-inch Odyssey Neo G9:3299;🧊 Bespoke AI Smart Fridge:4499;📺 98-inch Neo QLED 8K TV:14999
-Google|🔍|#4285f4|Tech|📱 Pixel 10 Pro XL:1499;☁️ Google One AI 2TB:27:m;🏠 Full Nest Smart Home Kit:1200;📺 YouTube TV Subscription:105:m;📢 Google Search Ads Dominance:35000:a
-Nvidia|🟩|#76b900|Tech|🕹️ GeForce NOW Ultimate:26:m;🎮 RTX 5090 Founders Edition:3499;🖥️ DGX Spark AI Workstation:12000::350;🧠 H200 Enterprise AI GPU:48000::1400;🏭 Liquid-Cooled AI Server Rack:550000::18500
-OpenAI|🤖|#10a37f|Tech|💬 ChatGPT Plus:28:m;⚡ ChatGPT Pro Unlimited:280:m;🎨 10,000 Sora Video Credits:800;🏢 50 Enterprise Team Seats:3000:m;🧠 Custom Fine-Tuned Model Cluster:150000::4200
-Shopify|🛍️|#5e8e3e|Tech|🏪 Shopify Basic Store:39:m;💳 Retail POS Hardware Kit:750;📢 Global Launch Ad Campaign:12000:a;🚚 Automated 3PL Fulfillment Deal:25000::1800;🏢 Buy Profitable E-Commerce Brand:650000::19500
-Tesla|🚗|#e82127|Cars|🤖 Full Self-Driving (FSD):99:m;🔌 Supercharger Unlimited Pass:240:m;🔋 Powerwall 3 Home Battery:16500;🏠 Solar Roof Full Install:62000::220;🚘 Model 3 Performance:69990;🚙 Model Y Long Range:64990;🛻 Cyberbeast Tri-Motor:139990;⚡ Model S Plaid:129990;🏁 Next-Gen Roadster:290000
-Ford|🛻|#003478|Cars|🔧 Heavy-Duty Tow Package:2400;🚗 Mustang EcoBoost:42000;🐎 Mustang Dark Horse V8:84000;🚐 E-Transit Commercial Van:79000;🛻 F-150 Lightning Platinum:108000;🏜️ F-150 Raptor R:154000
-Toyota|🚙|#eb0a1e|Cars|🚗 Corolla Hybrid:31000;🔋 Prius Prime Plug-In:41000;🚙 RAV4 Woodland:44000;🚐 Sienna Platinum:64000;🏎️ GR Supra 3.0:72000;🏔️ Land Cruiser 1958 Edition:86000
-Porsche|🏎️|#b12b28|Cars|🎨 Paint-to-Sample Custom Spec:18000;⚡ Taycan Turbo GT:265000;🛡️ Cayenne Turbo E-Hybrid:225000;🏎️ 911 GT3 RS Weissach:445000;🏁 918 Spyder Collector Edition:2400000
-Ferrari|🐎|#dc0000|Cars|🏁 Maranello Factory Track Day:18000;🏎️ Roma Spider:340000;🏎️ 296 GTB Assetto Fiorano:465000;🚙 Purosangue V12 SUV:620000;🔥 SF90 XX Stradale:1150000;👑 LaFerrari Aperta:5800000
-Lamborghini|🐂|#ddb321|Cars|🧢 Squadra Corse Merch Wall:1200;🐂 Urus SE Hybrid:365000;🏁 Huracán STO:450000;🚀 Revuelto V12 Hybrid:980000;⚡ Countach LPI 800-4:3600000
-Bugatti|🏁|#1c3f94|Cars|🏎️ Chiron Super Sport Rental Day:12000;⌚ Jacob & Co Bugatti Tourbillon Watch:380000;🏁 Bugatti Tourbillon V16:5900000::-4500;👑 Bugatti La Voiture Noire:18500000::-9000
-Uber|🚕|#18181b|Travel|👑 Uber One Membership:12:m;🚕 Uber Black Airport Transfer:95;🍔 Uber Eats Mansion Banquet:650;🚘 Chauffeur Fleet for a Week:4500;🚁 Uber Copter Manhattan Hop:2800
-Airbnb|🏡|#ff5a5f|Travel|🏕️ A-Frame Muskoka Cabin Weekend:890;🏙️ Downtown Penthouse Weekend:4800;🌴 Month in Bali Villa:11500;🏰 Scottish Highlands Castle Week:24000;🏝️ Private Bahamian Island Week:55000
-Air Canada|✈️|#f01428|Travel|🎟️ Aeroplan Super Elite Status:2500;🛫 Toronto to Vancouver Economy:420;✈️ Business Class to Paris:6400;🥂 Signature Class Suite to Tokyo:8200;🛩️ Charter Jetz Airbus A319:85000
-Emirates|🛫|#d71920|Travel|🍷 Dubai First Class Lounge Pass:250;👑 First Class Gamechanger Suite Dubai:24000;🛫 Private Suite to Sydney:29000;✈️ Charter Emirates Executive Private Jet:145000
-Marriott|🏨|#8a1538|Travel|🛏️ Bonvoy Ambassador Status:1200;🛎️ Presidential Suite Night:5200;🌴 All-Inclusive Resort Week:8800;🏨 Buy Out Entire Hotel Floor:75000
-NetJets|🛩️|#1a2a4e|Luxury|🚁 Sikorsky Helicopter Charter:16000;🛩️ Phenom 300 Light Jet Card:115000;🛩️ 25-Hour Challenger 350 Card:220000;🚀 Buy Brand-New Gulfstream G700:95000000::-35000
-Tim Hortons|☕|#c8102e|Food|☕ Large Double-Double:2.39;🍩 Box of 50 Timbits:12.99;🍩 10 Dozen Assorted Donuts:165;🧊 100 Iced Capps for the Crew:460;🏟️ Coffee & Donuts for an Entire Stadium:24000
-McDonald’s|🍟|#eab308|Food|🍔 Big Mac Extra Value Meal:13.49;🍟 Fries & Nuggets for the Whole Block:320;🍦 Working McFlurry Machine + Party:6500;🎉 Feed 1,000 People Meal Drop:13500;🏪 Franchise a McDonald's Location:2200000::42000
-Starbucks|🧋|#00704a|Food|🥤 Venti Caramel Macchiato:6.95;☕ $100 Reloaded Gold Card:100;🍰 Corporate Office Catering:1100;🧋 Private Frappuccino Fountain Bar:3600
-DoorDash|🥡|#ff3008|Food|📱 DashPass Monthly:9.99:m;🍜 Late Night Feast Delivery:55;🍕 20-Pizza Office Drop:240;🍣 Omakase Sushi Banquet Delivery:950
-Rolex|⌚|#006039|Luxury|⌚ Submariner Date:15200;⌚ GMT-Master II Pepsi:26500;🌟 Cosmograph Daytona:52000;💎 Day-Date 40 Platinum:84000;👑 Rainbow Daytona Off-Catalog:520000
-Louis Vuitton|👜|#6b4e2e|Luxury|🕶️ Millionaire Sunglasses:980;👜 Neverfull MM Tote:2550;👛 Alma BB Monogram:2700;🧳 Horizon Rolling Luggage Set:9400;🧳 Bespoke Courrier Lozine Trunk:54000
-Gucci|🧥|#0a5c36|Luxury|🕶️ GG Aviator Sunglasses:680;👞 Horsebit Leather Loafers:1250;👜 Dionysus Shoulder Bag:4200;🧥 Full Runway Velvet Suit Look:8500
-Sotheby’s|🖼️|#1c2d4a|Luxury|🖼️ Signed Andy Warhol Screenprint:280000;🏺 Ming Dynasty Imperial Vase:450000;🎻 1715 Stradivarius Violin:680000;🎨 Banksy Shredded Canvas:1450000;🦖 Apex Stegosaurus Skeleton:44000000
-Nike|👟|#f36f21|Fashion|🏃 Alphafly 3 Running Shoes:360;👟 Air Jordan 1 Chicago Lost & Found:580;✨ Travis Scott Limited Collab:3400;🏀 Custom Pro Team Uniforms & Kicks:14000;👟 Back to the Future Nike Mag:48000
-Lululemon|🧘|#d31f26|Fashion|🏃 Studio Mirror Membership:140:m;🧥 Define Nulu Jacket:148;👖 ABC Commission Pants 5-Pack:740;👕 Complete Athleisure Wardrobe:4200;🧘 Private Bali Yoga Retreat:6800
-SpaceX|🚀|#005288|Space|🛰️ Starlink Residential Monthly:140:m;📡 Starlink High-Performance Dish:699;🧢 Boca Chica VIP Launch Viewing:2500;🛰️ Dedicated Satellite Rideshare Slot:450000;🚀 Crew Dragon Orbit Mission Seat:55000000;🌙 DearMoon Lunar Starship Charter:150000000
-Virgin Galactic|🛸|#d82037|Space|🌍 Zero-G Parabolic Training Flight:14000;🚀 Astronaut Bootcamp Week:38000;🌌 Suborbital Spaceflight Ticket:650000
-RE/MAX|🏠|#dc1c2e|Property|🏠 Starter Home Down Payment:125000;🏢 Downtown Toronto Luxury Condo:850000::2800;🌲 Muskoka Lakefront Cottage:1350000::3600;🏬 Commercial Retail Plaza:4800000::34000;🏰 Beverly Hills Mega-Mansion:48000000::-18000;🏝️ Private Caribbean Island Estate:125000000::-45000
-GoFundMe|🤝|#00b964|Charity|💚 Community Medical Donation:100;🐶 Clear the Animal Shelter Fund:6500;🌊 Emergency Flood Relief Fund:50000;🏫 Build & Fund a Community School:280000;🏥 Fund a Pediatric Hospital Wing:5000000
+Snapchat|👻|#eab308|Social|⭐ Snapchat+:5.49:m;🔦 Citywide Geofilter Campaign:1800:a;🎭 Custom AR Sponsored Lens:45000:a;🦄 Celebrity Story Takeover:75000:a
+Reddit|👽|#ff4500|Social|🤖 Reddit Premium:7.99:m;🥇 Golden Award Rain:75:g;📌 Promoted Subreddit Thread:2500:a;🏅 Front Page Global Takeover:65000:a
+Discord|🗨️|#5865f2|Social|⚡ Discord Nitro:12.99:m;🚀 Boost Server ×14 (Level 3):69.99:g;🎨 Custom Bot & Server Makeover:650;🎉 Global Sponsored Quest:15000:a
+Steam|🎮|#1b2838|Gaming|🕹️ Steam Deck OLED 1TB:819;📚 Buy Entire Steam Wishlist:1450;⌨️ Custom Mech Keyboard Rig:580;🎁 Gift 100 AAA Games to Chat:8999;🖥️ Liquid-Cooled RTX 5090 PC:6499
+Nintendo|🍄|#e60012|Gaming|🎮 Nintendo Switch 2:629.99;🏎️ Mario Kart World:99.99;🎮 Switch Online + Expansion:63.99:m;🏰 Zelda Collector Statue Set:549.99;🎻 Hyrule Symphony VIP Box:1850
+Xbox|🟢|#107c10|Gaming|🎮 Xbox Series X 2TB Galaxy:799.99;🎟️ Game Pass Ultimate:25.99:m;🎮 Elite Series 2 Core Pack:229.99;🖥️ Ultimate Cloud + Sim Rig:4499
+PlayStation|🔷|#003791|Gaming|🥽 PS VR2 Horizon Bundle:749.99;🎧 Pulse Elite Headset:199.99;🎮 PS Plus Premium:21.99:m;🎮 DualSense Edge 4-Pack:1079.96;🏆 Complete Platinum Library:3999
+Roblox|🧱|#e2231a|Gaming|💰 10,000 Robux:139.99:g;🛍️ 100 Roblox Gift Cards:2500:g;🎩 Dominus Empyreus Hat:29500:g;🏰 Branded Sponsored Metaverse World:45000:a::1200
+Epic Games|⚔️|#7a3cff|Gaming|🎫 Fortnite Crew Pass:15.99:m;💎 13,500 V-Bucks Pack:119.99:g;🎁 Gift 50 Icon Skins:2400:g;📢 FNCS Tournament Sponsor:95000:a
+Pokémon Center|⚡|#eab308|Gaming|🃏 Booster Box Case (6 Boxes):1399.99;🧸 100 Giant Pikachu Plushies:4999;💎 First Edition Shadowless Box:88000;🔥 PSA 10 1st Ed Charizard:495000
+Apple|🍎|#8e8e93|Tech|📱 iPhone 17 Pro Max 1TB:2349;💻 MacBook Pro M4 Max:5299;🥽 Apple Vision Pro:4999;🎧 AirPods Max USB-C:779;⌚ Apple Watch Ultra 3:1099;🖥️ Mac Pro + Pro Display XDR:16298
+Samsung|📲|#1428a0|Tech|📱 Galaxy S25 Ultra 512GB:2099.99;🥽 Galaxy Z Fold Special:2699.99;🖥️ 57-inch Odyssey Neo G9:3299.99;🧊 Bespoke AI Smart Fridge:4599;📺 98-inch Neo QLED 8K TV:14999.99
+Google|🔍|#4285f4|Tech|📱 Pixel 10 Pro XL:1499;☁️ Google One AI 2TB:26.99:m;🏠 Full Nest Smart Home Kit:1249;📺 YouTube TV / Sports Pass:105:m;📢 Google Search Ads Dominance:35000:a
+Nvidia|🟩|#76b900|Tech|🕹️ GeForce NOW Ultimate:25.99:m;🎮 RTX 5090 Founders Edition:2899;🖥️ DGX Spark AI Workstation:12500::350;🧠 H200 Enterprise AI GPU:49000::1400;🏭 Liquid-Cooled AI Server Rack:560000::18500
+OpenAI|🤖|#10a37f|Tech|💬 ChatGPT Plus:28:m;⚡ ChatGPT Pro Unlimited:280:m;🎨 10,000 Sora Video Credits:820;🏢 50 Enterprise Team Seats:3100:m;🧠 Custom Fine-Tuned Model Cluster:155000::4200
+Shopify|🛍️|#5e8e3e|Tech|🏪 Shopify Basic Plan:38:m;💳 Retail POS Hardware Kit:749;📢 Global Launch Ad Campaign:12000:a;🚚 Automated 3PL Fulfillment Deal:25000::1800;🏢 Buy Profitable E-Commerce Brand:650000::19500
+Tesla|🚗|#e82127|Cars|🤖 Full Self-Driving (FSD):99:m;🔌 Supercharger Unlimited Pass:240:m;🔋 Powerwall 3 Home Battery:16800;🏠 Solar Roof Full Install:64000::220;🚘 Model 3 Performance:69990;🚙 Model Y Long Range:64990;🛻 Cyberbeast Tri-Motor:137990;⚡ Model S Plaid:129990;🏁 Next-Gen Roadster:290000
+Ford|🛻|#003478|Cars|🔧 Heavy-Duty Tow Package:2495;🚗 Mustang EcoBoost:41995;🐎 Mustang Dark Horse V8:84995;🚐 E-Transit Commercial Van:78995;🛻 F-150 Lightning Platinum:112995;🏜️ F-150 Raptor R:156995
+Toyota|🚙|#eb0a1e|Cars|🚗 Corolla Hybrid:30990;🔋 Prius Prime Plug-In:41490;🚙 RAV4 Woodland:44290;🚐 Sienna Platinum:64890;🏎️ GR Supra 3.0:71990;🏔️ Land Cruiser 1958 Edition:89290
+Porsche|🏎️|#b12b28|Cars|🎨 Paint-to-Sample Custom Spec:18400;⚡ Taycan Turbo GT:272000;🛡️ Cayenne Turbo E-Hybrid:229900;🏎️ 911 GT3 RS Weissach:458000;🏁 918 Spyder Collector Edition:2550000
+Ferrari|🐎|#dc0000|Cars|🏁 Maranello Factory Track Day:19000;🏎️ Roma Spider:358000;🏎️ 296 GTB Assetto Fiorano:485000;🚙 Purosangue V12 SUV:645000;🔥 SF90 XX Stradale:1220000;👑 LaFerrari Aperta:6100000
+Lamborghini|🐂|#ddb321|Cars|🧢 Squadra Corse Merch Wall:1250;🐂 Urus SE Hybrid:378000;🏁 Huracán STO:468000;🚀 Revuelto V12 Hybrid:1020000;⚡ Countach LPI 800-4:3750000
+Bugatti|🏁|#1c3f94|Cars|🏎️ Chiron Super Sport Rental Day:12500;⌚ Jacob & Co Bugatti Tourbillon Watch:395000;🏁 Bugatti Tourbillon V16:6100000::-4500;👑 Bugatti La Voiture Noire:19200000::-9000
+Uber|🚕|#18181b|Travel|👑 Uber One Membership:9.99:m;🚕 Uber Black Airport Transfer:98;🍔 Uber Eats Mansion Banquet:680;🚘 Chauffeur Fleet for a Week:4600;🚁 Uber Copter Manhattan Hop:2900
+Airbnb|🏡|#ff5a5f|Travel|🏕️ A-Frame Muskoka Cabin Weekend:920;🏙️ Downtown Penthouse Weekend:4950;🌴 Month in Bali Villa:11800;🏰 Scottish Highlands Castle Week:24500;🏝️ Private Bahamian Island Week:58000
+Air Canada|✈️|#f01428|Travel|🎟️ Aeroplan Super Elite Status:2500;🛫 Toronto to Vancouver Economy:438;✈️ Business Class to Paris:6550;🥂 Signature Class Suite to Tokyo:8450;🛩️ Charter Jetz Airbus A319:88000
+Emirates|🛫|#d71920|Travel|🍷 Dubai First Class Lounge Pass:265;👑 First Class Gamechanger Suite Dubai:24800;🛫 Private Suite to Sydney:29800;✈️ Charter Emirates Executive Private Jet:150000
+Marriott|🏨|#8a1538|Travel|🛏️ Bonvoy Ambassador Status:1200;🛎️ Presidential Suite Night:5400;🌴 All-Inclusive Resort Week:8900;🏨 Buy Out Entire Hotel Floor:78000
+NetJets|🛩️|#1a2a4e|Luxury|🚁 Sikorsky Helicopter Charter:16500;🛩️ Phenom 300 Light Jet Card:118000;🛩️ 25-Hour Challenger 350 Card:228000;🚀 Buy Brand-New Gulfstream G700:98000000::-35000
+Tim Hortons|☕|#c8102e|Food|☕ Large Double-Double:2.39;🍩 Box of 50 Timbits:13.49;🍩 10 Dozen Assorted Donuts:169.90;🧊 100 Iced Capps for the Crew:449;🏟️ Coffee & Donuts for an Entire Stadium:24500
+McDonald’s|🍟|#eab308|Food|🍔 Big Mac Extra Value Meal:13.69;🍟 Fries & Nuggets for the Whole Block:329;🍦 Working McFlurry Machine + Party:6500;🎉 Feed 1,000 People Meal Drop:13690;🏪 Franchise a McDonald's Location:2250000::42000
+Starbucks|🧋|#00704a|Food|🥤 Venti Caramel Macchiato:6.95;☕ $100 Reloaded Gold Card:100;🍰 Corporate Office Catering:1150;🧋 Private Frappuccino Fountain Bar:3600
+DoorDash|🥡|#ff3008|Food|📱 DashPass Monthly:9.99:m;🍜 Late Night Feast Delivery:58;🍕 20-Pizza Office Drop:249;🍣 Omakase Sushi Banquet Delivery:980
+Rolex|⌚|#006039|Luxury|⌚ Submariner Date:13950;⌚ GMT-Master II Pepsi:15100;🌟 Cosmograph Daytona:20900;💎 Day-Date 40 Platinum:88500;👑 Rainbow Daytona Off-Catalog:540000
+Louis Vuitton|👜|#6b4e2e|Luxury|🕶️ 1.1 Millionaires Sunglasses:1170;👜 Neverfull MM Tote:2720;👛 Alma BB Monogram:2520;🧳 Horizon Rolling Luggage Set:9650;🧳 Bespoke Courrier Lozine Trunk:56000
+Gucci|🧥|#0a5c36|Luxury|🕶️ GG Aviator Sunglasses:695;👞 Horsebit Leather Loafers:1290;👜 Dionysus Shoulder Bag:4350;🧥 Full Runway Velvet Suit Look:8800
+Sotheby’s|🖼️|#1c2d4a|Luxury|🖼️ Signed Andy Warhol Screenprint:290000;🏺 Ming Dynasty Imperial Vase:465000;🎻 1715 Stradivarius Violin:710000;🎨 Banksy Shredded Canvas:1490000;🦖 Apex Stegosaurus Skeleton:45500000
+Nike|👟|#f36f21|Fashion|🏃 Alphafly 3 Running Shoes:370;👟 Air Jordan 1 Chicago Lost & Found:595;✨ Travis Scott Limited Collab:3500;🏀 Custom Pro Team Uniforms & Kicks:14500;👟 Back to the Future Nike Mag:49500
+Lululemon|🧘|#d31f26|Fashion|🏃 Studio Mirror Membership:140:m;🧥 Define Nulu Jacket:138;👖 ABC Commission Pants 5-Pack:740;👕 Complete Athleisure Wardrobe:4200;🧘 Private Bali Yoga Retreat:6900
+SpaceX|🚀|#005288|Space|🛰️ Starlink Residential Monthly:140:m;📡 Starlink Standard Kit:499;🧢 Boca Chica VIP Launch Viewing:2600;🛰️ Dedicated Satellite Rideshare Slot:465000;🚀 Crew Dragon Orbit Mission Seat:58000000;🌙 DearMoon Lunar Starship Charter:155000000
+Virgin Galactic|🛸|#d82037|Space|🌍 Zero-G Parabolic Training Flight:14500;🚀 Astronaut Bootcamp Week:39000;🌌 Suborbital Spaceflight Ticket:680000
+RE/MAX|🏠|#dc1c2e|Property|🏠 Starter Home Down Payment:125000;🏢 Downtown Toronto Luxury Condo:865000::2800;🌲 Muskoka Lakefront Cottage:1390000::3600;🏬 Commercial Retail Plaza:4950000::34000;🏰 Beverly Hills Mega-Mansion:49000000::-18000;🏝️ Private Caribbean Island Estate:128000000::-45000
+GoFundMe|🤝|#00b964|Charity|💚 Community Medical Donation:100;🐶 Clear the Animal Shelter Fund:6500;🌊 Emergency Flood Relief Fund:50000;🏫 Build & Fund a Community School:285000;🏥 Fund a Pediatric Hospital Wing:5000000
 Red Cross|❤️|#e4002b|Charity|🩹 Family Emergency Relief Kit:65;🍲 Citywide Food Bank Drive:3500;🩸 Mobile Blood Drive Sponsorship:12000;🚑 Rapid Disaster Response Fleet:45000;🚁 Humanitarian Airlift Mission:350000
 Bell|📡|#0070bb|Telecom|📱 5G+ Unlimited Canada-US-Mexico:95:m;🌐 PureFibre 8Gbps Internet:135:m;📺 Fibe TV Better Package:85:m;🏒 NHL Arena Rinkboard Sponsorship:65000:a
-Peloton|🚴|#e5383b|Fitness|🏃 All-Access App Membership:55:m;🚴 Peloton Bike+ Ultimate:3195;🏃 Peloton Tread+ Slat Belt:6695;🏆 Full Commercial Home Gym Suite:14500
-Kickstarter|💡|#05ce78|Fun|🔦 Titanium EDC Flashlight:95;🎲 Deluxe Board Game All-In Pledge:220;🎬 Back an Indie Sci-Fi Film:18000;🤖 Seed-Fund a Robotics Startup:95000::2400
-Ticketmaster|🎤|#026cdf|Fun|🎫 Lower Bowl Concert Tickets:480;🎸 3-Day VIP Festival Pass:1850;⭐ Front Row Pit World Tour:2900;🏆 Stanley Cup Finals Luxury Suite:14500;🏟️ Rent Out the Entire Arena:380000`;
+Peloton|🚴|#e5383b|Fitness|🏃 All-Access App Membership:55:m;🚴 Peloton Bike+ Ultimate:3295;🏃 Peloton Tread+ Slat Belt:6695;🏆 Full Commercial Home Gym Suite:14800
+Kickstarter|💡|#05ce78|Fun|🔦 Titanium EDC Flashlight:95;🎲 Deluxe Board Game All-In Pledge:225;🎬 Back an Indie Sci-Fi Film:18500;🤖 Seed-Fund a Robotics Startup:95000::2400
+Ticketmaster|🎤|#026cdf|Fun|🎫 Lower Bowl Concert Tickets:495;🎸 3-Day VIP Festival Pass:1899;⭐ Front Row Pit World Tour:2950;🏆 Stanley Cup Finals Luxury Suite:14800;🏟️ Rent Out the Entire Arena:385000`;
 
 const NEWCO=`Crave|🍁|#00a3e0|Streaming|📺 Crave Premium Ad-Free:22:m;🍿 HBO Sunday Watch Party Pack:75;🎬 Premiere Night Title Sponsor:35000:a
-Kick|🟢|#53fc18|Streaming|💬 Pinned Mega Chat:25:g;🎁 Gift 10 Subs:80:h;🎁 Gift 500 Subs:3995:h;📢 Sponsor a Top Kick Streamer:25000:a
-Pinterest|📌|#e60023|Social|🖼️ Custom Gallery Print Set:85;📈 Promoted Idea Pins Campaign:1800:a;🛋️ Full HGTV Dream Room Makeover:12000
+Kick|🟢|#53fc18|Streaming|💬 Pinned Mega Chat:25:g;🎁 Gift 10 Subs:69.90:h;🎁 Gift 500 Subs:3495:h;📢 Sponsor a Top Kick Streamer:25000:a
+Pinterest|📌|#e60023|Social|🖼️ Custom Gallery Print Set:89;📈 Promoted Idea Pins Campaign:1800:a;🛋️ Full HGTV Dream Room Makeover:12500
 LinkedIn|💼|#0a66c2|Social|⭐ LinkedIn Sales Navigator:115:m;📢 B2B Executive Ad Campaign:12000:a;🎤 Keynote Industry Summit Sponsor:45000:a
-Riot Games|⚔️|#d13639|Gaming|💎 Valorant Points ×10 Bundle:150:g;🏆 Radiant Champions Skin Bundle:280;📢 Worlds Esports Arena Sponsor:85000:a
-Meta|🥽|#0668e1|Tech|🕶️ Ray-Ban Meta Smart Glasses:429;🥽 Meta Quest 3 512GB:699;📢 Cross-App Meta Ad Blitz:45000:a;🤖 Llama Compute Cluster Node:180000::4800
-Sony|📷|#2a2a2a|Tech|🎧 WH-1000XM5 Headphones:499;📷 Alpha a7R V Mirrorless Body:5200;📺 85-inch Bravia XR Master TV:7800;🎬 CineAlta Cinema Camera Kit:42000
-LEGO|🧱|#eab308|Fun|🚀 NASA Space Shuttle Discovery:260;🏰 Lion Knights' Castle Set:550;🏎️ Technic Ferrari Daytona SP3:590;🏗️ Pallet of 500,000 Loose Bricks:28000
-BMW|🚘|#1c69d4|Cars|🏁 M Driving School Track Day:4200;🚘 BMW M3 Competition xDrive:112000;⚡ BMW i7 M70 Flagship:185000;🏎️ BMW M4 GT3 Race Car:680000
-Harley-Davidson|🏍️|#f97316|Cars|🧥 Screamin' Eagle Leather Gear:1800;🏍️ Sportster S:21500;🏍️ CVO Street Glide Limited:54000
-Rivian|🛻|#f5a623|Cars|🏕️ Slide-Out Camp Kitchen:1200;🚙 R1S Tri-Motor Max SUV:124000;🛻 R1T Quad-Motor Adventure Truck:129000
-Carnival|🚢|#d52b1e|Travel|🛳️ 7-Day Caribbean Balcony Cruise:3600;🌴 Excel Presidential Suite:29000;🚢 Charter Entire Cruise Ship for Weekend:1650000
-WestJet|🛫|#00a2ae|Travel|🎟️ Calgary to Halifax Flight:340;🥂 787 Dreamliner Business Pod:1450;✈️ Charter WestJet Boeing 737:68000
-Four Seasons|🛎️|#8a6d3b|Travel|🍽️ Private Chef's Table Dinner:2200;🛏️ Bora Bora Overwater Villa Week:32000;🛩️ Four Seasons Private Jet World Tour:265000
-Cartier|💍|#a00000|Luxury|💍 Love Wedding Band:3900;⌚ Tank Louis Cartier Gold:16800;🐆 Panthère Diamond Bracelet:92000;👑 Royal Platinum Diamond Tiara:540000
-Hermès|🧡|#f37021|Luxury|🧣 Carre 90 Silk Twill Scarf:640;👡 Oran Leather Sandals:960;👜 Birkin 30 Togo Leather:22500;🐊 Himalayan Niloticus Birkin:380000
-Patek Philippe|🕰️|#0f2a4a|Luxury|⌚ Aquanaut Travel Time:95000;⌚ Nautilus 5711 Tiffany Dial:2400000;🕰️ Grandmaster Chime Ref. 6300:38000000
-Domino’s|🍕|#006491|Food|🍕 Large Extravaganzza Pizza:22.99;🎉 100-Pizza Block Party:1950;🏪 Open a Domino's Franchise Store:450000::9500
-Sephora|💄|#222222|Fashion|💄 Full Viral TikTok Glam Haul:720;🧴 Luxury La Mer Skincare Vault:3400;🛍️ Private After-Hours Store Shopping Spree:18000
-Toronto Maple Leafs|🍁|#00205b|Sports|🧢 Authentic Pro Jersey:260;🏒 Lower Bowl Glass Seats (Pair):1450;🥂 Scotiabank Arena Platinum Lounge Box:18000;🏆 Zamboni Ride + Practice with Team:35000
-Toronto Raptors|🦖|#ce1141|Sports|🏀 OVO City Edition Jersey:220;🎟️ Courtside Drake-Row Seats:4800;🏟️ Rent Arena Court for Midnight Run:28000
-FIFA World Cup|⚽|#1d4ed8|Sports|⚽ Official Match Ball Pro:210;🎟️ World Cup Final VIP Hospitality:16500;🏆 Private Skybox for Knockout Stage:95000;🏟️ Official Tournament Sponsor Board:750000:a
-Formula 1|🏎️|#e10600|Sports|🧢 Team Pit Crew Replica Kit:450;🥂 Paddock Club 3-Day Garage Pass:14500;🛥️ Monaco GP Trackside Yacht Berth:140000;🏎️ Buy Show-Spec F1 Chassis:1650000
-Gibson|🎸|#92400e|Music|🎸 Les Paul Standard '59 Reissue:8900;🎸 ES-335 Custom Shop:6400;🔥 Collector's 1959 Burst Les Paul:420000
-Steinway & Sons|🎹|#1e293b|Music|🎹 Model B Classic Grand Piano:145000;🎹 Model D Concert Grand Piano:245000;👑 Limited Edition Steinway Spirio r:320000
-Live Nation|🎤|#e11d48|Music|🎟️ All-Access Season Festival Passport:3500;🚌 Tour Bus Rental for a Month:45000;🎤 Book Headline Artist for Private Party:850000
-Nobu|🍣|#334155|Food|🍱 Omakase Tasting for Two:680;🍶 Rare Junmai Daiginjo Sake Bottle:1800;🥂 Buy Out Nobu Dining Room for Night:65000
-Nusr-Et (Salt Bae)|🥩|#b45309|Food|🥩 24K Gold-Wrapped Tomahawk Steak:2200;🍷 Vintage Petrus + Gold Steak Table:14500;🧂 Private Salt Bae Table Performance:25000
-Dom Pérignon|🍾|#15803d|Luxury|🍾 Vintage 2015 Brut Bottle:380;✨ P2 Plénitude Deuxième Magnum:1650;🥂 VIP Nightclub Parade (50 Methuselahs):185000
-Tiffany & Co.|💎|#0abab5|Luxury|💍 Return to Tiffany Silver Bracelet:650;💍 2-Carat Tiffany Setting Ring:38000;💎 Yellow Diamond High Jewelry Necklace:650000
-Rolls-Royce|🏛️|#4c1d95|Cars|☂️ Bespoke Door Umbrella Pair:1800;🚙 Cullinan Black Badge:580000;⚡ Spectre Electric Coupe:560000;👑 Phantom Extended Wheelbase:740000;🌌 Boat Tail Coachbuild Commission:34000000::-12000
-Koenigsegg|👻|#ea580c|Cars|🏎️ Jesko Attack Megacar:4400000::-3200;🏎️ Gemera 4-Seat Megacar:2600000::-2000;👑 CC850 Manual/Auto Hypercar:5100000::-3800
-Lürssen Yachts|🛳️|#0369a1|Luxury|🛥️ 45m Shadow Support Yacht:18000000::-15000;🛳️ 95m Custom Superyacht:165000000::-65000;👑 140m Giga-Yacht with Helipads:420000000::-140000
-Best Buy|🏷️|#0046be|Tech|🔌 Geek Squad Total Tech Plan:240:m;🖥️ OLED Gaming Monitor Trio:3600;🎬 Custom Dolby Atmos Home Cinema:38000;🏪 60-Second Best Buy Shopping Spree:65000
-Dyson|🌪️|#7e22ce|Tech|💇 Airwrap Multi-Styler Complete:799;🧹 Gen5detect Absolute Vacuum:1299;🎧 Zone Air-Purifying Headphones:999;🌬️ Whole-Home Purifier Fleet:4800
-Anthropic|🧠|#d97706|Tech|💬 Claude Pro Subscription:28:m;⚡ Claude Max 20x Plan:280:m;🏢 Enterprise API Token Bank:15000;🧠 Dedicated Constitutional AI Cluster:320000::9800
-Boston Dynamics|🐕|#0284c7|Tech|🐕 Spot Enterprise Quadruped Robot:98000::-250;🦾 Stretch Warehouse Logistics Robot:240000::5500;🤖 Electric Atlas Humanoid Prototype:480000
+Riot Games|⚔️|#d13639|Gaming|💎 Valorant Points ×10 Bundle:139.99:g;🏆 Radiant Champions Skin Bundle:289.99;📢 Worlds Esports Arena Sponsor:85000:a
+Meta|🥽|#0668e1|Tech|🕶️ Ray-Ban Meta Smart Glasses:369;🥽 Meta Quest 3 512GB:679.99;📢 Cross-App Meta Ad Blitz:45000:a;🤖 Llama Compute Cluster Node:185000::4800
+Sony|📷|#2a2a2a|Tech|🎧 WH-1000XM5 Headphones:499.99;📷 Alpha a7R V Mirrorless Body:5299.99;📺 85-inch Bravia XR Master TV:7999.99;🎬 CineAlta Cinema Camera Kit:43500
+LEGO|🧱|#eab308|Fun|🚀 NASA Space Shuttle Discovery:259.99;🏰 Lion Knights' Castle Set:519.99;🏎️ Technic Ferrari Daytona SP3:589.99;🏗️ Pallet of 500,000 Loose Bricks:28500
+BMW|🚘|#1c69d4|Cars|🏁 M Driving School Track Day:4400;🚘 BMW M3 Competition xDrive:113900;⚡ BMW i7 M70 Flagship:189900;🏎️ BMW M4 GT3 Race Car:695000
+Harley-Davidson|🏍️|#f97316|Cars|🧥 Screamin' Eagle Leather Gear:1850;🏍️ Sportster S:20499;🏍️ CVO Street Glide Limited:55999
+Rivian|🛻|#f5a623|Cars|🏕️ Slide-Out Camp Kitchen:1250;🚙 R1S Tri-Motor Max SUV:126000;🛻 R1T Quad-Motor Adventure Truck:132000
+Carnival|🚢|#d52b1e|Travel|🛳️ 7-Day Caribbean Balcony Cruise:3650;🌴 Excel Presidential Suite:29500;🚢 Charter Entire Cruise Ship for Weekend:1680000
+WestJet|🛫|#00a2ae|Travel|🎟️ Calgary to Halifax Flight:348;🥂 787 Dreamliner Business Pod:1490;✈️ Charter WestJet Boeing 737:69000
+Four Seasons|🛎️|#8a6d3b|Travel|🍽️ Private Chef's Table Dinner:2250;🛏️ Bora Bora Overwater Villa Week:33500;🛩️ Four Seasons Private Jet World Tour:272000
+Cartier|💍|#a00000|Luxury|💍 Love Wedding Band:1780;⌚ Tank Louis Cartier Gold:17600;🐆 Panthère Diamond Bracelet:96000;👑 Royal Platinum Diamond Tiara:555000
+Hermès|🧡|#f37021|Luxury|🧣 Carre 90 Silk Twill Scarf:710;👡 Oran Leather Sandals:1025;👜 Birkin 30 Togo Leather:16800;🐊 Himalayan Niloticus Birkin:395000
+Patek Philippe|🕰️|#0f2a4a|Luxury|⌚ Aquanaut Travel Time:98000;⌚ Nautilus 5711 Tiffany Dial:2480000;🕰️ Grandmaster Chime Ref. 6300:39000000
+Domino’s|🍕|#006491|Food|🍕 Large Extravaganzza Pizza:23.99;🎉 100-Pizza Block Party:1999;🏪 Open a Domino's Franchise Store:450000::9500
+Sephora|💄|#222222|Fashion|💄 Full Viral TikTok Glam Haul:740;🧴 Luxury La Mer Skincare Vault:3550;🛍️ Private After-Hours Store Shopping Spree:18500
+Toronto Maple Leafs|🍁|#00205b|Sports|🧢 Authentic Fanatics Pro Jersey:259.99;🏒 Lower Bowl Glass Seats (Pair):1480;🥂 Scotiabank Arena Platinum Lounge Box:18500;🏆 Zamboni Ride + Practice with Team:35000
+Toronto Raptors|🦖|#ce1141|Sports|🏀 OVO City Edition Jersey:219.99;🎟️ Courtside Drake-Row Seats:4950;🏟️ Rent Arena Court for Midnight Run:28000
+FIFA World Cup|⚽|#1d4ed8|Sports|⚽ Official Pro Match Ball:220;🎟️ World Cup Final VIP Hospitality:16800;🏆 Private Skybox for Knockout Stage:98000;🏟️ Official Tournament Sponsor Board:750000:a
+Formula 1|🏎️|#e10600|Sports|🧢 Team Pit Crew Replica Kit:465;🥂 Paddock Club 3-Day Garage Pass:14900;🛥️ Monaco GP Trackside Yacht Berth:145000;🏎️ Buy Show-Spec F1 Chassis:1680000
+Gibson|🎸|#92400e|Music|🎸 Les Paul Standard '59 Reissue:9299;🎸 ES-335 Custom Shop:6699;🔥 Collector's 1959 Burst Les Paul:435000
+Steinway & Sons|🎹|#1e293b|Music|🎹 Model B Classic Grand Piano:148000;🎹 Model D Concert Grand Piano:249000;👑 Limited Edition Steinway Spirio r:328000
+Live Nation|🎤|#e11d48|Music|🎟️ All-Access Season Festival Passport:3600;🚌 Tour Bus Rental for a Month:46000;🎤 Book Headline Artist for Private Party:860000
+Nobu|🍣|#334155|Food|🍱 Omakase Tasting for Two:695;🍶 Rare Junmai Daiginjo Sake Bottle:1850;🥂 Buy Out Nobu Dining Room for Night:68000
+Nusr-Et (Salt Bae)|🥩|#b45309|Food|🥩 24K Gold-Wrapped Tomahawk Steak:2250;🍷 Vintage Petrus + Gold Steak Table:14800;🧂 Private Salt Bae Table Performance:25500
+Dom Pérignon|🍾|#15803d|Luxury|🍾 Vintage 2015 Brut Bottle:379.95;✨ P2 Plénitude Deuxième Magnum:1695;🥂 VIP Nightclub Parade (50 Methuselahs):189000
+Tiffany & Co.|💎|#0abab5|Luxury|💍 Return to Tiffany Silver Bracelet:690;💍 2-Carat Tiffany Setting Ring:39500;💎 Yellow Diamond High Jewelry Necklace:665000
+Rolls-Royce|🏛️|#4c1d95|Cars|☂️ Bespoke Door Umbrella Pair:1850;🚙 Cullinan Black Badge:595000;⚡ Spectre Electric Coupe:575000;👑 Phantom Extended Wheelbase:765000;🌌 Boat Tail Coachbuild Commission:35500000::-12000
+Koenigsegg|👻|#ea580c|Cars|🏎️ Jesko Attack Megacar:4550000::-3200;🏎️ Gemera 4-Seat Megacar:2680000::-2000;👑 CC850 Manual/Auto Hypercar:5250000::-3800
+Lürssen Yachts|🛳️|#0369a1|Luxury|🛥️ 45m Shadow Support Yacht:18500000::-15000;🛳️ 95m Custom Superyacht:168000000::-65000;👑 140m Giga-Yacht with Helipads:435000000::-140000
+Best Buy|🏷️|#0046be|Tech|🔌 Geek Squad Total Tech Plan:239.99:m;🖥️ OLED Gaming Monitor Trio:3699;🎬 Custom Dolby Atmos Home Cinema:38500;🏪 60-Second Best Buy Shopping Spree:65000
+Dyson|🌪️|#7e22ce|Tech|💇 Airwrap Multi-Styler Complete:799.99;🧹 Gen5detect Absolute Vacuum:1299.99;🎧 OnTrac Noise-Cancelling Headphones:699.99;🌬️ Whole-Home Purifier Fleet:4899
+Anthropic|🧠|#d97706|Tech|💬 Claude Pro Subscription:28:m;⚡ Claude Max 20x Plan:280:m;🏢 Enterprise API Token Bank:15000;🧠 Dedicated Constitutional AI Cluster:325000::9800
+Boston Dynamics|🐕|#0284c7|Tech|🐕 Spot Enterprise Quadruped Robot:102000::-250;🦾 Stretch Warehouse Logistics Robot:248000::5500;🤖 Electric Atlas Humanoid Prototype:495000
 Vanguard Canada|📈|#991b1b|Finance|📊 S&P 500 Index ETF (VFV) Block:10000::140;🏦 Canadian Government T-Bills:100000::1150;💎 Private Equity Institutional Fund:1000000::14500;🏛️ Sovereign Wealth Endowment:25000000::410000`;
 
 const CO=(DATA+'\n'+NEWCO).split('\n').map((l,i)=>{
@@ -492,7 +540,7 @@ const CO=(DATA+'\n'+NEWCO).split('\n').map((l,i)=>{
   };
 });
 
-// Update search bar dynamically with exact company count
+// Update search bar dynamically with exact company & item count
 $('#q').placeholder=`Search ${CO.length} companies & ${CO.reduce((a,c)=>a+c.it.length,0)} items…`;
 
 const KEY='spendsim-v2';
@@ -725,7 +773,6 @@ function checkout(c,it,i){
     const cd=$('#cd');
     cd.classList.add('busy');
 
-    // Card-specific sound & stage cues
     const st=S.cardStyle;
     if(st===1){tone(900,.3,'sawtooth',.06);tone(1400,.4,'sine',.07,.35)}
     if(st===2){tone(1200,.12,'sine',.12);tone(1600,.18,'sine',.12,.14)}
@@ -790,12 +837,164 @@ function commit(c,it,i,q,tot,msg){
   }else if(it.f=='a'){
     openViralAdSim(c,it,tot);
   }else{
-    burst(it.e,q,tot,it.f=='m'?`Subscribed: ${c.n}`:`${q>1?q.toLocaleString()+'× ':''}${it.n} acquired!`);
+    playBespokeAnimation(c,it,q,tot);
   }
 
   if(openCo)openStore(openCo);
   renderTabs();
   if(S.bal<1&&getNetWorth()<10)setTimeout(broke,2400);
+}
+
+// =========================================================
+// BESPOKE CUSTOM ANIMATIONS FOR EVERY CATEGORY & PLATFORM
+// =========================================================
+function playBespokeAnimation(c,it,q,tot){
+  const f=$('#fx');
+  f.innerHTML='';
+  const qtyTag=q>1?`${q.toLocaleString()}× `:'';
+  const label=`${qtyTag}${it.n}`;
+
+  if(tot>=50000){
+    f.insertAdjacentHTML('beforeend','<div class="flash"></div>');
+    shk();
+  }
+
+  // 1. Subscriptions (m flag)
+  if(it.f==='m'){
+    tint('radial-gradient(#5b3df566,#000a)',3200);
+    el(`<div class="fx-vip-card">
+      <div style="font-size:48px;margin-bottom:6px">${it.e}</div>
+      <div style="font-size:11px;letter-spacing:.15em;opacity:.8;font-weight:800">RECURRING PASS ACTIVATED</div>
+      <div style="font-size:19px;font-weight:900;margin:4px 0">${c.n}</div>
+      <div style="font-size:13px;opacity:.9">${it.n} · ${fmt(it.p)}/20s</div>
+    </div>`,'inset:0',[{opacity:0,transform:'scale(.7)'},{opacity:1,transform:'scale(1)',offset:.18},{opacity:1,transform:'scale(1)',offset:.82},{opacity:0,transform:'scale(1.06)'}],{duration:3200});
+    pops(['✨','🔁','💎','⭐'],24,320,28,1800,.15);
+    [523.25,659.25,783.99,1046.5].forEach((hz,idx)=>tone(hz,.35,'triangle',.1,idx*.09));
+    return;
+  }
+
+  // 2. Cars & Motorcycles
+  if(c.cat==='Cars'){
+    tint('linear-gradient(transparent 45%,#000000aa)',3400);
+    el('<div class="fx-road"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3400});
+    cross(it.e,130,68,2.2,1,0,0);
+    cross('💨',70,71,2.2,1,.14,0);
+    cross('🔥',54,72,2.2,1,.18,0);
+    cap(`🔑 ${label} Delivered!`,'#fde047');
+    tone(65,1.4,'sawtooth',.16,0,340);
+    tone(340,.7,'sawtooth',.12,1.3,110);
+    noise(.7,.15,1.2,2800,700);
+    return;
+  }
+
+  // 3. Space & Aviation
+  if(c.cat==='Space'||['Air Canada','Emirates','WestJet','NetJets'].includes(c.n)){
+    const isSpace=c.cat==='Space';
+    tint(isSpace?'radial-gradient(#1e1b4bdd,#000e)':'linear-gradient(#0284c7aa,#e0f2fe55)',3800);
+    if(isSpace){
+      stars(80,'#fff',2800);
+      el(it.e,'left:50%;bottom:5%;margin-left:-.6em;font-size:120px;line-height:1',[{transform:'translateY(0) scale(.8)'},{transform:'translateY(-115vh) scale(1.2)'}],{duration:2600,easing:'ease-in'});
+      for(let i=0;i<14;i++)el(pick(['🔥','💨','✨']),`left:50%;margin-left:-.5em;bottom:${i*7}vh;font-size:64px`,[{opacity:1,transform:'scale(.6)'},{opacity:0,transform:'scale(1.6)'}],{duration:800,delay:i*120});
+      noise(2.4,.26,0,400,3200);
+      tone(65,2.4,'sawtooth',.16,0,190);
+    }else{
+      cross('☁️',90,22,3.4,-1,0);
+      cross('☁️',110,48,3.8,-1,.4);
+      cross(it.e,135,34,2.8,1,.1,-45);
+      noise(2.2,.14,0,300,2400);
+      tone(180,1.8,'sine',.09,0,420);
+    }
+    cap(`🛫 ${label}`,'#e0f2fe');
+    return;
+  }
+
+  // 4. Luxury, Watches, Jewelry, Fashion & Art
+  if(c.cat==='Luxury'||c.cat==='Fashion'){
+    tint('radial-gradient(#fde04733,#3b0764cc 60%,#090514ee)',3800);
+    ring('#fde047',0);
+    ring('#f472b6',.25);
+    big(it.e,150,3400,POP);
+    pops(['💎','✨','👑','🥂'],32,360,32,2000,.15);
+    rain(['✨','💎'],24,0,3400);
+    cap(`✨ ${label}`,'#fef08a');
+    [1046.5,1318.5,1568,2093,2637].forEach((hz,idx)=>tone(hz,.7,'sine',.07,idx*.11));
+    return;
+  }
+
+  // 5. Real Estate & Mega-Projects
+  if(c.cat==='Property'||it.n.includes('Home Build')||it.n.includes('Pool')||it.n.includes('Deck')){
+    el('<div class="fx-blueprint"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3600});
+    big(it.e,145,3400,[{transform:'translateY(40vh) scale(.4)',opacity:0},{transform:'translateY(0) scale(1.05)',opacity:1,offset:.25},{transform:'translateY(0) scale(1)',opacity:1,offset:.85},{opacity:0}]);
+    pops(['🔑','📐','🏡','✨'],26,320,32,1800,.3);
+    cap(`🔑 ${label} Closed!`,'#7dd3fc');
+    [392,493.88,587.33,783.99].forEach((hz,idx)=>tone(hz,.5,'triangle',.11,idx*.14));
+    return;
+  }
+
+  // 6. Food & Fine Dining
+  if(c.cat==='Food'){
+    const isGoldSteak=c.n.includes('Salt Bae')||it.n.includes('Gold');
+    tint(isGoldSteak?'radial-gradient(#f59e0b55,#000c)':'radial-gradient(#fb923c44,#0009)',3200);
+    big(it.e,140,3000,POP);
+    rain(isGoldSteak?['✨','🥩','🧂','🪙']:['♨️','🔥','😋','✨'],28,1,3000);
+    cap(`🍽️ ${label}`,'#fed7aa');
+    noise(.45,.18,0,3500,900);
+    tone(587.33,.25,'sine',.1,.2);
+    tone(880,.35,'sine',.1,.35);
+    return;
+  }
+
+  // 7. Tech, Gaming, Music & AI Clusters
+  if(['Tech','Gaming','Music','Telecom','Fitness'].includes(c.cat)){
+    el('<div class="fx-matrix"></div>','inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3400});
+    ring('#2be08f',0);
+    ring('#38bdf8',.2);
+    big(it.e,140,3200,POP);
+    pops(['⚡','💻','🎮','🔊','✨'],28,340,30,1800,.1);
+    cap(`⚡ ${label}`,'#6ee7b7');
+    [440,554.37,659.25,880,1108.73].forEach((hz,idx)=>tone(hz,.3,'sawtooth',.06,idx*.08));
+    return;
+  }
+
+  // 8. Charity & Humanitarian Impact
+  if(c.cat==='Charity'){
+    tint('radial-gradient(#10b98166,#064e3bcc)',3800);
+    ring('#34d399',0);
+    ring('#fde047',.25);
+    big(it.e,145,3500,POP);
+    rain(['💖','💚','🕊️','✨','🌟'],34,1,3600);
+    cap(`💚 Thank You! ${label}`,'#a7f3d0');
+    [523.25,659.25,783.99,987.77,1046.5].forEach((hz,idx)=>tone(hz,.8,'sine',.09,idx*.15));
+    return;
+  }
+
+  // 9. Sports & Live Arena Events
+  if(c.cat==='Sports'||c.cat==='Fun'){
+    tint('radial-gradient(#ef444444,#1e3a8acc)',3500);
+    big(it.e,145,3200,POP);
+    pops(['🎉','🎊','🏆','🔥','📣'],38,440,34,2000,.1);
+    rain(['🎊','🎉','⭐'],30,0,3400);
+    cap(`🏆 ${label}`,'#fde047');
+    tone(146.83,.9,'sawtooth',.16,0);
+    tone(220,.9,'sawtooth',.14,.05);
+    noise(1.1,.2,.1,1400,600);
+    return;
+  }
+
+  // 10. Finance & Investments
+  if(c.cat==='Finance'){
+    tint('radial-gradient(#05966955,#020617dd)',3600);
+    const bars=[35,55,48,72,66,92,100].map((h,idx)=>`<div class="fx-candle" style="height:${h}%;animation:grow .6s ${idx*.08}s both"></div>`).join('');
+    el(`<div class="fx-chart">${bars}</div>`,'inset:0',[{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3600});
+    rain(['💰','🪙','💵','📈'],32,0,3400);
+    cap(`📈 Invested: ${label}`,'#4ade80');
+    tone(987.77,.15,'sine',.12,0);
+    tone(1318.51,.4,'sine',.12,.14);
+    return;
+  }
+
+  // Fallback Shopping / General Celebration
+  burst(it.e,q,tot,`${label} ordered!`);
 }
 
 // ---- Standard Celebration Burst
@@ -817,7 +1016,7 @@ function burst(e,q,tot,label){
 }
 
 // =========================================================
-// UPGRADED TIKTOK / LIVE STREAM STUDIO (SUPER CHATS, GIFTS, HYPE TRAINS)
+// UPGRADED TIKTOK / YOUTUBE / TWITCH LIVE STUDIO
 // =========================================================
 let liveTimer=null,liveCloseTimer=null;
 function openLiveStudio(c,it,q,tot,msg){
@@ -825,27 +1024,42 @@ function openLiveStudio(c,it,q,tot,msg){
   clearTimeout(liveCloseTimer);
 
   const isTT=c.n=='TikTok',
-        creators=[
-          {n:'kai_live_official',av:'🕺',title:'24H SUBATHON + PK BATTLE 🔥'},
-          {n:'mia.creates',av:'👩‍🎤',title:'LATE NIGHT VIBES & MUSIC 🎧'},
-          {n:'drake_toronto_fan',av:'🦉',title:'REACTING TO CRAZY GIFTS!!'},
-          {n:'speed_streams',av:'⚡',title:'DONO WALL = INSANE REACTION'}
-        ],
-        cr=pick(creators);
+        isYT=c.n=='YouTube',
+        isTW=c.n=='Twitch',
+        platformMode=isYT?'yt-mode':isTW?'tw-mode':'';
 
-  let viewers=Math.round(rnd(14200,48900)),
-      likes=Math.round(rnd(85000,420000)),
-      pkPct=Math.min(94,52+Math.round(Math.log10(tot+1)*9));
+  const creators=isYT?[
+    {n:'@LinusTechTipsLive',av:'💻',title:'WAN SHOW LIVE · READING SUPER CHATS 🔴'},
+    {n:'@LudwigLive',av:'🎙️',title:'SUBATHON FINALE · DONO WALL ON 🔥'},
+    {n:'@Valkyrae',av:'🎮',title:'LATE NIGHT VARIETY + Q&A ✨'}
+  ]:isTW?[
+    {n:'shroud',av:'🎯',title:'RANKED GRIND · HYPE TRAIN LEVEL 5 💜'},
+    {n:'pokimane',av:'🌸',title:'COZY CHATTING & REACTING ✨'},
+    {n:'xQc',av:'⚡',title:'MEGA REACT + GIFT SUB WAR 🚂'}
+  ]:[
+    {n:'kai_live_official',av:'🕺',title:'24H SUBATHON + PK BATTLE 🔥'},
+    {n:'mia.creates',av:'👩‍🎤',title:'LATE NIGHT VIBES & MUSIC 🎧'},
+    {n:'drake_toronto_fan',av:'🦉',title:'REACTING TO CRAZY GIFTS!!'},
+    {n:'speed_streams',av:'⚡',title:'DONO WALL = INSANE REACTION'}
+  ];
+  const cr=pick(creators);
+
+  let viewers=Math.round(rnd(16400,54900)),
+      likes=Math.round(rnd(95000,480000)),
+      pkPct=Math.min(96,54+Math.round(Math.log10(tot+1)*10));
 
   const th=[5,10,20,50,100,200,500],
         cl=['#1e88e5','#00bcd4','#10b981','#f59e0b','#f97316','#ec4899','#ef4444'],
         scColor=cl[Math.min(6,th.filter(x=>tot>=x).length)];
 
+  const meterLeft=isYT?`🔴 Super Chat Goal · ${(tot*150).toLocaleString()} pts`:isTW?`🚂 Hype Train Lv.${Math.min(10,1+Math.floor(Math.log10(tot+1)*2))} · 100%`:`🔥 ${cr.n} · ${(tot*120).toLocaleString()} pts`;
+  const meterRight=isYT?'Milestone Unlocked 🏆':isTW?'Conductor: YOU 👑':'Rival · 14,200 pts';
+
   const e=show('lay',`
-    <div class="tt-live">
+    <div class="tt-live ${platformMode}">
       <div class="tt-stage">
         <div class="tt-avatar-ring"><div class="tt-avatar">${cr.av}</div></div>
-        <div style="margin-top:12px;font-weight:800;font-size:14px;letter-spacing:.03em;opacity:.9">${cr.title}</div>
+        <div style="margin-top:12px;font-weight:800;font-size:13.5px;letter-spacing:.03em;opacity:.92;text-align:center;padding:0 16px">${cr.title}</div>
         <div class="tt-eq"><i></i><i></i><i></i><i></i><i></i></div>
       </div>
 
@@ -854,7 +1068,7 @@ function openLiveStudio(c,it,q,tot,msg){
           <div class="tt-creator">
             <div class="av">${cr.av}</div>
             <div><b>${cr.n}</b><small id="ttLikes">❤️ ${likes.toLocaleString()}</small></div>
-            <button class="tt-follow" id="ttFollow">Follow</button>
+            <button class="tt-follow" id="ttFollow">${isYT?'Subscribe':isTW?'Follow':'Follow'}</button>
           </div>
           <div class="tt-stats">
             <div class="tt-pill"><span class="tt-live-tag">LIVE</span> 👁️ <span id="ttViewers">${viewers.toLocaleString()}</span></div>
@@ -864,19 +1078,24 @@ function openLiveStudio(c,it,q,tot,msg){
 
         <div class="tt-pk">
           <div class="tt-pk-labels">
-            <span style="color:#fda4af">🔥 ${cr.n} · ${(tot*120).toLocaleString()} pts</span>
-            <span style="color:#93c5fd">Rival · 14,200 pts</span>
+            <span style="color:${isYT?'#fca5a5':isTW?'#d8b4fe':'#fda4af'}">${meterLeft}</span>
+            <span style="color:#93c5fd">${meterRight}</span>
           </div>
-          <div class="tt-pk-track"><div class="tt-pk-fill" id="ttPkFill" style="width:50%"></div></div>
+          <div class="tt-pk-track"><div class="tt-pk-fill" id="ttPkFill" style="width:48%"></div></div>
         </div>
 
-        <div class="tt-vip">👑 #1 TOP GIFTER: YOU (${fmt(tot)})</div>
+        ${isYT?`
+          <div class="yt-ticker">
+            <div class="yt-chip" style="background:${scColor};color:#fff">${it.e} YOU · ${fmt(tot)}</div>
+            <div class="yt-chip" style="background:#1e88e5;color:#fff">🍁 MapleFan · $20</div>
+            <div class="yt-chip" style="background:#10b981;color:#fff">🎮 RetroKid · $50</div>
+          </div>`:`<div class="tt-vip">👑 #1 TOP SUPPORTER: YOU (${fmt(tot)})</div>`}
 
         <div class="tt-gift-combo">
           <div class="gi">${it.e}</div>
           <div style="flex:1">
             <div style="font-weight:900;font-size:13.5px">YOU sent ${it.n}</div>
-            <div style="font-size:11.5px;opacity:.9">${c.n} Live Gift · ${fmt(tot)}</div>
+            <div style="font-size:11.5px;opacity:.9">${c.n} Live · ${fmt(tot)}</div>
           </div>
           <div class="gx">×${q.toLocaleString()}</div>
         </div>
@@ -885,26 +1104,26 @@ function openLiveStudio(c,it,q,tot,msg){
       <div class="tt-fountain" id="ttFountain"></div>
 
       <div class="tt-bot">
-        ${it.f=='s'||msg?`
+        ${it.f=='s'||msg||isYT?`
           <div class="tt-sc-pin" style="--c:${scColor}">
-            <div class="hd"><span>💬 SUPER CHAT · YOU</span><span>${fmt(tot)}</span></div>
-            <div class="bd">${msg?msg.replace(/</g,'&lt;'):`Dropped ${fmt(tot)} to support the stream! 🔥`}</div>
+            <div class="hd"><span>${isYT?'💬 YOUTUBE SUPER CHAT':'💬 PINNED MESSAGE'} · YOU</span><span>${fmt(tot)}</span></div>
+            <div class="bd">${msg?msg.replace(/</g,'&lt;'):`Dropped ${fmt(tot)} (${q>1?q+'× ':''}${it.n}) live on stream! 🔥`}</div>
             <u></u>
           </div>`:''}
         <div class="tt-chat-wrap">
           <div class="tt-chat" id="ttChat"></div>
         </div>
-        <div class="tt-rx" id="ttRx">🎙️ Connecting to streamer audio…</div>
+        <div class="tt-rx" id="ttRx">🎙️ Connecting to creator mic…</div>
         <div class="tt-actions">
           <button class="tt-fake-in" id="ttHypeBtn">🔥 Hype in chat: "W STREAM!!"</button>
-          <button class="tt-heart-btn" id="ttHeartBtn">❤️</button>
+          <button class="tt-heart-btn" id="ttHeartBtn">${isYT?'👍':isTW?'💜':'❤️'}</button>
         </div>
       </div>
     </div>
   `);
 
   $('#ttClose').onclick=()=>{clearInterval(liveTimer);clearTimeout(liveCloseTimer);cls('lay')};
-  $('#ttFollow').onclick=function(){this.textContent='Following ✓';this.style.background='#ffffff33';ding(880,.08)};
+  $('#ttFollow').onclick=function(){this.textContent=isYT?'Subscribed ✓':'Following ✓';this.style.background='#ffffff33';ding(880,.08)};
 
   const spawnHeart=(emoji='❤️')=>{
     const h=document.createElement('div');
@@ -913,20 +1132,20 @@ function openLiveStudio(c,it,q,tot,msg){
     h.style.right=rnd(4,34)+'px';
     $('#ttFountain').append(h);
     setTimeout(()=>h.remove(),2200);
-    likes+=Math.round(rnd(15,120));
+    likes+=Math.round(rnd(25,160));
     if($('#ttLikes'))$('#ttLikes').textContent='❤️ '+likes.toLocaleString();
   };
 
   $('#ttHeartBtn').onclick=()=>{
-    spawnHeart(pick(['❤️','💖','🔥','✨','👑']));
+    spawnHeart(isYT?pick(['👍','❤️','🔥','🎉','💯']):isTW?pick(['💜','💎','🚂','🔥','👑']):pick(['❤️','💖','🔥','✨','👑']));
     ding(740+Math.random()*300,.05);
   };
 
   const USERS=[
     ['xX_Gamer','MOD','#10b981'],
     ['mochi_to','VIP','#f59e0b'],
-    ['TorontoMans','SUB','#3b82f6'],
-    ['kayla_k','LVL 42','#ec4899'],
+    ['TorontoMans','MEMBER','#3b82f6'],
+    ['kayla_k','LVL 48','#ec4899'],
     ['NightOwl','TOP 3','#8b5cf6'],
     ['lofi_girl','SUB','#06b6d4'],
     ['楓_maple','MOD','#10b981']
@@ -935,8 +1154,8 @@ function openLiveStudio(c,it,q,tot,msg){
     'NO WAY HE JUST SENT THAT 😱😱',
     'W MANS IN THE CHAT 🔥🔥🔥',
     'CLIP IT RIGHT NOW!!',
-    'WHO IS THIS BILLIONAIRE?! 💸',
-    'PK BATTLE INSTANT WIN 🏆',
+    'WHO IS THIS CANADIAN BILLIONAIRE?! 🍁💸',
+    'INSTANT LEGEND IN CHAT 🏆',
     'BRO IS CARRYING THE WHOLE STREAM',
     'SHEEEESH 🥶🥶🥶'
   ];
@@ -954,20 +1173,23 @@ function openLiveStudio(c,it,q,tot,msg){
     ding(980,.08);
   };
 
-  // Trigger TikTok custom visual/audio gift engine!
+  // Trigger platform-specific visual & synthesized audio effects!
   if(isTT&&G[it.n]){
     tikgift(it,q);
+  }else if(isYT){
+    playYouTubeGiftFX(it,q,tot,scColor);
+  }else if(isTW){
+    playTwitchGiftFX(it,q,tot);
   }else{
-    burst(it.e,q,tot,'');
-    ding(988,.2);
+    playPlatformGiftFX(c,it,q,tot);
   }
 
-  // Surge PK bar & viewers
+  // Surge meter & viewers
   setTimeout(()=>{
     if($('#ttPkFill'))$('#ttPkFill').style.width=pkPct+'%';
-    viewers+=Math.round(tot*1.8+rnd(1500,6000));
+    viewers+=Math.round(tot*2.2+rnd(2000,7500));
     if($('#ttViewers'))$('#ttViewers').textContent=viewers.toLocaleString();
-  },350);
+  },320);
 
   // Typewriter streamer reaction
   const rxLine=`YO WHAT?! ${q>1?q.toLocaleString()+'× ':''}${it.n} (${fmt(tot)}) FROM YOU?! ${msg?'“'+msg+'” — ':''}CHAT SPAM W’S RIGHT NOW!!`;
@@ -976,18 +1198,86 @@ function openLiveStudio(c,it,q,tot,msg){
     if(!$('#ttRx')){clearInterval(ty);return}
     $('#ttRx').textContent='🎙️ '+rxLine.slice(0,++charIdx);
     if(charIdx>=rxLine.length)clearInterval(ty);
-  },24);
+  },22);
 
   // Fast live chat + floating heart fountain loop
   liveTimer=setInterval(()=>{
     const[u,bg,bc]=pick(USERS);
     addChat(u,bg,bc,pick(MSGS));
-    spawnHeart(pick(['❤️','💖','🔥','💎','👏']));
-    viewers+=Math.round(rnd(40,380));
+    spawnHeart(isYT?pick(['👍','❤️','🔥','🎉']):isTW?pick(['💜','💎','🚂','🔥']):pick(['❤️','💖','🔥','💎','👏']));
+    viewers+=Math.round(rnd(50,420));
     if($('#ttViewers'))$('#ttViewers').textContent=viewers.toLocaleString();
-  },420);
+  },380);
 
   liveCloseTimer=setTimeout(()=>{clearInterval(liveTimer);cls('lay')},9500);
+}
+
+// Bespoke YouTube Live Super Chat & Super Sticker Full-Screen Animations
+function playYouTubeGiftFX(it,q,tot,scColor){
+  K=1+Math.min(1.8,Math.log10(q));
+  if(it.n.includes('Cat')){
+    tint('radial-gradient(#ff000055,#000c)',3600);
+    big('🐱',190,3400,[{transform:'scale(.2) rotate(-18deg)',opacity:0},{transform:'scale(1.25) rotate(8deg)',opacity:1,offset:.2},{transform:'scale(1) rotate(-6deg)',offset:.45},{transform:'scale(1.12) rotate(5deg)',offset:.7},{opacity:0}]);
+    pops(['🐾','❤️','▶️','✨'],26,300,32,1800,.15);
+    cap('Super Sticker Cat! 🐱','#fca5a5');
+    tone(520,.22,'triangle',.14,0,940);
+    tone(940,.32,'triangle',.14,.22,480);
+  }else if(it.n.includes('Fire')){
+    tint('radial-gradient(#f9731677,#7f1d1dcc 55%,#000d)',3800);
+    row('🔥',86,'0',3800,[{transform:'translateY(90px)'},{transform:'translateY(0)',offset:.2},{transform:'translateY(-10px)',offset:.8},{transform:'translateY(90px)'}]);
+    big('🔥',190,3400,POP);
+    pops(['🔥','💥','▶️','⚡'],32,380,34,1900,.1);
+    shk();
+    cap('Super Sticker LIT! 🔥','#fdba74');
+    noise(1.8,.22,0,1400,300);
+    tone(130,.9,'sawtooth',.16,0,65);
+  }else{
+    tint(`radial-gradient(${scColor}66,#000c)`,3600);
+    ring(scColor,0);
+    ring('#ffffff',.22);
+    big(it.e,165,3200,POP);
+    pops(['▶️','💸','❤️','🔥','👑'],34,400,34,2000,.1);
+    rain(['💸','❤️','▶️'],26,0,3400);
+    if(tot>=100)shk();
+    cap(`SUPER CHAT ${fmt(tot)}!`,'#fde047');
+    [523.25,659.25,783.99,1046.5,1318.5].forEach((hz,idx)=>tone(hz,.35,'triangle',.11,idx*.08));
+  }
+}
+
+// Bespoke Twitch Hype Train & Bits Cheer Full-Screen Animations
+function playTwitchGiftFX(it,q,tot){
+  K=1+Math.min(1.8,Math.log10(q));
+  tint('radial-gradient(#9146ff77,#1e1b4bdd 55%,#000e)',4000);
+  if(it.f==='h'||it.n.includes('Train')){
+    shk();
+    cross('🚂',135,54,3.6,-1,0,0);
+    [0,.35,.7,1.05,1.4].forEach(t=>cross('💜',62,46,2.2,-1,t,-20));
+    pops(['🚂','💜','🎉','👑','⚡'],36,420,34,2100,.2);
+    cap('🚂 HYPE TRAIN CONDUCTOR!','#d8b4fe');
+    tone(440,.25,'square',.1,0);
+    tone(554.37,.25,'square',.1,.25);
+    tone(659.25,.55,'square',.11,.5);
+  }else{
+    ring('#9146ff',0);
+    ring('#00f5d4',.2);
+    big('💎',175,3400,POP);
+    rain(['💎','💜','✨','⚡'],34,0,3400);
+    cap(`💎 ${q>1?q+'× ':''}${it.n}!`,'#c4b5fd');
+    [880,1108.73,1318.51,1760].forEach((hz,idx)=>tone(hz,.3,'sine',.1,idx*.09));
+  }
+}
+
+// Bespoke Discord, Reddit, Roblox, Epic Games, Riot & Kick Gift Animations
+function playPlatformGiftFX(c,it,q,tot){
+  K=1+Math.min(1.6,Math.log10(q));
+  tint(`radial-gradient(${c.c}77,#000d)`,3600);
+  ring(c.c,0);
+  big(it.e,165,3200,POP);
+  pops([it.e,'✨','🔥','💎','🎉'],32,380,32,1900,.1);
+  rain([it.e,'✨'],24,0,3400);
+  if(tot>=1000)shk();
+  cap(`${c.n}: ${q>1?q+'× ':''}${it.n}!`,'#fff');
+  [587.33,739.99,880,1174.66].forEach((hz,idx)=>tone(hz,.3,'triangle',.1,idx*.09));
 }
 
 // =========================================================
@@ -1129,29 +1419,29 @@ const POP=[{transform:'scale(.1)',opacity:0},{transform:'scale(1.15)',opacity:1,
       WAVE=[{transform:'translateY(75vh)'},{transform:'translateY(0)',offset:.3},{transform:'translateY(0)',offset:.78},{transform:'translateY(75vh)'}];
 
 const G={
-  'Rose':()=>{rain(['🌹','🌸','🥀'],26,0,4200);cap('A rose for you 🌹','#ff6b8b');[523,659,784].forEach((f,i)=>tone(f,.9,'sine',.1,i*.18))},
-  'Finger Heart':()=>{rain(['💖','💗','💕'],20,1,3200);pops(['❤️'],12,170,30);cap('Finger heart! 💖');[1046,1318].forEach((f,i)=>tone(f,.15,'sine',.1,i*.1))},
-  'Doughnut':()=>{rain(['🍩','🍩','🍬','🍪'],24,0,3600);cap('Sweet doughnut time 🍩');[330,440,660].forEach((f,i)=>tone(f,.3,'triangle',.12,i*.15))},
-  'Confetti':()=>{pops(['🎊','🎉','✨','🎈'],36,420,34,1800);pops(['🎊','🎉','🥳'],30,540,40,2200,.35);cap('Party time!!');noise(.2,.25,0,6000);noise(.2,.2,.35,5000)},
-  'Corgi':()=>{cross('🐕',90,68,3.4,1);cross('🦴',46,66,3.4,1,.35);pops(['🐾','❤️'],10,200,28,1500,.5);cap('Corgi zoomies 🐶');[0,.45,.9].forEach(t=>tone(620,.12,'square',.1,t,380))},
-  'Money Gun':()=>{rain(['💸','💵','💴','🤑'],50,0,2600);big('🔫',120,2400,POP);cap('Make it rain 💸','#4ade80');for(let i=0;i<14;i++)noise(.05,.2,i*.08,3000);tone(1568,.4,'sine',.1,1);tone(2093,.5,'sine',.1,1.12)},
-  'Swan':()=>{tint('linear-gradient(#bfe3ffcc,#fff0)',4200);cross('🦢',150,45,4,1,0,-40);rain(['🪶','✨','🤍'],16,0,4000);cap('Graceful swan 🦢','#cfe8ff');[392,494,587].forEach(f=>tone(f,3.5,'sine',.07))},
-  'Train':()=>{shk();cross('🚂',130,60,3.8,-1);[0,.4,.8,1.2,1.6].forEach(t=>cross('☁️',60,50,2.2,-1,t));cap('Choo choo! 🚂');for(let i=0;i<10;i++)noise(.12,.2,i*.3,900);tone(880,.8,'triangle',.1,.4,990)},
-  'Galaxy Globe':()=>{tint('radial-gradient(#312e81cc,#000d)',4200);orbit(['🪐','🌍','🌙','☄️','⭐'],170,4000,56);stars(50,'#c4b5fd');cap('Galaxy Globe 🔮','#c4b5fd');[262,330,392,523,659,784,1046].forEach((f,i)=>tone(f,.8,'sine',.08,i*.15))},
-  'Whale Diving':()=>{tint('linear-gradient(#0b3d91aa,#021a4dcc)',5200);el('','left:0;right:0;bottom:0;height:70vh;background:linear-gradient(#38bdf8cc,#0369a1ee 35%,#082f6b)',WAVE,{duration:5200});row('🌊',56,'calc(70vh - 30px)',5200,WAVE);cross('🐋',210,46,4.6,1,.5,-70);rain(['🫧','💧'],26,1,4200);cap('Whale Diving 🐋','#7dd3fc');tone(80,3.2,'sine',.3,.3,200);tone(200,2.4,'sine',.16,1.1,90);tone(120,2,'triangle',.1,2,260);noise(2,.14,0,300,900);noise(2.6,.12,2.4,900,200)},
-  'Leon the Kitty':()=>{big('🐱',190,3200,[{transform:'scale(.2) rotate(-20deg)',opacity:0},{transform:'scale(1.2) rotate(8deg)',opacity:1,offset:.2},{transform:'scale(1) rotate(-6deg)',offset:.4},{transform:'scale(1.1) rotate(6deg)',offset:.6},{transform:'scale(1)',opacity:1,offset:.85},{opacity:0}]);pops(['🐾','❤️','🐟'],20,260,30,1600,.2);cap('Meow! Leon the Kitty 🐱');tone(500,.25,'triangle',.14,0,900);tone(900,.35,'triangle',.14,.25,450);tone(480,.25,'triangle',.14,1.3,860);tone(860,.35,'triangle',.14,1.55,430)},
-  'Flying Jets':()=>{tint('linear-gradient(#7dd3fc88,#0000)',3400);[0,.25,.5].forEach((t,i)=>{cross('✈️',90,16+i*16,2.2,1,t);cross('💨',60,18+i*16,2.2,1,t+.15);noise(2,.12,t,400,3500)});cap('Flying jets ✈️','#e0f2fe')},
-  'Sports Car':()=>{shk();cross('🏎️',150,64,2.4,1);cross('💨',80,66,2.4,1,.2);pops(['✨','🔥'],14,260,30,900,1.2);cap('Vroom! 🏎️','#fca5a5');tone(70,1.6,'sawtooth',.14,0,400);tone(400,.8,'sawtooth',.1,1.5,120);noise(.8,.15,1.4,3000,800)},
-  'Falcon':()=>{cross('🦅',150,22,2.2,1,0,120);cross('🦅',90,40,2.4,1,.3,90);rain(['🪶'],20,0,3200);cap('Falcon strike 🦅');tone(2000,.5,'sawtooth',.07,.1,2800);tone(2400,.45,'sawtooth',.07,.9,1800)},
-  'Dragon Flame':()=>{tint('radial-gradient(#7f1d1dcc,#000d)',4200);cross('🐉',210,24,3.6,-1,0,40);row('🔥',90,'0',4200,[{transform:'translateY(100px)'},{transform:'translateY(0)',offset:.25},{transform:'translateY(-12px)',offset:.75},{transform:'translateY(100px)'}]);rain(['🔥'],18,1,3000);shk();cap('Dragon flame 🐉','#fb923c');tone(110,1.2,'sawtooth',.18,0,50);noise(2.5,.22,.3,1200,300);tone(90,1,'sawtooth',.15,1.6,40)},
-  'Lion':()=>{tint('radial-gradient(#facc1599,#000c)',3600);big('🦁',210,3600,[{transform:'scale(.1)',opacity:0},{transform:'scale(1.6)',opacity:1,offset:.3},{transform:'scale(1.3) rotate(-3deg)',offset:.5},{transform:'scale(1.4) rotate(3deg)',offset:.7},{transform:'scale(1.35)',opacity:1,offset:.85},{opacity:0}]);ring('#facc15');ring('#f97316',.25);ring('#fff',.5);shk();pops(['🔥','✨'],18,300,34,1500,.3);cap('ROAAAR! 🦁','#facc15');tone(220,.2,'sawtooth',.25,0,300);tone(160,1.6,'sawtooth',.28,.15,55);tone(240,1.4,'square',.08,.2,70);noise(1.8,.3,.1,1500,200);tone(150,1,'sawtooth',.2,1.9,60);noise(1,.2,1.9,1000,200)},
-  'Fairy Castle':()=>{tint('linear-gradient(#a78bfa99,#f9a8d499)',4400);big('🏰',230,4400,[{transform:'translateY(60vh) scale(.5)',opacity:0},{transform:'translateY(0) scale(1)',opacity:1,offset:.3},{transform:'translateY(0) scale(1.05)',opacity:1,offset:.8},{opacity:0}]);pops(['✨','🎆','⭐'],30,380,34,1800,.6);rain(['✨','🦄','🌈'],18,0,4000);cap('Fairy Castle 🏰','#f5d0fe');[523,659,784,1046].forEach((f,i)=>tone(f,.5,'square',.07,i*.2));tone(1046,1.2,'square',.07,.9)},
-  'Universe':()=>{tint('radial-gradient(#1e1b4b,#000)',5200);stars(90,'#fff',3200);stars(40,'#a5b4fc',3500,.8);orbit(['🪐','🌍','🌙'],200,5000,70);big('🌌',230,5200,POP);cap('TikTok Universe 🌌','#c7d2fe');[130,196,261,392].forEach((f,i)=>tone(f,4.5,'sine',.09,i*.4));[1568,2093,2637].forEach((f,i)=>tone(f,1,'sine',.05,1+i*.3))},
-  'Yacht':()=>{tint('linear-gradient(#7dd3fc99,#0369a1cc)',4600);cross('🛥️',170,52,4.2,1,0,10);row('🌊',70,'0',4600,[{transform:'translateY(0)'},{transform:'translateY(-14px)',offset:.5},{transform:'translateY(0)'}]);rain(['🥂','🍾','✨'],16,1,3600);cap('Yacht life 🛥️','#e0f2fe');tone(130,1,'sawtooth',.12,0,125);noise(2.5,.1,0,500,900);noise(.15,.3,1.4,6000)},
-  'Rocket':()=>{[3,2,1].forEach((n,i)=>{el(n,'left:0;width:100%;text-align:center;top:22%;font:900 150px sans-serif;color:#fff;text-shadow:0 0 30px #f97316',[{transform:'scale(2)',opacity:0},{transform:'scale(1)',opacity:1,offset:.3},{opacity:0}],{duration:700,delay:i*700});tone(660,.15,'square',.1,i*.7)});tone(1100,.5,'square',.1,2.1);el('🚀','left:50%;bottom:0;margin-left:-.6em;font-size:120px;line-height:1',[{transform:'translateY(0) rotate(-45deg)'},{transform:'translateY(-125vh) rotate(-45deg)'}],{duration:2300,delay:2100,easing:'ease-in'});for(let i=0;i<16;i++)el(pick(['🔥','💨']),`left:50%;margin-left:-.5em;bottom:${i*6.5}vh;font-size:70px;line-height:1`,[{opacity:1,transform:'scale(.6)'},{opacity:0,transform:'scale(1.7)'}],{duration:900,delay:2100+i*130});setTimeout(()=>{shk();cap('LIFTOFF! 🚀','#fdba74')},2100);noise(3,.3,2,500,3500);tone(60,3,'sawtooth',.18,2,200)},
-  'Diamond Planet':()=>{tint('radial-gradient(#0e7490cc,#000d)',4600);big('💎',200,4600,[{transform:'scale(.1) rotate(0)',opacity:0},{transform:'scale(1.2) rotate(180deg)',opacity:1,offset:.3},{transform:'scale(1) rotate(360deg)',opacity:1,offset:.85},{opacity:0}]);orbit(['💎','✨','💎','✨','💎','✨','💎','✨'],230,4000,40);rain(['💎'],26,0,3600);ring('#67e8f9');cap('Diamond Planet 💎','#67e8f9');for(let i=0;i<10;i++)tone(1500+Math.random()*2500,.35,'sine',.05,i*.18);tone(220,3,'sine',.1)},
-  'Supernova':()=>{tint('#fff',700);tint('radial-gradient(#f97316,#7c2d12 40%,#000)',5200);[0,.2,.4,.6].forEach((t,i)=>ring(['#fff','#fde68a','#f97316','#ef4444'][i],t));stars(120,'#fde68a',2400);pops(['☄️','🔥','💥','⭐'],40,560,46,2000,.1);big('💥',230,3000,POP);shk();cap('SUPERNOVA 🌠','#fde68a');tone(80,2.5,'sawtooth',.3,0,25);noise(3,.4,0,2000,60);for(let i=0;i<8;i++)noise(.1,.2,1+i*.2,4000)},
-  'Pegasus Sovereign':()=>{tint('radial-gradient(#fde047aa,#7c3aeddd 50%,#000)',5400);cross('🦄',230,30,4.2,1,0,-50);ring('#fde047');ring('#c084fc',.3);stars(110,'#fef08a',3000);rain(['👑','✨','🪽','💎'],34,0,4200);shk();cap('PEGASUS SOVEREIGN 👑','#fef08a');[261,329,392,523,659,784,1046,1318].forEach((f,i)=>tone(f,.9,'triangle',.1,i*.14))}
+  'Rose':()=>{tint('radial-gradient(#ff2c5544,#0009)',4200);rain(['🌹','🌸','🥀','✨'],30,0,4200);pops(['🌹','❤️'],14,220,30,1600,.2);cap('A rose for you 🌹','#ff6b8b');[523,659,784,1046].forEach((f,i)=>tone(f,.9,'sine',.1,i*.16))},
+  'Finger Heart':()=>{tint('radial-gradient(#ec489944,#0009)',3400);rain(['💖','💗','💕','💓'],24,1,3200);pops(['❤️','✨'],16,200,32,1500,.1);cap('Finger heart! 💖','#f9a8d4');[1046,1318,1568].forEach((f,i)=>tone(f,.18,'sine',.1,i*.09))},
+  'Doughnut':()=>{rain(['🍩','🍩','🍬','🍪','🧁'],28,0,3600);big('🍩',145,2800,POP);cap('Sweet doughnut time 🍩','#fdba74');[330,440,660,880].forEach((f,i)=>tone(f,.3,'triangle',.12,i*.13))},
+  'Confetti':()=>{pops(['🎊','🎉','✨','🎈'],40,440,36,1800);pops(['🎊','🎉','🥳'],34,560,42,2200,.3);rain(['🎊','🎉'],24,0,3200);cap('Party time!!','#fde047');noise(.2,.25,0,6000);noise(.2,.2,.35,5000)},
+  'Corgi':()=>{tint('linear-gradient(#fef08a33,#0008)',3400);cross('🐕',105,66,3.4,1);cross('🦴',48,64,3.4,1,.32);pops(['🐾','❤️','⭐'],14,220,30,1500,.45);cap('Corgi zoomies 🐶','#fde68a');[0,.45,.9].forEach(t=>tone(620,.12,'square',.1,t,380))},
+  'Money Gun':()=>{tint('radial-gradient(#22c55e44,#000a)',3200);rain(['💸','💵','💴','🤑'],56,0,2800);big('🔫',130,2500,POP);cap('Make it rain 💸','#4ade80');for(let i=0;i<16;i++)noise(.05,.2,i*.07,3000);tone(1568,.4,'sine',.1,1);tone(2093,.5,'sine',.1,1.12)},
+  'Swan':()=>{tint('linear-gradient(#bfe3ffcc,#1e3a8a66)',4200);cross('🦢',165,44,4,1,0,-40);rain(['🪶','✨','🤍'],20,0,4000);cap('Graceful swan 🦢','#cfe8ff');[392,494,587,784].forEach((f,i)=>tone(f,3.5,'sine',.07,i*.1))},
+  'Train':()=>{shk();tint('radial-gradient(#f59e0b44,#000b)',3800);cross('🚂',145,58,3.8,-1);[0,.35,.7,1.05,1.4].forEach(t=>cross('☁️',64,48,2.2,-1,t));cap('Choo choo! 🚂','#fde047');for(let i=0;i<10;i++)noise(.12,.2,i*.3,900);tone(880,.8,'triangle',.1,.4,990)},
+  'Galaxy Globe':()=>{tint('radial-gradient(#312e81dd,#000e)',4400);ring('#a78bfa',0);orbit(['🪐','🌍','🌙','☄️','⭐'],180,4200,58);stars(65,'#c4b5fd');cap('Galaxy Globe 🔮','#c4b5fd');[262,330,392,523,659,784,1046].forEach((f,i)=>tone(f,.8,'sine',.08,i*.14))},
+  'Whale Diving':()=>{tint('linear-gradient(#0b3d91bb,#021a4ddd)',5200);el('','left:0;right:0;bottom:0;height:70vh;background:linear-gradient(#38bdf8cc,#0369a1ee 35%,#082f6b)',WAVE,{duration:5200});row('🌊',56,'calc(70vh - 30px)',5200,WAVE);cross('🐋',220,44,4.6,1,.45,-75);rain(['🫧','💧','🐟'],30,1,4200);cap('Whale Diving 🐋','#7dd3fc');tone(80,3.2,'sine',.3,.3,200);tone(200,2.4,'sine',.16,1.1,90);tone(120,2,'triangle',.1,2,260);noise(2,.14,0,300,900);noise(2.6,.12,2.4,900,200)},
+  'Leon the Kitty':()=>{tint('radial-gradient(#f472b655,#000b)',3600);big('🐱',200,3400,[{transform:'scale(.2) rotate(-20deg)',opacity:0},{transform:'scale(1.25) rotate(8deg)',opacity:1,offset:.2},{transform:'scale(1) rotate(-6deg)',offset:.4},{transform:'scale(1.15) rotate(6deg)',offset:.6},{transform:'scale(1)',opacity:1,offset:.85},{opacity:0}]);pops(['🐾','❤️','🐟','✨'],24,280,32,1700,.2);cap('Meow! Leon the Kitty 🐱','#fbcfe8');tone(500,.25,'triangle',.14,0,900);tone(900,.35,'triangle',.14,.25,450);tone(480,.25,'triangle',.14,1.3,860);tone(860,.35,'triangle',.14,1.55,430)},
+  'Flying Jets':()=>{tint('linear-gradient(#7dd3fc99,#0284c744)',3600);[0,.22,.44].forEach((t,i)=>{cross('✈️',100,15+i*16,2.2,1,t);cross('💨',66,17+i*16,2.2,1,t+.14);noise(2,.12,t,400,3500)});cap('Flying jets ✈️','#e0f2fe')},
+  'Sports Car':()=>{shk();tint('linear-gradient(transparent 50%,#000b)',3000);cross('🏎️',160,62,2.4,1);cross('💨',85,65,2.4,1,.18);pops(['✨','🔥'],18,280,32,1000,1.1);cap('Vroom! 🏎️','#fca5a5');tone(70,1.6,'sawtooth',.14,0,400);tone(400,.8,'sawtooth',.1,1.5,120);noise(.8,.15,1.4,3000,800)},
+  'Falcon':()=>{tint('radial-gradient(#f59e0b44,#000a)',3400);cross('🦅',165,20,2.2,1,0,120);cross('🦅',100,38,2.4,1,.28,90);rain(['🪶','✨'],24,0,3200);cap('Falcon strike 🦅','#fde68a');tone(2000,.5,'sawtooth',.07,.1,2800);tone(2400,.45,'sawtooth',.07,.9,1800)},
+  'Dragon Flame':()=>{tint('radial-gradient(#7f1d1ddd,#000e)',4400);cross('🐉',225,22,3.6,-1,0,40);row('🔥',95,'0',4400,[{transform:'translateY(100px)'},{transform:'translateY(0)',offset:.22},{transform:'translateY(-14px)',offset:.78},{transform:'translateY(100px)'}]);rain(['🔥','💥'],24,1,3200);shk();cap('Dragon flame 🐉','#fb923c');tone(110,1.2,'sawtooth',.18,0,50);noise(2.5,.22,.3,1200,300);tone(90,1,'sawtooth',.15,1.6,40)},
+  'Lion':()=>{tint('radial-gradient(#facc15aa,#000d)',3800);big('🦁',225,3800,[{transform:'scale(.1)',opacity:0},{transform:'scale(1.65)',opacity:1,offset:.3},{transform:'scale(1.3) rotate(-3deg)',offset:.5},{transform:'scale(1.45) rotate(3deg)',offset:.7},{transform:'scale(1.35)',opacity:1,offset:.85},{opacity:0}]);ring('#facc15');ring('#f97316',.22);ring('#fff',.45);shk();pops(['🔥','✨','👑'],24,330,36,1600,.25);cap('ROAAAR! 🦁','#facc15');tone(220,.2,'sawtooth',.25,0,300);tone(160,1.6,'sawtooth',.28,.15,55);tone(240,1.4,'square',.08,.2,70);noise(1.8,.3,.1,1500,200);tone(150,1,'sawtooth',.2,1.9,60);noise(1,.2,1.9,1000,200)},
+  'Fairy Castle':()=>{tint('linear-gradient(#a78bfaaa,#f9a8d4aa)',4600);big('🏰',240,4600,[{transform:'translateY(60vh) scale(.5)',opacity:0},{transform:'translateY(0) scale(1)',opacity:1,offset:.28},{transform:'translateY(0) scale(1.06)',opacity:1,offset:.82},{opacity:0}]);pops(['✨','🎆','⭐','👑'],34,400,36,1900,.5);rain(['✨','🦄','🌈'],22,0,4200);cap('Fairy Castle 🏰','#f5d0fe');[523,659,784,1046].forEach((f,i)=>tone(f,.5,'square',.07,i*.18));tone(1046,1.2,'square',.07,.85)},
+  'Universe':()=>{tint('radial-gradient(#1e1b4b,#000)',5400);stars(110,'#fff',3400);stars(50,'#a5b4fc',3600,.7);orbit(['🪐','🌍','🌙','☄️'],210,5200,72);big('🌌',245,5400,POP);ring('#818cf8',.2);cap('TikTok Universe 🌌','#c7d2fe');[130,196,261,392].forEach((f,i)=>tone(f,4.5,'sine',.09,i*.38));[1568,2093,2637].forEach((f,i)=>tone(f,1,'sine',.05,1+i*.28))},
+  'Yacht':()=>{tint('linear-gradient(#7dd3fc99,#0369a1dd)',4800);cross('🛥️',185,50,4.2,1,0,10);row('🌊',74,'0',4800,[{transform:'translateY(0)'},{transform:'translateY(-14px)',offset:.5},{transform:'translateY(0)'}]);rain(['🥂','🍾','✨','💎'],20,1,3800);cap('Yacht life 🛥️','#e0f2fe');tone(130,1,'sawtooth',.12,0,125);noise(2.5,.1,0,500,900);noise(.15,.3,1.4,6000)},
+  'Rocket':()=>{[3,2,1].forEach((n,i)=>{el(n,'left:0;width:100%;text-align:center;top:22%;font:900 150px sans-serif;color:#fff;text-shadow:0 0 30px #f97316',[{transform:'scale(2)',opacity:0},{transform:'scale(1)',opacity:1,offset:.3},{opacity:0}],{duration:700,delay:i*700});tone(660,.15,'square',.1,i*.7)});tone(1100,.5,'square',.1,2.1);el('🚀','left:50%;bottom:0;margin-left:-.6em;font-size:130px;line-height:1',[{transform:'translateY(0) rotate(-45deg)'},{transform:'translateY(-125vh) rotate(-45deg)'}],{duration:2300,delay:2100,easing:'ease-in'});for(let i=0;i<18;i++)el(pick(['🔥','💨','✨']),`left:50%;margin-left:-.5em;bottom:${i*6.2}vh;font-size:74px;line-height:1`,[{opacity:1,transform:'scale(.6)'},{opacity:0,transform:'scale(1.7)'}],{duration:900,delay:2100+i*120});setTimeout(()=>{shk();cap('LIFTOFF! 🚀','#fdba74')},2100);noise(3,.3,2,500,3500);tone(60,3,'sawtooth',.18,2,200)},
+  'Diamond Planet':()=>{tint('radial-gradient(#0e7490dd,#000e)',4800);big('💎',215,4800,[{transform:'scale(.1) rotate(0)',opacity:0},{transform:'scale(1.25) rotate(180deg)',opacity:1,offset:.3},{transform:'scale(1) rotate(360deg)',opacity:1,offset:.85},{opacity:0}]);orbit(['💎','✨','💎','✨','💎','✨','💎','✨'],240,4200,42);rain(['💎','✨'],32,0,3800);ring('#67e8f9');ring('#fff',.3);cap('Diamond Planet 💎','#67e8f9');for(let i=0;i<12;i++)tone(1500+Math.random()*2500,.35,'sine',.05,i*.16);tone(220,3,'sine',.1)},
+  'Supernova':()=>{tint('#fff',750);tint('radial-gradient(#f97316,#7c2d12 40%,#000)',5400);[0,.18,.36,.54].forEach((t,i)=>ring(['#fff','#fde68a','#f97316','#ef4444'][i],t));stars(140,'#fde68a',2600);pops(['☄️','🔥','💥','⭐'],48,580,48,2100,.1);big('💥',240,3200,POP);shk();cap('SUPERNOVA 🌠','#fde68a');tone(80,2.5,'sawtooth',.3,0,25);noise(3,.4,0,2000,60);for(let i=0;i<8;i++)noise(.1,.2,1+i*.2,4000)},
+  'Pegasus Sovereign':()=>{tint('radial-gradient(#fde047bb,#7c3aedee 50%,#000)',5600);cross('🦄',245,28,4.4,1,0,-50);ring('#fde047');ring('#c084fc',.25);ring('#fff',.5);stars(130,'#fef08a',3200);rain(['👑','✨','🪽','💎'],40,0,4400);shk();cap('PEGASUS SOVEREIGN 👑','#fef08a');[261,329,392,523,659,784,1046,1318].forEach((f,i)=>tone(f,.9,'triangle',.1,i*.13))}
 };
 
 function tikgift(it,q){
