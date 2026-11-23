@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>SpendSim – Blow $1,000,000 CAD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#101523;--mut:#667089;--line:#dde2ee;--acc:#5b3df5;--ok:#0fa968;--bad:#e5383b;--hd:#ffffffee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;--acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--hd:#0c1020ee}}
+:root[data-theme=dark]{--bg:#080b14;--card:#121829;--ink:#eef1fb;--mut:#8a93b0;--line:#222a44;--acc:#8d78ff;--ok:#2be08f;--bad:#ff5c5f;--hd:#0c1020ee}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
+#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--hd);backdrop-filter:blur(14px);padding:12px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.bal small{color:var(--mut);display:block}
+#bal{font-size:clamp(28px,7vw,46px);font-weight:800;font-variant-numeric:tabular-nums;color:var(--ok);letter-spacing:-.02em;transition:color .2s}
+#bal.hit{color:var(--bad);animation:jolt .4s}
+.meter{height:6px;border-radius:9px;background:var(--line);margin-top:4px;overflow:hidden;min-width:200px}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--bad),#ffb020,var(--ok));transition:width .9s cubic-bezier(.2,.8,.2,1)}
+#st{display:flex;flex-wrap:wrap;gap:6px;font-size:13px}#st span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 10px}
+.fl{position:absolute;left:16px;top:60px;font-weight:800;font-size:22px;color:var(--bad);animation:up 1.6s forwards;pointer-events:none}.fl.g{color:var(--ok)}
+main{max-width:1100px;margin:0 auto;padding:14px 16px 60px}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tabs button{padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card)}.tabs .on{background:var(--acc);color:#fff;border-color:var(--acc)}.tabs #rs{margin-left:auto;color:var(--mut)}
+input[type=search],input[type=text]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0}.chips button{white-space:nowrap;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px}.chips .on{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.co{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:left;transition:transform .15s,border-color .15s}.co:hover{transform:translateY(-3px);border-color:var(--acc)}
+.lg{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:8px}.co b{display:block}.co small{color:var(--mut)}
+.layer{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));background:#04060dcc;backdrop-filter:blur(5px)}.layer.on{display:flex}
+#ov{z-index:20}#ck{z-index:30}#lay{z-index:40}#fx{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:22px;width:100%;max-width:460px;max-height:100%;overflow:auto;animation:pop .3s cubic-bezier(.2,1.4,.4,1)}
+.sh{padding:18px;color:#fff;display:flex;align-items:center;gap:12px}.sh i{font-style:normal;font-size:34px}.sh button{margin-left:auto;font-size:22px;color:#fff}
+.row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}.row>span:first-child{font-size:24px}.row div{flex:1;min-width:0}.row small{color:var(--mut);display:block}
+.buy{background:var(--acc);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;white-space:nowrap}.buy:disabled{opacity:.5}
+.ckb{padding:18px}.ckb h3{margin:0 0 2px}.qty{display:flex;gap:6px;margin:12px 0;align-items:center;flex-wrap:wrap}.qty button{border:1px solid var(--line);border-radius:9px;padding:6px 11px}.qty b{min-width:60px;text-align:center}
+.card{height:150px;border-radius:16px;padding:16px;color:#fff;background:linear-gradient(135deg,#1b2a6b,#6a2fd8 60%,#d6357f);position:relative;margin:12px 0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;font-family:ui-monospace,monospace;letter-spacing:.08em}
+.card::before{content:"";position:absolute;top:18px;left:18px;width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#f6d98a,#b98d2e)}
+.card.busy::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,#fff7 50%,transparent 70%);animation:sweep 1s infinite}
+.tot{display:flex;justify-content:space-between;font-size:20px;font-weight:800}.stat{min-height:22px;color:var(--mut);margin:8px 0}
+.pay{width:100%;padding:14px;border-radius:14px;background:var(--ok);color:#04150d;font-weight:800;font-size:17px}.pay:disabled{opacity:.6}
+.res{padding:34px 20px;text-align:center}.res h2{margin:14px 0 4px}.res p{color:var(--mut);margin:2px 0}.res.no{animation:shake .5s}
+.res svg{width:96px;height:96px}.res circle{fill:none;stroke-width:5;stroke-dasharray:190;stroke-dashoffset:190;animation:draw .6s forwards}.res path{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .4s .5s forwards}
+.res.ok svg{stroke:var(--ok)}.res.no svg{stroke:var(--bad)}
+.live{width:100%;max-width:560px;border-radius:20px;overflow:hidden;background:#000;color:#fff;animation:pop .3s}
+.vid{height:210px;background:linear-gradient(120deg,#2b1055,#7597de,#2b1055);background-size:300% 300%;animation:bg 6s infinite;display:grid;place-items:center;font-size:84px;position:relative}.vid em{position:absolute;top:10px;left:12px;font:700 12px sans-serif;background:#e62117;padding:3px 8px;border-radius:5px}.vid span{animation:bob .6s infinite alternate}
+.chat{height:150px;overflow:hidden;padding:8px 12px;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;background:#0f0f0f}.chat b{color:#9aa}
+.sc{margin:0 10px;border-radius:12px;overflow:hidden;background:var(--c);color:#fff;animation:drop .6s cubic-bezier(.2,1.5,.4,1)}.sc div{padding:8px 12px;font-weight:700}.sc .m{background:#0003;font-weight:500;min-height:34px}.sc u{display:block;height:4px;background:#fff9;animation:bar 6s linear forwards;transform-origin:left}
+.rx{padding:10px 14px 14px;min-height:56px;font-style:italic}
+.ban{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;animation:ban 3.6s forwards;filter:drop-shadow(0 6px 20px #0008)}.ban i{display:block;font-style:normal;font-size:min(34vw,160px)}.ban span{display:inline-block;background:var(--acc);color:#fff;padding:8px 18px;border-radius:99px;font-weight:800;font-size:18px}
+#fx s{position:absolute;top:-60px;text-decoration:none;animation:fall linear forwards}.flash{position:absolute;inset:0;background:#fff;animation:fade .7s forwards}
+.cnt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.cnt div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}.cnt b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.cnt small{color:var(--mut)}
+.pb{height:8px;background:var(--line);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%;width:0;background:var(--acc);animation:grow 3s ease-out forwards}
+.rec{background:var(--card);border:1px dashed var(--line);border-radius:6px;padding:10px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;font-variant-numeric:tabular-nums}.rec div{flex:1}.rec small{color:var(--mut);display:block}.rec b{color:var(--bad)}
+.empty{color:var(--mut);padding:30px;text-align:center}
+#tt{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}#tt div{background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;animation:pop .3s,fade 3.4s forwards;font-size:14px}
+.shake{animation:shake .6s}
+@keyframes pop{from{transform:scale(.85);opacity:0}}@keyframes up{to{transform:translateY(-34px);opacity:0}}@keyframes jolt{30%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}@keyframes draw{to{stroke-dashoffset:0}}@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+@keyframes bg{50%{background-position:100% 50%}}@keyframes bob{to{transform:translateY(-10px) rotate(6deg)}}@keyframes drop{from{transform:translateY(-120px) scale(.7);opacity:0}}@keyframes bar{to{transform:scaleX(0)}}
+@keyframes ban{0%{transform:translate(-50%,-50%) scale(0)}12%{transform:translate(-50%,-50%) scale(1.15)}20%,80%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-90%) scale(.9);opacity:0}}
+@keyframes fall{to{transform:translateY(115vh) rotate(540deg)}}@keyframes fade{to{opacity:0}}@keyframes grow{to{width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+</style></head><body>
+<header id="top"><div class="bal"><small>Balance · CAD</small><div id="bal"></div><div class="meter"><i id="mt"></i></div></div><div id="st"></div></header>
+<main>
+<nav class="tabs"><button data-t="s" class="on">Stores</button><button data-t="m">My stuff</button><button data-t="r">Receipts</button><button id="rs">Reset</button></nav>
+<section id="s"><input type="search" id="q" placeholder="Search 60 companies…"><div class="chips" id="ch"></div><div class="grid" id="gr"></div></section>
+<section id="m" hidden></section><section id="r" hidden></section>
+</main>
+<div class="layer" id="ov"></div><div class="layer" id="ck"></div><div class="layer" id="lay"></div><div id="fx"></div><div id="tt"></div>
+<script>
+const $=s=>document.querySelector(s),wait=ms=>new Promise(r=>setTimeout(r,ms)),fmt=n=>new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD'}).format(n),rnd=(a,b)=>a+Math.random()*(b-a);
+// name|logo|color|category|emoji item:price:flag;…  flags: m=monthly sub, s=super chat, g=gift burst, h=hype train, a=ad campaign
+const DATA=`Amazon|🛒|#ff9900|Shopping|📦 Prime Membership:9.99:m;🔊 Echo Dot:69.99;📖 Kindle:199.99;🎮 PlayStation 5:629.99;🚁 Camera Drone:1299
+Walmart|🛍️|#0071ce|Shopping|🛒 Cart of Groceries:187.43;📺 Smart TV:498;🚲 Bicycle:279;🎄 Entire Seasonal Aisle:2999
+Costco|🏬|#e31837|Shopping|🌭 Hot Dog Combo:1.99;🥩 Bulk Meat Pallet:849;🛞 Tires + Install:1100;💍 Diamond Ring:7999
+IKEA|🪑|#0058a3|Shopping|🍝 40 Meatballs:79;🛋️ Sofa:1299;🛏️ Entire Bedroom:2499;🏠 Furnish a Mansion:85000
+Canadian Tire|🍁|#e31937|Shopping|🏒 Hockey Gear:899;🛶 Canoe:1299;🧂 Bag of Salt:7.99
+Home Depot|🔨|#f96302|Shopping|🔨 Hammer:24.99;🏊 Backyard Pool:48000;🪵 Lumber Truckload:6200
+Temu|🧸|#fb7701|Shopping|🎁 Mystery Box:19.99;📦 10,000 Gadgets:4999;🧦 Sock Mountain:299
+eBay|🏷️|#e53238|Shopping|⌚ Vintage Watch:1200;📼 Sealed VHS:3500;🗿 Weird Statue:650
+Netflix|🎬|#e50914|Streaming|📺 Premium Plan:24.99:m;🍿 Snack Pack:39;🎞️ License a Series:250000
+Spotify|🎧|#1db954|Streaming|🎵 Premium:11.99:m;👨‍👩‍👧 Family Plan:19.99:m;📻 Playlist Ad Campaign:5000:a
+Disney+|🏰|#113ccf|Streaming|✨ Bundle:19.99:m;🎢 Park Family Trip:9800
+YouTube|▶️|#ff0000|Streaming|💬 Super Chat Blue:5:s;💬 Super Chat Green:20:s;💬 Super Chat Gold:100:s;💬 Super Chat RED:500:s;🐱 Super Sticker Cat:4:g;🔥 Super Sticker Fire:25:g;🏅 Channel Membership:6.99:m;⭐ YouTube Premium:15.99:m;📢 Local Ad Campaign:500:a;📢 National Ad Campaign:25000:a;🏈 Big Game Ad Spot:9000000:a
+Twitch|💜|#9146ff|Streaming|💎 1000 Bits:14:g;⭐ Subscription:7.99:m;🎁 Gift 5 Subs:39.95:h;🚂 Gift 100 Subs:799:h;🚂 Gift 1000 Subs:7990:h
+TikTok|🎵|#fe2c55|Social|🌹 Rose:0.02:g;❤️ Finger Heart:0.07:g;🦁 Lion:600:g;🌌 Universe:900:g;🚀 Rocket:2200:g;📈 Promote Campaign:2500:a
+Instagram|📸|#c13584|Social|📈 Boost Post:50:a;🤝 Influencer Shoutout:15000:a;🎯 Reels Campaign:60000:a
+X|✖️|#1d9bf0|Social|✅ Premium:11:m;📣 Promoted Post Blitz:5000:a
+Snapchat|👻|#fffc00|Social|⭐ Snapchat+:5.99:m;🎭 Sponsored Lens:30000:a
+Reddit|👽|#ff4500|Social|🥇 Award Rain:60:g;📌 Promoted Thread:1500:a
+Discord|🗨️|#5865f2|Social|⚡ Nitro:13:m;🚀 Boost Server ×14:70:g
+Steam|🎮|#1b2838|Gaming|🕹️ Steam Deck:799;📚 Entire Wishlist:1200;🖥️ Gaming PC:4200
+Nintendo|🍄|#e60012|Gaming|🎮 Switch 2:629;🏎️ Mario Kart:99;🏰 Zelda Collector Set:420
+Xbox|🟢|#107c10|Gaming|🎮 Series X:649;🎟️ Game Pass Ultimate:24.99:m
+PlayStation|🔷|#003791|Gaming|🥽 PS VR Setup:799;🎧 Pulse Headset:149;🎮 PS Plus:11:m
+Roblox|🧱|#e2231a|Gaming|💰 10,000 Robux:150:g;🎩 Dominus Hat:9000:g
+Epic Games|⚔️|#7a3cff|Gaming|💎 V-Bucks 13,500:130:g;🎫 Battle Pass:12:g
+Pokémon Center|⚡|#ffcb05|Gaming|🃏 Booster Box:229;🔥 Charizard PSA 10:420000
+Apple|🍎|#8e8e93|Tech|📱 iPhone Pro Max:1999;💻 MacBook Pro:3999;🥽 Vision Pro:4999;🎧 AirPods Max:769
+Samsung|📲|#1428a0|Tech|📱 Galaxy Ultra:1799;🖥️ Gaming Monitor:1299;🧊 Smart Fridge:3499
+Google|🔍|#4285f4|Tech|📱 Pixel Pro:1399;☁️ 2TB Storage:13:m;📢 Search Ads Campaign:10000:a
+Nvidia|🟩|#76b900|Tech|🎮 RTX 5090:3499;🧠 AI GPU:40000;🏭 AI Server Rack:400000
+OpenAI|🤖|#10a37f|Tech|💬 Chat Plus:28:m;⚡ Pro Plan:280:m
+Shopify|🛍️|#5e8e3e|Tech|🏪 Store Plan:39:m;📢 Launch Ads:8000:a
+Tesla|🚗|#e82127|Cars|🚘 Model 3:52990;🚙 Model Y:56990;⚡ Model S Plaid:119990;🛻 Cybertruck:99990;🏁 Roadster:250000;🔋 Powerwall:14500;🤖 FSD Subscription:99:m
+Ford|🛻|#003478|Cars|🛻 F-150 Lightning:79999;🐎 Mustang GT:57000
+Toyota|🚙|#eb0a1e|Cars|🚗 Corolla:26000;🚙 RAV4:35000;🚐 Sienna:48000
+Porsche|🏎️|#b12b28|Cars|🏎️ 911 GT3 RS:410000;⚡ Taycan Turbo:200000
+Ferrari|🐎|#dc0000|Cars|🏎️ 296 GTB:430000;🔥 SF90:800000
+Lamborghini|🐂|#ddb321|Cars|🐂 Urus:340000;🚀 Revuelto:960000
+Bugatti|🏁|#1c3f94|Cars|🏁 Tourbillon:5800000
+Uber|🚕|#000000|Travel|🚕 Black Ride:85;🍔 Eats Banquet:420;🚁 Helicopter Ride:2400
+Airbnb|🏡|#ff5a5f|Travel|🏕️ Cabin Weekend:640;🏰 Scottish Castle Week:18000;🏝️ Private Island Week:35000
+Air Canada|✈️|#f01428|Travel|🛫 Toronto to Vancouver:389;🥂 Signature Class Tokyo:6900
+Emirates|🛫|#d71920|Travel|👑 First Class Suite Dubai:21000
+Marriott|🏨|#8a1538|Travel|🛎️ Presidential Suite Night:4500;🏨 Buy Out a Floor:60000
+NetJets|🛩️|#1a2a4e|Luxury|🛩️ 25-Hour Jet Card:180000;🚀 Gulfstream G700:93000000
+Tim Hortons|☕|#c8102e|Food|☕ Double-Double:2.19;🍩 50 Timbits:11.99;🏟️ Coffee for a Stadium:19500
+McDonald’s|🍟|#ffbc0d|Food|🍔 Big Mac Meal:12.49;🎉 Feed 1,000 People:11500
+Starbucks|🧋|#00704a|Food|🥤 Venti Latte:6.45;🍰 Office Catering:900
+DoorDash|🥡|#ff3008|Food|🍜 Dinner Delivery:48;📱 DashPass:9.99:m
+Rolex|⌚|#006039|Luxury|⌚ Submariner:14500;🌟 Daytona:48000
+Louis Vuitton|👜|#6b4e2e|Luxury|👜 Neverfull:2300;🧳 Trunk:45000
+Gucci|🧥|#0a5c36|Luxury|👞 Loafers:1100;🧥 Full Outfit:6500
+Sotheby’s|🖼️|#1c2d4a|Luxury|🖼️ Warhol Print:250000;🎨 Banksy:650000
+Nike|👟|#f36f21|Fashion|👟 Air Jordans:230;✨ Limited Drop:3200
+Lululemon|🧘|#d31f26|Fashion|🧥 Jacket:148;👕 New Wardrobe:3500
+SpaceX|🚀|#005288|Space|📡 Starlink Dish:499;🛰️ Starlink Monthly:140:m;🌙 Lunar Seat:150000000
+Virgin Galactic|🛸|#d82037|Space|🌌 Suborbital Seat:600000
+RE/MAX|🏠|#dc1c2e|Property|🏢 Toronto Condo:780000;🌲 Muskoka Cottage:950000;🏰 Beverly Hills Mansion:45000000
+GoFundMe|🤝|#00b964|Charity|💚 Donate:100;🏫 Fund a School:250000
+Red Cross|❤️|#e4002b|Charity|🩹 Relief Kit:50;🚑 Disaster Response:25000
+Bell|📡|#0070bb|Telecom|📱 Unlimited Plan:95:m;🌐 Gigabit Fibre:90:m
+Peloton|🚴|#e5383b|Fitness|🚴 Bike+:2995;🏃 All-Access:44:m
+Kickstarter|💡|#05ce78|Fun|🔦 Wild Gadget:89;🎬 Indie Film:15000
+Ticketmaster|🎤|#026cdf|Fun|🎫 Floor Seats:450;⭐ Front Row Tour:1850;🏟️ Rent the Arena:350000`;
+const CO=DATA.split('\n').map((l,i)=>{const[n,e,c,cat,it]=l.split('|');return{id:i,n,e,c,cat,it:it.split(';').map(x=>{const[nm,p,f]=x.split(':'),k=nm.indexOf(' ');return{e:nm.slice(0,k),n:nm.slice(k+1),p:+p,f:f||''}})}});
+const START=1e6,KEY='spendsim-v1';let S={bal:START,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0},shown=START,raf,openCo=null,busy=false,cat='All',next=Date.now()+20000;
+try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d.bal=='number')S=d;shown=S.bal}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const ITM=k=>{const[a,b]=k.split('.');return[CO[a],CO[a].it[b]]};
+const RANKS=[[0,'Window shopper'],[1e3,'Impulse buyer'],[1e4,'Big spender'],[1e5,'Whale'],[5e5,'Tycoon'],[9e5,'Financial arsonist']];
+let ac;function ding(f=880,t=.15,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(.1,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t*3);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+t*3)}catch(e){}}
+function toast(m){const d=document.createElement('div');d.textContent=m;$('#tt').append(d);setTimeout(()=>d.remove(),3400)}
+function flt(t,g){const d=document.createElement('div');d.className='fl'+(g?' g':'');d.textContent=t;$('#top').append(d);setTimeout(()=>d.remove(),1600)}
+function setBal(spend){cancelAnimationFrame(raf);const f=shown,to=S.bal,t0=performance.now();if(spend){$('#bal').classList.add('hit');setTimeout(()=>$('#bal').classList.remove('hit'),900)}
+ (function s(t){const k=Math.min(1,(t-t0)/900);shown=f+(to-f)*(1-Math.pow(1-k,3));$('#bal').textContent=fmt(shown);if(k<1)raf=requestAnimationFrame(s)})(t0);
+ $('#mt').style.width=Math.max(0,S.bal/START*100)+'%';stats();save()}
+function stats(){const mo=Object.keys(S.subs).reduce((a,k)=>a+ITM(k)[1].p,0),r=RANKS.filter(x=>S.spent>=x[0]).pop()[1];
+ $('#st').innerHTML=`<span>🏅 ${S.bal<1?'Broke legend':r}</span><span>😊 ${Math.round(S.h)}</span><span>📣 ${Math.round(S.c)}</span><span>💖 ${Math.round(S.k)}</span><span>🔁 ${fmt(mo)}/mo · ${mo?Math.max(0,Math.ceil((next-Date.now())/1000))+'s':'no subs'}</span>`}
+const show=(id,h)=>{const e=$('#'+id);e.innerHTML=h;e.className='layer on';return e},cls=id=>{const e=$('#'+id);e.className='layer';e.innerHTML=''};
+['ov','lay'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id==id){cls(id);if(id=='ov')openCo=null}});
+// ---- store browsing
+function grid(){const q=$('#q').value.toLowerCase();$('#gr').innerHTML='';CO.filter(c=>(cat=='All'||c.cat==cat)&&(c.n.toLowerCase().includes(q)||c.it.some(i=>i.n.toLowerCase().includes(q)))).forEach(c=>{const b=document.createElement('button');b.className='co';b.innerHTML=`<div class="lg" style="background:${c.c}33">${c.e}</div><b>${c.n}</b><small>${c.cat} · ${c.it.length} items</small>`;b.onclick=()=>openStore(c);$('#gr').append(b)})}
+function chips(){const cs=['All',...new Set(CO.map(c=>c.cat))];$('#ch').innerHTML='';cs.forEach(c=>{const b=document.createElement('button');b.textContent=c;b.className=c==cat?'on':'';b.onclick=()=>{cat=c;chips();grid()};$('#ch').append(b)})}
+function openStore(c){openCo=c;const e=show('ov',`<div class="sheet"><div class="sh" style="background:${c.c}"><i>${c.e}</i><div><b style="font-size:20px">${c.n}</b><br>${c.cat}</div><button>✕</button></div></div>`);e.querySelector('button').onclick=()=>{cls('ov');openCo=null};
+ c.it.forEach((it,i)=>{const r=document.createElement('div'),own=S.inv[c.id+'.'+i],sub=S.subs[c.id+'.'+i];r.className='row';
+  r.innerHTML=`<span>${it.e}</span><div><b>${it.n}</b><small>${fmt(it.p)}${{m:' per month 🔁',s:' · live Super Chat 💬',g:' · animated gift ✨',h:' · hype train 🚂',a:' · ad campaign 📈'}[it.f]||''}${own&&!sub?' · you own '+own:''}</small></div><button class="buy">${sub?'Subscribed ✓':'Buy'}</button>`;
+  const b=r.querySelector('button');b.disabled=!!sub;b.onclick=()=>checkout(c,it,i);e.querySelector('.sheet').append(r)})}
+// ---- checkout + payment animation
+function checkout(c,it,i){let q=1;const one=it.f=='m'||it.f=='s',max=Math.max(1,Math.min(1e5,Math.floor(S.bal/it.p)));
+ const e=show('ck',`<div class="sheet"><div class="ckb"><h3>${it.e} ${it.n}</h3><small style="color:var(--mut)">${c.n}</small>
+ ${one?'':'<div class="qty"><button>−</button><b id="qn">1</b><button>+</button><button data-q="10">×10</button><button data-q="100">×100</button><button data-q="max">Max</button></div>'}
+ ${it.f=='s'?'<input type="text" id="msg" maxlength="120" placeholder="Your message, read live on stream 💬" style="margin-top:10px">':''}
+ <div class="card" id="cd"><div>•••• •••• •••• 4242</div><small>YOU · 12/29</small></div>
+ <div class="tot"><span>Total</span><span id="tt2"></span></div><div class="stat" id="stt"></div><button class="pay" id="pay"></button></div></div>`);
+ const upd=()=>{q=Math.max(1,Math.min(1e6,q));$('#tt2').textContent=fmt(q*it.p);$('#pay').textContent='Pay '+fmt(q*it.p);if($('#qn'))$('#qn').textContent=q.toLocaleString()};upd();
+ e.querySelectorAll('.qty button').forEach((b,n)=>b.onclick=()=>{const d=b.dataset.q;q=d?(d=='max'?max:q*+d):q+(n?1:-1);upd()});
+ e.onclick=ev=>{if(ev.target.id=='ck'&&!busy)cls('ck')};
+ $('#pay').onclick=async()=>{busy=true;$('#pay').disabled=true;$('#cd').classList.add('busy');const tot=+(q*it.p).toFixed(2),msg=$('#msg')?$('#msg').value.trim():'';
+  for(const s of ['🔒 Encrypting card details…','🏦 Contacting your bank…','🧾 Authorizing '+fmt(tot)+'…']){$('#stt').textContent=s;ding(500+Math.random()*200,.05);await wait(650)}
+  const ok=tot<=S.bal+1e-9,sh=e.querySelector('.sheet');
+  sh.innerHTML=ok?`<div class="res ok"><svg viewBox="0 0 100 100" stroke="currentColor"><circle cx="50" cy="50" r="30"/><path d="M36 51l10 10 19-21"/></svg><h2>Payment confirmed</h2><p><b>${fmt(tot)}</b> · ${c.n}</p><p>Auth AUTH-${Math.random().toString(36).slice(2,8).toUpperCase()}</p></div>`:`<div class="res no"><svg viewBox="0 0 100 100" stroke="currentColor"><circle cx="50" cy="50" r="30"/><path d="M40 40l20 20M60 40L40 60"/></svg><h2>Card declined</h2><p>Insufficient funds. You have ${fmt(S.bal)}.</p></div>`;
+  if(ok){ding(880,.12);setTimeout(()=>ding(1320,.2),140)}else ding(150,.3,'sawtooth');
+  await wait(ok?1400:1900);busy=false;cls('ck');if(ok)commit(c,it,i,q,tot,msg)}}
+function commit(c,it,i,q,tot,msg){S.bal=+(S.bal-tot).toFixed(2);S.spent+=tot;const k=c.id+'.'+i;S.inv[k]=(S.inv[k]||0)+q;if(it.f=='m')S.subs[k]=1;
+ const d=Math.log10(tot+1)*3,ct=c.cat;if(ct=='Charity')S.k+=d;else if(['Social','Luxury','Cars','Space'].includes(ct)||it.f=='a')S.c+=d,S.h+=d/2;else S.h+=d;
+ S.rec.unshift({e:it.e,n:it.n,s:c.n,q,tot,t:Date.now(),d:/[gsamh]/.test(it.f)});S.rec=S.rec.slice(0,80);
+ setBal(true);flt('−'+fmt(tot));ding(260,.2,'triangle');
+ if(it.f=='s')superchat(tot,msg);else if(it.f=='a')adcamp(c,it,tot);
+ else burst(it.e,q,tot,it.f=='g'?`Sent ${q.toLocaleString()}× ${it.n}!`:it.f=='h'?`🚂 HYPE TRAIN · ${it.n}`:it.f=='m'?`Subscribed: ${c.n}`:`${it.n} ordered!`);
+ if(openCo)openStore(openCo);renderTabs();if(S.bal<1)setTimeout(broke,2500)}
+// ---- effects
+function burst(e,q,tot,label){const f=$('#fx'),n=Math.min(70,10+Math.round(Math.log10(tot+1)*9)+Math.min(q,15));
+ if(label)f.insertAdjacentHTML('beforeend',`<div class="ban"><i>${e}</i><span>${label}</span></div>`);
+ if(tot>=50000){f.insertAdjacentHTML('beforeend','<div class="flash"></div>');document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),600)}
+ for(let i=0;i<n;i++){const p=document.createElement('s');p.textContent=Math.random()<.2?'💸':e;p.style.cssText=`left:${rnd(0,95)}%;font-size:${rnd(16,44)}px;animation-delay:${rnd(0,.9)}s;animation-duration:${rnd(1.6,3.2)}s`;f.append(p)}
+ setTimeout(()=>{f.innerHTML=''},4400)}
+function superchat(tot,msg){const th=[5,10,20,50,100,200,500],cl=['#1e88e5','#00bcd4','#1de9b6','#f9a825','#f57c00','#e91e63','#e62117'],c=cl[Math.min(6,th.filter(x=>tot>=x).length)],
+ U=['xX_Gamer','mochi','TheRealBob','kayla_k','NightOwl','lofi_girl_fan','Dave'],M=['LETS GOOO','W stream','first time here','😂😂😂','clip it!!','POG','hello from Canada 🍁'];
+ const e=show('lay',`<div class="live"><div class="vid"><em>● LIVE · ${Math.round(rnd(12,90))}.${Math.round(rnd(0,9))}K watching</em><span>🎙️</span></div><div class="chat" id="chat"></div><div id="scs"></div><div class="rx" id="rx"></div></div>`);
+ const chat=$('#chat'),line=(u,m)=>{chat.insertAdjacentHTML('beforeend',`<div><b>${u}</b> ${m}</div>`);if(chat.children.length>8)chat.firstChild.remove()};
+ const iv=setInterval(()=>line(U[~~rnd(0,7)],M[~~rnd(0,7)]),350);
+ setTimeout(()=>{$('#scs').innerHTML=`<div class="sc" style="--c:${c}"><div>🧑 You · ${fmt(tot)}</div><div class="m"></div><u></u></div>`;$('#scs .m').textContent=msg||'';burst('❤️',1,tot,'');ding(988,.2);
+  ['SUPERCHAT KING 👑','WHO IS THIS GUY','💸💸💸','THANK YOU SO MUCH','bro is rich'].forEach((m,i)=>setTimeout(()=>line(U[i],m),i*220));
+  const t=`Oh wow, a ${fmt(tot)} Super Chat from You!! ${msg?'They say: “'+msg+'” — THANK YOU!!':'Thank you so much!!'}`;let n=0;const ty=setInterval(()=>{$('#rx').textContent='🎙️ '+t.slice(0,++n);if(n>=t.length)clearInterval(ty)},30)},1400);
+ setTimeout(()=>{clearInterval(iv);cls('lay')},9500)}
+function adcamp(c,it,tot){const imp=Math.round(tot/8*1000*rnd(.8,1.2)),clk=Math.round(imp*rnd(.012,.025)),sal=Math.round(clk*rnd(.02,.06));S.imp+=imp;S.c+=Math.log10(imp+1)*2;
+ const e=show('lay',`<div class="sheet"><div class="res"><div style="font-size:54px">📢</div><h2>Campaign is live!</h2><p>${c.n} · ${it.n}</p><div class="cnt"><div><b data-v="${imp}">0</b><small>Impressions</small></div><div><b data-v="${clk}">0</b><small>Clicks</small></div><div><b data-v="${sal}">0</b><small>Sales</small></div></div><div class="pb"><i></i></div><p style="margin-top:12px">Reach is added to My stuff. Tap outside to close.</p></div></div>`);
+ const t0=performance.now();(function s(t){const k=Math.min(1,(t-t0)/3000);e.querySelectorAll('[data-v]').forEach(b=>b.textContent=Math.round(b.dataset.v*(1-Math.pow(1-k,3))).toLocaleString());if(k<1)requestAnimationFrame(s)})(t0);ding(660,.1);renderTabs()}
+function broke(){show('lay',`<div class="sheet"><div class="res"><div style="font-size:60px">🪦</div><h2>You’re broke!</h2><p>You turned ${fmt(START)} into memories and receipts.</p><p>Fortune spent: ${fmt(S.spent)}</p><br><button class="pay" onclick="reset()">Start over with $1,000,000</button></div></div>`)}
+// ---- tabs
+function renderTabs(){const inv=Object.keys(S.inv),subs=Object.keys(S.subs);
+ $('#m').innerHTML=`<div class="rec"><div><b style="color:var(--ink)">📊 Impact</b><small>😊 happiness ${Math.round(S.h)} · 📣 clout ${Math.round(S.c)} · 💖 karma ${Math.round(S.k)} · ad impressions ${S.imp.toLocaleString()} · total spent ${fmt(S.spent)}</small></div></div>`+(subs.length?'<h3>Subscriptions (billed every 20 seconds)</h3>':'')+subs.map(k=>{const[c,it]=ITM(k);return`<div class="rec"><span>${it.e}</span><div>${it.n}<small>${c.n} · ${fmt(it.p)}/mo</small></div><button class="buy" data-k="${k}">Cancel</button></div>`}).join('')+'<h3>Everything you own</h3>'+(inv.length?inv.map(k=>{const[c,it]=ITM(k);return`<div class="rec"><span style="font-size:24px">${it.e}</span><div>${it.n}<small>${c.n}</small></div><b style="color:var(--ink)">×${S.inv[k].toLocaleString()}</b></div>`}).join(''):'<div class="empty">Nothing yet. Open a store and spend something.</div>');
+ $('#m').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{delete S.subs[b.dataset.k];save();stats();renderTabs();toast('Subscription cancelled')});
+ const now=Date.now();$('#r').innerHTML=S.rec.length?S.rec.map(r=>{const s=(now-r.t)/1000,st=r.d?'⚡ Delivered instantly':s<8?'📦 Order placed':s<16?'🚚 Out for delivery':'✅ Delivered';return`<div class="rec"><span style="font-size:24px">${r.e}</span><div>${r.q>1?r.q.toLocaleString()+'× ':''}${r.n}<small>${r.s} · ${new Date(r.t).toLocaleTimeString()} · ${st}</small></div><b>−${fmt(r.tot)}</b></div>`}).join(''):'<div class="empty">No receipts yet.</div>'}
+document.querySelectorAll('.tabs [data-t]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs [data-t]').forEach(x=>x.className=x==b?'on':'');['s','m','r'].forEach(i=>$('#'+i).hidden=i!=b.dataset.t);renderTabs()});
+let rc=0;$('#rs').onclick=()=>{if(rc){reset();return}rc=1;$('#rs').textContent='Tap again to reset';setTimeout(()=>{rc=0;$('#rs').textContent='Reset'},3000)};
+function reset(){S={bal:START,spent:0,inv:{},subs:{},rec:[],h:0,c:0,k:0,imp:0};rc=0;$('#rs').textContent='Reset';cls('lay');setBal();renderTabs();if(openCo)openStore(openCo);toast('Fresh $1,000,000. Spend wisely, or don’t.')}
+// ---- monthly billing + clock
+setInterval(()=>{if(Date.now()>=next){next=Date.now()+20000;Object.keys(S.subs).forEach(k=>{const[c,it]=ITM(k);if(S.bal<it.p){delete S.subs[k];toast(`${it.n} cancelled: insufficient funds`);return}
+ S.bal=+(S.bal-it.p).toFixed(2);S.spent+=it.p;S.rec.unshift({e:'🔁',n:'Billing: '+it.n,s:c.n,q:1,tot:it.p,t:Date.now(),d:1});setBal(true);flt('−'+fmt(it.p));toast(`🔁 ${c.n} billed ${fmt(it.p)}`);ding(330,.1)});renderTabs()}stats();if(!$('#r').hidden)renderTabs()},1000);
+$('#q').oninput=grid;chips();grid();renderTabs();$('#bal').textContent=fmt(shown);setBal();
+</script></body></html>
