@@ -43,10 +43,12 @@ main{max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-ri
 .tabs .on{background:var(--acc);color:#fff;border-color:var(--acc)}
 .tabs #rs{margin-left:auto;color:var(--mut)}
 .controls{display:flex;gap:8px;flex-wrap:wrap}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;touch-action:pan-x;cursor:grab;user-select:none}
+.chips.dragging{cursor:grabbing;scroll-behavior:auto}
 .chips::-webkit-scrollbar{display:none}
-.chips button{white-space:nowrap;padding:6px 13px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600}
-.chips .on{background:var(--ink);color:var(--bg)}
+.chips button{flex:0 0 auto;white-space:nowrap;padding:6px 13px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600;transition:background .15s,color .15s,border-color .15s}
+.chips button:hover{border-color:var(--acc)}
+.chips .on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sec-h{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:16px 0 8px}
 
 /* Store grid */
@@ -692,7 +694,42 @@ const show=(id,h)=>{const e=$('#'+id);e.innerHTML=h;e.className='layer on';retur
       cls=id=>{const e=$('#'+id);e.className='layer';e.innerHTML=''};
 ['ov','lay'].forEach(id=>$('#'+id).onclick=e=>{if(e.target.id==id){cls(id);if(id=='ov')openCo=null}});
 
-// ---------- Store browsing ----------
+// ---------- Store browsing & Category Strip Slider ----------
+let chipDragMoved=false;
+(function initChipSlider(){
+  const strip=$('#ch');
+  let isDown=false,startX=0,startScroll=0;
+
+  strip.addEventListener('wheel',e=>{
+    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){
+      strip.scrollLeft+=e.deltaY;
+      e.preventDefault();
+    }
+  },{passive:false});
+
+  strip.addEventListener('pointerdown',e=>{
+    if(e.pointerType!=='mouse'||e.button!==0)return;
+    isDown=true;chipDragMoved=false;
+    strip.classList.add('dragging');
+    startX=e.clientX;
+    startScroll=strip.scrollLeft;
+  });
+
+  window.addEventListener('pointermove',e=>{
+    if(!isDown)return;
+    const dx=e.clientX-startX;
+    if(Math.abs(dx)>4)chipDragMoved=true;
+    strip.scrollLeft=startScroll-dx;
+  });
+
+  window.addEventListener('pointerup',()=>{
+    if(!isDown)return;
+    isDown=false;
+    strip.classList.remove('dragging');
+    setTimeout(()=>{chipDragMoved=false;},0);
+  });
+})();
+
 function grid(){
   const q=$('#q').value.toLowerCase();
   $('#gr').innerHTML='';
@@ -705,15 +742,29 @@ function grid(){
       $('#gr').append(b);
     });
 }
-function chips(){
+function chips(shouldScrollActive=false){
+  const strip=$('#ch');
+  const prevScroll=strip.scrollLeft;
   const cs=['All',...new Set(CO.map(c=>c.cat))];
-  $('#ch').innerHTML='';
+  strip.innerHTML='';
+  let activeBtn=null;
   cs.forEach(c=>{
     const b=document.createElement('button');
-    b.textContent=c;b.className=c==cat?'on':'';
-    b.onclick=()=>{cat=c;chips();grid()};
-    $('#ch').append(b);
+    b.type='button';
+    b.textContent=c;
+    const isOn=c==cat;
+    b.className=isOn?'on':'';
+    if(isOn)activeBtn=b;
+    b.onclick=()=>{
+      if(chipDragMoved)return;
+      cat=c;chips(true);grid();
+    };
+    strip.append(b);
   });
+  strip.scrollLeft=prevScroll;
+  if(shouldScrollActive&&activeBtn){
+    activeBtn.scrollIntoView({behavior:'smooth',inline:'nearest',block:'nearest'});
+  }
 }
 function openStore(c){
   openCo=c;
@@ -755,18 +806,16 @@ const CARD_ANIMS=[
   {id:14,name:'🕶️ Sovereign Black-Ops',tag:'CLASSIFIED · 0000',steps:['🕶️ Authenticating retina & voice…','🛡️ Opening Swiss black-ops vault…','🦅 Authorizing ']}
 ];
 
-// Picks a card animation out of all 15 based on item price, category, payment method, and randomness
 function pickSmartCardAnim(c,it,tot,useCredit){
   let pool=[];
-  if(useCredit) pool=[3,9,14,1,7,11]; // Credit line favors Obsidian, Syndicate, Black-Ops, Laser, Gold, Cyber
-  else if(tot>=1000000) pool=[14,7,12,6,3,13]; // Million+ purchases
-  else if(tot>=50000) pool=[3,12,10,9,4,1]; // High-ticket
+  if(useCredit) pool=[3,9,14,1,7,11];
+  else if(tot>=1000000) pool=[14,7,12,6,3,13];
+  else if(tot>=50000) pool=[3,12,10,9,4,1];
   else if(c.cat==='Cars'||c.cat==='Space') pool=[6,13,11,3,1];
   else if(c.cat==='Tech'||c.cat==='Gaming') pool=[8,11,5,4,1];
   else if(c.cat==='Luxury'||c.cat==='Fashion') pool=[10,12,7,4,0];
-  else if(tot<50) pool=[2,0,5,8,11]; // Quick tap / everyday
+  else if(tot<50) pool=[2,0,5,8,11];
   else pool=[0,1,2,4,5,6,8,9,10,11,13];
-  // 25% chance to pull from ANY of the 15 so every animation stays in active rotation
   if(Math.random()<0.25) return pick(CARD_ANIMS);
   return CARD_ANIMS[pick(pool)];
 }
@@ -837,7 +886,6 @@ function checkout(c,it,i){
     busy=true;$('#pay').disabled=true;
     $('#cd').classList.add('busy');
     const st=animObj.id,tot=+(q*it.p).toFixed(2),msg=$('#msg')?$('#msg').value.trim():'';
-    // Distinct audio per card protocol
     if(st%3===1){sfxTone(900,.28,'sawtooth',.06);sfxTone(1400,.38,'sine',.07,.32)}
     else if(st%3===2){sfxTone(1200,.12,'sine',.11);sfxTone(1650,.18,'sine',.11,.14)}
     else{[523,659,784,1046].forEach((f,idx)=>sfxTone(f,.14,'triangle',.07,idx*.11))}
@@ -962,7 +1010,6 @@ setInterval(()=>{
     if(tab==='a')renderAuctions();
     return;
   }
-  // AI bids on active lots
   auctionLots.forEach(lot=>{
     if(lot.curBid>=lot.maxAiCap) return;
     const isEndRush=rem<20000;
@@ -983,8 +1030,7 @@ setInterval(()=>{
       }
     }
   });
-  // Process player's own auction listings & incoming deals
-  S.myListings.forEach((lst,idx)=>{
+  S.myListings.forEach((lst)=>{
     if(lst.sold) return;
     if(Math.random()<0.28){
       const buyer=pick(AI_BIDDERS);
@@ -999,7 +1045,6 @@ setInterval(()=>{
           toast(`🔨 SOLD! ${buyer.n} met your asking price of ${fmt(lst.curBid)} for ${lst.n}!`);
         }
       }else if(S.deals.length<6 && Math.random()<0.35){
-        // Send a private Deal Offer (Cash or Cash + Trade item)
         const cashOffer=Math.round(lst.askPrice*rnd(0.72,1.08));
         const tradePool=CO.flatMap((c,ci)=>c.it.map((it,ii)=>({k:`${ci}.${ii}`,e:it.e,n:it.n,p:it.p}))).filter(x=>x.p<lst.askPrice*0.5&&x.p>100);
         const tradeItem=Math.random()<0.45&&tradePool.length?pick(tradePool):null;
@@ -1019,7 +1064,6 @@ function placePlayerBid(lotId,bidAmt){
   if(!lot)return;
   if(bidAmt<=lot.curBid){toast('Bid must be higher than current bid!');return}
   if(bidAmt>S.bal){toast(`Need ${fmt(bidAmt)} cash in balance to bid!`);sfxTone(150,.2,'sawtooth');return}
-  // Refund previous escrow if player was already high bidder, then escrow new bid
   if(lot.youAreHigh && lot.escrow) S.bal=+(S.bal+lot.escrow).toFixed(2);
   S.bal=+(S.bal-bidAmt).toFixed(2);
   lot.escrow=bidAmt;
@@ -1028,13 +1072,16 @@ function placePlayerBid(lotId,bidAmt){
   lot.highAv='😎';
   lot.youAreHigh=true;
   lot.history.unshift({who:'YOU 👑',av:'😎',amt:bidAmt,t:Date.now()});
-  // Anti-snipe: if < 12s left, add 10s
   if(auctionEnd-Date.now()<12000) auctionEnd+=10000;
   setBal(-1);sfxDing(880,.12);toast(`🔨 Bid placed: ${fmt(bidAmt)} on ${lot.n}`);
   renderAuctions();
 }
 
 function renderAuctions(){
+  const prevBidVal=$('#customBidIn')?$('#customBidIn').value:'';
+  const prevAskVal=$('#sellAskIn')?$('#sellAskIn').value:'';
+  const activeId=document.activeElement&&$('#a').contains(document.activeElement)?document.activeElement.id:null;
+
   const secLeft=Math.max(0,Math.ceil((auctionEnd-Date.now())/1000));
   const mm=String(Math.floor(secLeft/60)).padStart(2,'0'),ss=String(secLeft%60).padStart(2,'0');
   const sel=auctionLots.find(l=>l.id===selectedLotId)||auctionLots[0];
@@ -1071,7 +1118,7 @@ function renderAuctions(){
     </div>
     <small style="color:var(--mut)">Competing Bidders (${sel.bidders.length}): ${sel.bidders.map(b=>`${b.av} ${b.n}`).join(' · ')}</small>
     <div style="display:flex;gap:6px;margin-top:4px">
-      <input type="number" id="customBidIn" placeholder="Custom bid > ${fmt(sel.curBid)}" min="${sel.curBid+1}">
+      <input type="number" id="customBidIn" inputmode="numeric" step="any" min="1" value="${prevBidVal}" placeholder="Custom bid > ${fmt(sel.curBid)}">
       <button class="buy" id="customBidBtn">Place Bid</button>
     </div>
     <div class="auc-feed">
@@ -1084,7 +1131,7 @@ function renderAuctions(){
     <b>🏷️ List Your Item on the Auction House</b>
     <div style="display:grid;grid-template-columns:1fr 140px auto;gap:6px">
       <select id="sellItemSel">${ownedKeys.map(k=>{const[c,it]=ITM(k);return`<option value="${k}">${it.e} ${it.n} (Own ${S.inv[k]} · Val ${fmt(it.p)})</option>`}).join('')}</select>
-      <input type="number" id="sellAskIn" placeholder="Asking $ CAD">
+      <input type="number" id="sellAskIn" inputmode="numeric" step="any" min="1" value="${prevAskVal}" placeholder="Asking $ CAD">
       <button class="buy" id="listItemBtn">List Item</button>
     </div>
   </div>`:'<div class="empty">Buy items from Stores or win auctions to list them here!</div>';
@@ -1127,14 +1174,33 @@ function renderAuctions(){
   });
   $('#a').querySelectorAll('[data-auc-sel]').forEach(b=>b.onclick=()=>{selectedLotId=b.dataset.aucSel;renderAuctions()});
   if($('#customBidBtn'))$('#customBidBtn').onclick=()=>{
-    const v=+$('#customBidIn').value;if(v>0)placePlayerBid(sel.id,v);
+    const v=+$('#customBidIn').value;
+    if(v>0){$('#customBidIn').value='';placePlayerBid(sel.id,v);}
+  };
+  if($('#customBidIn'))$('#customBidIn').onkeydown=e=>{
+    if(e.key==='Enter'){
+      const v=+$('#customBidIn').value;
+      if(v>0){$('#customBidIn').value='';placePlayerBid(sel.id,v);}
+    }
   };
   if($('#listItemBtn'))$('#listItemBtn').onclick=()=>{
     const k=$('#sellItemSel').value,[,it]=ITM(k);if(!it)return;
     const ask=Math.max(10,+$('#sellAskIn').value||Math.round(it.p*1.15));
+    $('#sellAskIn').value='';
     S.myListings.unshift({id:'lst_'+Date.now(),k,e:it.e,n:it.n,askPrice:ask,curBid:Math.round(ask*0.65),highBidder:null,sold:false});
     save();renderAuctions();toast(`📢 Listed ${it.n} for ${fmt(ask)}!`);
   };
+  if($('#sellAskIn'))$('#sellAskIn').onkeydown=e=>{
+    if(e.key==='Enter'&&$('#listItemBtn'))$('#listItemBtn').click();
+  };
+  if(activeId){
+    const el=$('#'+activeId);
+    if(el){
+      el.focus();
+      const len=el.value.length;
+      try{el.setSelectionRange(len,len);}catch(_){}
+    }
+  }
   $('#a').querySelectorAll('[data-accept-bid]').forEach(b=>b.onclick=()=>{
     const lst=S.myListings.find(x=>x.id===b.dataset.acceptBid);if(!lst||lst.sold)return;
     lst.sold=true;S.inv[lst.k]--;if(S.inv[lst.k]<=0)delete S.inv[lst.k];
@@ -1188,7 +1254,6 @@ setInterval(()=>{
     });
     S.prop.forEach(p=>{passive+=p.rent;upkeep+=p.tax;p.value*=1+propOf(p.pid).apprec});
     S.biz.forEach(b=>{if(b.dead||b.kind=='startup')return;const inc=b.income*(1+(b.staff||0)*.15+(b.rd||0)*.25);passive+=inc;upkeep+=b.upkeep+(b.staff||0)*b.staffPay});
-    // Revolving Line of Credit interest & minimum payment
     if(S.creditUsed>0){
       const interest=+(S.creditUsed*S.apr).toFixed(2);
       S.creditUsed=+(S.creditUsed+interest).toFixed(2);
@@ -1404,7 +1469,6 @@ function fxFrame(now){
       else if(en.anim=='rise'){const q=ease.out(clamp(p/.4,0,1));dy=(1-q)*VH*.45;s=.6+.4*q;a=p>.85?1-(p-.85)/.15:1}
       else if(en.anim=='fly'){const q=ease.inOut(p);dy=-q*VH*.1;s=1;a=p>.9?1-(p-.9)/.1:1;r=Math.sin(p*Math.PI*2)*.15}
       else if(en.anim=='carlaunch'){
-        // After Effects style car launch: screech in from right, drift center, nitrous blast left
         if(p<.25){dx=(1-ease.out(p/.25))*VW*.65;s=0.85+0.25*(p/.25)}
         else if(p<.75){dx=Math.sin((p-.25)*24)*6;s=1.12}
         else{dx=-ease.inOut((p-.75)/.25)*VW*.75;s=1.18}
@@ -1522,13 +1586,12 @@ function sfxFanfare(at=0){[523.25,659.25,783.99,1046.5].forEach((f,i)=>sfxTone(f
 function sfxCarRev(){
   sfxTone(55,1.1,'sawtooth',.18,0,280,.3);
   sfxTone(110,1.1,'square',.08,0,420,.2);
-  sfxNoise(.45,.18,1.05,3200,800,.3); // turbo blowoff
+  sfxNoise(.45,.18,1.05,3200,800,.3);
   sfxTone(72,1.2,'sawtooth',.2,1.15,390,.3);
 }
 
 // =====================================================================
 // AFTER EFFECTS STYLE GIFT & PURCHASE CINEMATICS
-// Top 10 Most Expensive TikTok Gifts + All 13 Big TikTok Live Gifts+
 // =====================================================================
 const at=(ms,fn)=>setTimeout(fn,ms);
 const multTxt=q=>q>1?`×${q.toLocaleString()} `:'';
@@ -1542,7 +1605,6 @@ function megaCount(q,delay=0){
   text(`×${q.toLocaleString()}`,{x:VW*.82,y:VH*.16,size:Math.min(70,VW/7),col:'#f0abfc',delay,dur:3200,glow:'#f0f'});
 }
 
-// Reusable After Effects Masterpiece Composer for top gifts & mega items
 function aeShowcase(opts){
   const{tintCol='rgba(20,10,45,A)',rayCol='rgba(253,224,71,.26)',ringCols=['#fff','#fde047','#f97316'],
         heroEmoji,orbitChs=['✨','👑','💎'],rainChs=['✨','🪙','👑'],banner,subCol='#fde047',
@@ -1563,7 +1625,6 @@ function aeShowcase(opts){
 }
 
 const GIFTS={
-  // Standard TikTok Gifts
   'Rose':(c,it,q,tot)=>{tint('rgba(255,44,85,A)',4200,.5);hero('🌹',{size:150,anim:'fly',dur:3800,glow:'rgba(255,60,100,.9)'});rain(['🌹','🌸','🥀','✨'],34,4.2);sparkRing(CX(),CY(),28,120,'#ff6b8b',1.2);at(400,()=>sfxSparkle(0));beatCaption(it,q,tot);megaCount(q)},
   'Finger Heart':(c,it,q,tot)=>{tint('rgba(236,72,153,A)',3600,.45);ring({col:'#f9a8d4',w:8,dur:1200});hero('💖',{size:170,anim:'pop',glow:'rgba(244,114,182,.9)'});at(120,()=>burst(CX(),CY(),{chs:['❤️','💖','💕'],n:26,speed:520,sz:30}));rise(['💗','💕','💓'],22,3);beatCaption(it,q,tot,'#f9a8d4');megaCount(q)},
   'Doughnut':(c,it,q,tot)=>{tint('rgba(251,146,60,A)',3600,.4);hero('🍩',{size:200,anim:'roar',spin:Math.PI*2,dur:3400});rain(['🍩','🍬','🍪','🧁'],30,3.6);beatCaption(it,q,tot,'#fdba74');megaCount(q)},
@@ -1577,8 +1638,6 @@ const GIFTS={
   'Leon the Kitty':(c,it,q,tot)=>{tint('rgba(244,114,182,A)',3600,.5);hero('🐱',{size:210,anim:'roar',dur:3400,glow:'rgba(249,168,212,.9)'});rain(['🐾','❤️','🐟','✨'],26,3.4);beatCaption(it,q,tot,'#fbcfe8');megaCount(q)},
   'Flying Jets':(c,it,q,tot)=>{tint('rgba(125,211,252,A)',3800,.4);[0,260,520].forEach((t,i)=>at(t,()=>{hero('✈️',{y:VH*(.22+i*.14),size:110,anim:'fly',dur:2600});sfxNoise(2,.12,0,400,3500)}));beatCaption(it,q,tot,'#e0f2fe');megaCount(q)},
   'Sports Car':(c,it,q,tot)=>{aeCarShow(it,q,tot)},
-
-  // TOP 10 MOST EXPENSIVE TIKTOK GIFTS — FULL AFTER EFFECTS STYLE
   'Falcon':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(120,53,15,A)',rayCol:'rgba(253,224,71,.24)',ringCols:['#fff','#fde047','#f59e0b'],heroEmoji:'🦅',orbitChs:['🪶','⚡','✨'],rainChs:['🪶','✨','👑'],banner:'APEX FALCON STRIKE 🦅',roar:true,it,q,tot}),
   'Dragon Flame':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(127,29,29,A)',rayCol:'rgba(251,146,60,.28)',ringCols:['#fff','#fb923c','#ef4444'],heroEmoji:'🐉',orbitChs:['🔥','💥','⚡'],rainChs:['🔥','🏮','✨'],banner:'INFERNO DRAGON FLAME 🐉',subCol:'#fb923c',roar:true,it,q,tot}),
   'Lion':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(45,24,0,A)',rayCol:'rgba(250,204,21,.3)',ringCols:['#fff','#facc15','#f97316'],heroEmoji:'🦁',orbitChs:['👑','🔥','🪙'],rainChs:['🪙','👑','✨','🦁'],banner:'KING OF THE LIVE · ROAAAR! 🦁',roar:true,dur:5800,it,q,tot}),
@@ -1591,8 +1650,6 @@ const GIFTS={
   'Pegasus Sovereign':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(76,29,149,A)',rayCol:'rgba(253,224,71,.34)',ringCols:['#fff','#fde047','#c084fc','#f472b6'],heroEmoji:'🦄',orbitChs:['👑','🪽','💎'],rainChs:['👑','✨','🪽','💎'],banner:'PEGASUS SOVEREIGN ASCENSION 👑',subCol:'#fef08a',dur:6400,it,q,tot}),
   'Starlight Crown':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(67,56,202,A)',rayCol:'rgba(253,224,71,.28)',ringCols:['#fff','#fde047','#818cf8'],heroEmoji:'🌟',orbitChs:['👑','✨','💫'],rainChs:['👑','🌟','✨'],banner:'STARLIGHT CROWN CORONATION 🌟',it,q,tot}),
   'Peacock Majesty':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(6,78,59,A)',rayCol:'rgba(52,211,153,.28)',ringCols:['#fff','#34d399','#38bdf8','#fde047'],heroEmoji:'🦚',orbitChs:['🪶','💎','✨'],rainChs:['🪶','✨','💎'],banner:'PEACOCK ROYAL MAJESTY 🦚',subCol:'#6ee7b7',it,q,tot}),
-
-  // ALL 13+ BIG TIKTOK LIVE GIFTS+ — FULL AFTER EFFECTS STYLE
   'Ice Cream Cake':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(157,23,77,A)',rayCol:'rgba(244,114,182,.26)',ringCols:['#fff','#f472b6','#fde047'],heroEmoji:'🍰',orbitChs:['🍓','🍬','✨'],rainChs:['🍰','🍬','🍭','✨'],banner:'SWEET CELEBRATION CAKE 🍰',subCol:'#fbcfe8',dur:4400,it,q,tot}),
   'Hot Air Balloon':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(3,105,161,A)',rayCol:'rgba(125,211,252,.26)',ringCols:['#fff','#38bdf8','#fde047'],heroEmoji:'🎈',orbitChs:['☁️','🎊','✨'],rainChs:['🎈','🎊','✨'],banner:'SKYLINE BALLOON VOYAGE 🎈',subCol:'#e0f2fe',dur:4800,it,q,tot}),
   'Phoenix Rising':(c,it,q,tot)=>aeShowcase({tintCol:'rgba(153,27,27,A)',rayCol:'rgba(251,146,60,.32)',ringCols:['#fff','#fde047','#f97316','#ef4444'],heroEmoji:'🔥',orbitChs:['🪶','🔥','⚡'],rainChs:['🔥','✨','🪶'],banner:'IMMORTAL PHOENIX REBIRTH 🔥',subCol:'#fdba74',roar:true,dur:5600,it,q,tot}),
@@ -1643,9 +1700,6 @@ function hexToRgba(hex,a){
   return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
 }
 
-// =====================================================================
-// UPGRADED AFTER EFFECTS CAR ANIMATION + 50%+ SPECIFIC ITEM ANIMATIONS
-// =====================================================================
 function aeCarShow(it,q,tot){
   const label=`${multTxt(q)}${it.n}`;
   flashFX(.35);
@@ -1654,7 +1708,6 @@ function aeCarShow(it,q,tot){
   rays('rgba(239,68,68,.2)',4000,16,100);
   hero(it.e,{size:230,anim:'carlaunch',dur:3800,glow:'rgba(56,189,248,1)'});
   sfxCarRev();
-  // Telemetry speedometer revving up
   [0,350,700,1050,1400,1800].forEach((ms,idx)=>at(ms,()=>{
     const spd=[88,164,242,318,389,432][idx];
     text(`⚡ ${spd} KM/H · LAUNCH CONTROL`,{y:VH*.2,size:Math.min(34,VW/13),col:idx>=4?'#fde047':'#38bdf8',dur:380,glow:'#0ea5e9'});
@@ -1666,7 +1719,6 @@ function aeCarShow(it,q,tot){
   text(fmtS(tot),{y:VH*.80,size:Math.min(23,VW/20),col:'#38bdf8',dur:3000,delay:100});
 }
 
-// Specific unique purchase animations covering 50%+ of all catalog items via curated matchers
 const SPECIFIC_ITEM_ANIMATIONS=[
   [/Watch|Rolex|Daytona|Nautilus|Royal Oak|RM |Cartier|Submariner|Chronograph|Tourbillon/, (it,label,tot)=>{
     tint('rgba(15,23,42,A)',4000,.78);rays('rgba(253,224,71,.24)',3800,20,0);
@@ -1734,7 +1786,6 @@ function celebrate(c,it,q,tot){
   const cat=c.cat,label=`${multTxt(q)}${it.n}`;
   if(cat==='Cars'){aeCarShow(it,q,tot);return}
 
-  // Check specific item choreography first (covers 50%+ of all store items)
   for(const[rx,fn] of SPECIFIC_ITEM_ANIMATIONS){
     if(rx.test(it.n)){
       fn(it,label,tot);
@@ -1894,448 +1945,342 @@ function openLiveStudio(c,it,q,tot,msg,forcedPlat=null){
     spawnHeart(isYT?pick(['👍','❤️','🔥','🎉','💯']):isTW?pick(['💜','💎','🚂','🔥','👑']):isKK?pick(['💚','🔥','💎','👑']):pick(['❤️','💖','🔥','✨','👑']));
     sfxDing(740+Math.random()*300,.05);
   };
-  $('#pollOptA').onclick=()=>{pollA=clamp(pollA+3,1,99);pollB=100-pollA;$('#pollOptA').textContent=`🔥 YES (${pollA}%)`;$('#pollOptB').textContent=`❄️ CHILL (${pollB}%)`;sfxDing(880,.06)};
-  $('#pollOptB').onclick=()=>{pollB=clamp(pollB+3,1,99);pollA=100-pollB;$('#pollOptA').textContent=`🔥 YES (${pollA}%)`;$('#pollOptB').textContent=`❄️ CHILL (${pollB}%)`;sfxDing(660,.06)};
 
-  const USERS=[['xX_Gamer','MOD','#10b981'],['mochi_to','VIP','#f59e0b'],['TorontoMans','MEMBER','#3b82f6'],['kayla_k','LVL 48','#ec4899'],['NightOwl','TOP 3','#8b5cf6'],['lofi_girl','SUB','#06b6d4'],['楓_maple','MOD','#10b981']];
-  const MSGS=['NO WAY HE JUST SENT THAT 😱😱','W MANS IN THE CHAT 🔥🔥🔥','CLIP IT RIGHT NOW!!','WHO IS THIS CANADIAN BILLIONAIRE?! 🍁💸','INSTANT LEGEND IN CHAT 🏆','BRO IS CARRYING THE WHOLE STREAM','SHEEEESH 🥶🥶🥶'];
-  const addChat=(u,badge,bcol,text)=>{
-    const ch=$('#ttChat');if(!ch)return;
-    ch.insertAdjacentHTML('beforeend',`<div class="tt-msg"><span class="tt-badge" style="background:${bcol}">${badge}</span><b>${u}:</b> ${text.replace(/</g,'&lt;')}</div>`);
-    ch.scrollTop=ch.scrollHeight;
-    if(ch.children.length>18)ch.firstChild.remove();
+  const addChat=(user,textStr,badge=null,badgeCol='#fe2c55')=>{
+    const box=$('#ttChat');if(!box)return;
+    const d=document.createElement('div');d.className='tt-msg';
+    const bHtml=badge?`<span class="tt-badge" style="background:${badgeCol};color:#fff">${badge}</span>`:'';
+    d.innerHTML=`${bHtml}<b style="color:#93c5fd">${user}</b>: ${textStr}`;
+    box.append(d);while(box.children.length>12)box.firstChild.remove();
+    box.scrollTop=box.scrollHeight;
   };
-
   const sendUserChat=()=>{
     const inp=$('#ttChatIn');if(!inp)return;
-    const val=inp.value.trim();if(!val)return;
+    const txt=inp.value.trim();if(!txt)return;
     inp.value='';
-    addChat('YOU','👑 #1','#eab308',val);
-    spawnHeart('🔥');sfxDing(960,.07);
-    if($('#ttRx'))$('#ttRx').textContent=`🎙️ ${cr.n}: "@YOU said '${val}' — W CHAT, SHOW SOME LOVE!!"`;
-    setTimeout(()=>{const[u,bg,bc]=pick(USERS);addChat(u,bg,bc,`@YOU facts!! "${val.slice(0,28)}" 💯🔥`)},650);
+    addChat('YOU',txt.replace(/</g,'&lt;'),'VIP','#f59e0b');
+    sfxTick(640);
+    setTimeout(()=>{
+      const replies=[
+        `YO @${cr.n.replace('@','')} read "${txt.slice(0,28)}"!!`,
+        `${cr.av} "${txt.slice(0,32)}" — W chat!`,
+        `VIP in the building 🔥 "${txt.slice(0,26)}"`
+      ];
+      addChat(cr.n,pick(replies),isYT?'HOST':'LIVE',isYT?'#ff0000':'#fe2c55');
+    },700);
   };
   $('#ttSendBtn').onclick=sendUserChat;
   $('#ttChatIn').onkeydown=e=>{if(e.key==='Enter')sendUserChat()};
 
-  // Quick-drop gifts right inside the live stream!
-  $('#lay').querySelectorAll('[data-qgift]').forEach(btn=>btn.onclick=()=>{
-    const[ge,gn,gp]=btn.dataset.qgift.split('|');const price=+gp;
-    if(S.bal<price){toast(`Need ${fmt(price)} cash to send ${gn}!`);return}
-    S.bal=+(S.bal-price).toFixed(2);S.spent+=price;S.c+=Math.log10(price+1)*3;
-    S.rec.unshift({e:ge,n:`Live Drop: ${gn}`,s:cr.n,q:1,tot:price,t:Date.now(),d:1});
-    setBal(-1);flt('−'+fmt(price));
-    addChat('YOU','👑 #1','#eab308',`dropped ${ge} ${gn} (${fmt(price)})!!`);
-    if($('#ttRx'))$('#ttRx').textContent=`🎙️ ${cr.n}: "WHAT?! ${gn.toUpperCase()} FROM @YOU!! ARE YOU KIDDING ME?!"`;
-    fireGift(c,{e:ge,n:gn,p:price,f:'g'},1,price);
+  $('#pollOptA').onclick=()=>{pollA=Math.min(95,pollA+2);pollB=100-pollA;$('#pollOptA').textContent=`🔥 YES (${pollA}%)`;$('#pollOptB').textContent=`❄️ CHILL (${pollB}%)`;sfxTick(700)};
+  $('#pollOptB').onclick=()=>{pollB=Math.min(95,pollB+2);pollA=100-pollB;$('#pollOptA').textContent=`🔥 YES (${pollA}%)`;$('#pollOptB').textContent=`❄️ CHILL (${pollB}%)`;sfxTick(500)};
+
+  $('#lay').querySelectorAll('[data-qgift]').forEach(btn=>{
+    btn.onclick=()=>{
+      const[ge,gn,gp]=btn.dataset.qgift.split('|');
+      const price=+gp;
+      if(S.bal<price){toast(`Need ${fmt(price)} for ${gn}!`);sfxTone(160,.2,'sawtooth');return}
+      S.bal=+(S.bal-price).toFixed(2);S.spent+=price;
+      setBal(-1);
+      addChat('YOU',`sent ${ge} ${gn} (${fmt(price)})!`,'GIFT','#f59e0b');
+      if($('#ttRx'))$('#ttRx').textContent=`🎙️ "${NO WAY! ${ge} ${gn}?! THANK YOU SO MUCH!!}"`;
+      pkPct=clamp(pkPct+Math.min(20,Math.ceil(Math.log10(price+10)*4)),5,98);
+      if($('#ttPkFill'))$('#ttPkFill').style.width=pkPct+'%';
+      spawnHeart(ge);
+      fireGift(c,{e:ge,n:gn,p:price,f:'g'},1,price);
+    };
   });
 
-  addChat('YOU','👑 #1','#eab308',`sent ${q.toLocaleString()}× ${it.e} ${it.n} (${fmt(tot)})!`);
   fireGift(c,it,q,tot);
-
-  setTimeout(()=>{
-    if($('#ttRx'))$('#ttRx').textContent=`🎙️ ${cr.n}: "${tot>=10000?'HOLD EVERYTHING!! STOP THE STREAM!! THAT IS INSANE!!':tot>=500?'WHAT?! NO WAY!! THANK YOU SO MUCH!!':'AYOOO HUGE SHOUTOUT TO YOU!!'}"`;
-    sfxDing(1046,.12);
-  },550);
-
-  let step=0;
-  liveTimer=setInterval(()=>{
-    if(!$('#ttChat')){clearInterval(liveTimer);return}
-    step++;
-    const[u,bg,bc]=pick(USERS);
-    addChat(u,bg,bc,pick(MSGS));
-    spawnHeart(pick(['❤️','💖','🔥','✨','💎']));
-    viewers+=Math.round(rnd(120,950));
+  const viewerNames=['alex_vibes','moonlight99','kieran_yt','sophia.l','nordic_wolf','zenith_07','chloe_p','sky_drifter','max_toronto','bella_f'];
+  const chatLines=['BROOOOO','WHAT JUST HAPPENED','W STREAMER','SHEEEESH','UNREAL','LET\'S GOOOO','NO WAY','HYPE IS REAL','INSANE DROP','CHAT WE ARE EATING'];
+  const hostLines=tot>=50000?[`"STOP EVERYTHING!! ${fmt(tot)}?! YOU JUST BROKE THE STREAM!!"`]:tot>=500?[`"BROOO ${fmt(tot)}?! THANK YOU SO MUCH FOR THE HUGE SUPPORT!!"`]:[`"AYO ${q>1?q+'× ':''}${it.n}! Appreciate you heavy in chat!"`];
+  let idx=0;
+  const step=()=>{
+    viewers=Math.max(1200,viewers+Math.round(rnd(-180,450)));
     if($('#ttViewers'))$('#ttViewers').textContent=viewers.toLocaleString();
-    if(step%4===0&&$('#ttPkFill'))$('#ttPkFill').style.width=clamp(pkPct+rnd(-3,5),10,99)+'%';
-  },420);
-
-  const autoDur=tot>=50000?9500:tot>=500?7800:6500;
-  liveCloseTimer=setTimeout(()=>{
-    if(!stayInLive){clearInterval(liveTimer);cls('lay')}
-  },autoDur);
+    addChat(pick(viewerNames),pick(chatLines),idx%5===0?'MOD':'#5865f2');
+    if(idx%3===0)spawnHeart(pick(['❤️','🔥','✨','💎']));
+    if($('#ttRx')&&idx%2===0)$('#ttRx').textContent=`🎙️ ${cr.n}: ${pick(hostLines)}`;
+    idx++;
+  };
+  step();
+  liveTimer=setInterval(step,1150);
+  if(!stayInLive){
+    liveCloseTimer=setTimeout(()=>{clearInterval(liveTimer);if(!stayInLive)cls('lay')},6400);
+  }
 }
 
-// ---------- Viral ad simulator ----------
+// =====================================================================
+// VIRAL AD CAMPAIGN SIMULATOR
+// =====================================================================
+let adTimer=null;
 function openViralAdSim(c,it,tot){
-  const views=Math.round(tot*rnd(65,160)),clicks=Math.round(views*rnd(.035,.07)),conv=Math.round(clicks*rnd(.08,.18)),
-        net=pick(['For You Feed · Trending #1','Sponsored Reels · Explore','Prime Time Broadcast','Top Trending Takeover']),
-        cap=pick([`"Just dropped ${fmt(tot)} to put this everywhere 🔥"`,`"POV: You own the entire algorithm today 📈"`,`"Sponsored by pure ambition. #Viral"`]);
+  clearInterval(adTimer);
+  const mult=clamp(1+Math.log10(tot+1)/2.2,1,4.5);
+  let views=Math.round(rnd(45000,180000)*mult),likes=Math.round(views*rnd(.08,.18)),shares=Math.round(views*rnd(.015,.045)),ctr=rnd(2.8,7.9).toFixed(1);
+  const platBadge=c.n=='TikTok'?'🎵 TikTok Promote':c.n=='YouTube'?'▶️ YouTube Ads':c.n=='Instagram'?'📸 IG Reels Boost':c.n=='X'?'✖️ X Amplify':`📣 ${c.n} Ad Network`;
+
   show('lay',`
     <div class="ad-phone">
-      <div class="ad-hdr" style="background:${c.c}"><span>📣 ${c.n} Ad Manager</span><span>● LIVE</span></div>
+      <div class="ad-hdr" style="background:${c.c}">
+        <span>${platBadge} · LIVE</span>
+        <button id="adClose" style="background:#0004;color:#fff;width:28px;height:28px;border-radius:50%">✕</button>
+      </div>
       <div class="ad-post">
-        <div class="ad-user"><div class="uav">YOU</div><div><b style="font-size:13.5px">@YourBrand · Sponsored</b><small style="display:block;color:var(--mut);font-size:11.5px">${net}</small></div></div>
-        <div class="ad-media" style="background:linear-gradient(135deg,${c.c},#111827)">${it.e}<span>Ad · ${fmt(tot)} Budget</span></div>
-        <div style="padding:10px 12px 2px;font-size:13px">${cap}</div>
-        <div class="ad-eng"><span>❤️ <b id="adLk">0</b></span><span>💬 <b id="adCm">0</b></span><span>🔁 <b id="adSh">0</b></span></div>
+        <div class="ad-user"><div class="uav">${c.e}</div>
+          <div><b style="font-size:13.5px">@sponsored_by_you</b><small style="display:block;color:var(--mut);font-size:11px">Sponsored · Budget ${fmt(tot)}</small></div>
+        </div>
+        <div class="ad-media" style="background:linear-gradient(135deg,${c.c},#111827)">${it.e}<span>${it.n}</span></div>
+        <div class="ad-eng"><span>❤️ <b id="adLikes">${likes.toLocaleString()}</b></span><span>🔁 <b id="adShares">${shares.toLocaleString()}</b></span><span>🎯 CTR <b>${ctr}%</b></span></div>
+      </div>
+      <div class="cnt">
+        <div><b id="adViews">${views.toLocaleString()}</b><small>Impressions</small></div>
+        <div><b id="adReach">${Math.round(views*.74).toLocaleString()}</b><small>Unique Reach</small></div>
+        <div><b style="color:var(--ok)">VIRAL</b><small>Algo Boost</small></div>
       </div>
       <div class="pb"><i></i></div>
-      <div class="cnt">
-        <div><b id="v1">0</b><small>Impressions</small></div>
-        <div><b id="v2">0</b><small>Link Clicks</small></div>
-        <div><b id="v3">0</b><small>New Fans</small></div>
-      </div>
-      <div style="text-align:center;padding:0 12px 14px;font-size:12.5px;color:var(--mut)">Campaign reach &amp; clout synced to your profile</div>
+      <div style="padding:12px 14px 16px;text-align:center;color:var(--mut);font-size:12.5px">Algorithm pushing campaign across global feeds…</div>
     </div>`);
-  confetti(90,3.2);sfxFanfare(0);
-  const t0=performance.now();
-  (function u(t){
-    const k=Math.min(1,(t-t0)/3000),e=1-Math.pow(1-k,3);
-    if($('#v1'))$('#v1').textContent=Math.round(views*e).toLocaleString();
-    if($('#v2'))$('#v2').textContent=Math.round(clicks*e).toLocaleString();
-    if($('#v3'))$('#v3').textContent=Math.round(conv*e).toLocaleString();
-    if($('#adLk'))$('#adLk').textContent=Math.round(views*.09*e).toLocaleString();
-    if($('#adCm'))$('#adCm').textContent=Math.round(views*.004*e).toLocaleString();
-    if($('#adSh'))$('#adSh').textContent=Math.round(views*.012*e).toLocaleString();
-    if(k<1)requestAnimationFrame(u);
-  })(t0);
-  S.imp+=views;S.c+=Math.log10(views+1)*2;save();stats();
-  setTimeout(()=>cls('lay'),4100);
+
+  $('#adClose').onclick=()=>{clearInterval(adTimer);cls('lay')};
+  sfxTone(660,.12,'triangle',.08);sfxTone(880,.18,'triangle',.08,.12);
+  confetti(65,2.8);
+  adTimer=setInterval(()=>{
+    views+=Math.round(rnd(12000,48000)*mult);likes+=Math.round(rnd(1400,5200)*mult);shares+=Math.round(rnd(250,950)*mult);
+    if($('#adViews'))$('#adViews').textContent=views.toLocaleString();
+    if($('#adReach'))$('#adReach').textContent=Math.round(views*.74).toLocaleString();
+    if($('#adLikes'))$('#adLikes').textContent=likes.toLocaleString();
+    if($('#adShares'))$('#adShares').textContent=shares.toLocaleString();
+  },220);
+  setTimeout(()=>{clearInterval(adTimer);cls('lay')},3500);
 }
 
-// =====================================================================
-// VENTURES, MARKETS, REAL ESTATE UPGRADES & EXECUTIVE MINI-GAMES
-// =====================================================================
-let vSub='stocks';
-function sparkSVG(arr,col){
-  if(arr.length<2)return '';
-  const mn=Math.min(...arr),mx=Math.max(...arr),sp=mx-mn||1,w=200,h=50;
-  const pts=arr.map((v,i)=>`${(i/(arr.length-1))*w},${h-4-((v-mn)/sp)*(h-8)}`).join(' ');
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" points="${pts}"/></svg>`;
-}
-function celebrateRaw(emoji,label,col='#34d399'){
-  audio();tint('rgba(16,185,129,A)',2800,.4);hero(emoji,{size:160,anim:'pop',dur:2600});
-  confetti(55,2.6);sfxFanfare(0);text(label,{y:VH*.74,size:Math.min(38,VW/12),col,dur:2400});fxKick();
-}
-function earn(amt,emoji,label,sub='Ventures'){
+// ---------- Earn money ----------
+function earn(amt,e,n,s){
   S.bal=+(S.bal+amt).toFixed(2);
-  S.rec.unshift({e:emoji,n:label,s:sub,q:1,tot:-amt,t:Date.now(),d:1});
-  setBal(1);flt('+'+fmt(amt),1);sfxDing(880,.15);
+  S.rec.unshift({e:e||'💰',n,s:s||'Venture',q:1,tot:-amt,t:Date.now(),d:1});
+  setBal(1);flt('+'+fmt(amt),1);sfxDing(880,.12);renderTabs();
 }
-function spendVenture(amt,emoji,label,sub='Ventures'){
-  if(amt>S.bal){toast(`Need ${fmt(amt)} cash (you have ${fmt(S.bal)})`);sfxTone(150,.25,'sawtooth');return false}
-  S.bal=+(S.bal-amt).toFixed(2);S.spent+=amt;
-  S.rec.unshift({e:emoji,n:label,s:sub,q:1,tot:amt,t:Date.now(),d:1});
-  setBal(-1);flt('−'+fmt(amt));return true;
+function celebrateRaw(emo,label,col='#fde047'){
+  flashFX(.3);tint('rgba(20,10,45,A)',3400,.7);rays('rgba(253,224,71,.24)',3200,18,0);
+  hero(emo,{size:200,anim:'pop',dur:3000,glow:col});confetti(70,2.8);sfxFanfare(0);
+  text(label,{y:VH*.74,size:Math.min(38,VW/12),col,dur:2600});fxKick();
 }
 
+// =====================================================================
+// VENTURES & MARKETS TAB (Real Estate, Startups, Businesses, Markets, LOC)
+// =====================================================================
+let vTab='p';
 function renderVentures(){
-  const pv=portfolioValue(),prv=propValue(),bzv=bizValue();
-  const top=`
-    <div class="news-ticker">${marketHeadline}</div>
-    <div class="rec" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div><b>📊 Stocks &amp; Crypto</b><small>${fmt(pv)}</small></div>
-      <div><b>🏠 Real Estate</b><small>${fmt(prv)} (${S.prop.length})</small></div>
-      <div><b>🏢 Ventures</b><small>${fmt(bzv)} (${S.biz.filter(b=>!b.dead).length})</small></div>
-      <div><b>🎮 Executive Games</b><small>High-Stakes Deals</small></div>
+  const locAvail=getAvailCredit();
+  $('#v').innerHTML=`
+    <div class="rec" style="border-color:var(--acc)">
+      <div><b>💳 Revolving Line of Credit (LOC)</b>
+        <small>Score: <b>${S.creditScore}</b> · APR: <b>${(S.apr*100).toFixed(1)}%/20s</b> · Used: <b>${fmt(S.creditUsed)}</b> / Limit: <b>${fmt(S.creditLimit)}</b></small></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="buy" id="drawLocBtn">Borrow +$25k</button>
+        <button class="ghost" id="payLocBtn" ${S.creditUsed<=0?'disabled':''}>Repay $25k</button>
+        <button class="ghost" id="payAllLocBtn" ${S.creditUsed<=0?'disabled':''}>Pay Full</button>
+      </div>
     </div>
-    <div class="chips" id="vchips">
-      <button data-vs="stocks" class="${vSub=='stocks'?'on':''}">📈 Stock &amp; Crypto Market</button>
-      <button data-vs="prop" class="${vSub=='prop'?'on':''}">🏠 Real Estate Empire</button>
-      <button data-vs="biz" class="${vSub=='biz'?'on':''}">🏢 Businesses &amp; Startups</button>
-      <button data-vs="games" class="${vSub=='games'?'on':''}">🎲 Executive Mini-Games</button>
-    </div>`;
+    <div class="tabs" style="margin-bottom:10px">
+      <button data-vt="p" class="${vTab=='p'?'on':''}">🏠 Real Estate</button>
+      <button data-vt="s" class="${vTab=='s'?'on':''}">🚀 Startups</button>
+      <button data-vt="b" class="${vTab=='b'?'on':''}">🏪 Businesses</button>
+      <button data-vt="m" class="${vTab=='m'?'on':''}">📈 Markets</button>
+    </div>
+    <div id="vBody"></div>`;
 
-  let body='';
-  if(vSub=='stocks'){
-    body=mkt.map(x=>{
-      const pos=S.stk[x.t]||{q:0,avg:0};
-      const chg=((x.p-x.prev)/x.prev)*100;
-      const up=chg>=0;
-      const val=pos.q*x.p,pl=pos.q?(x.p-pos.avg)*pos.q:0;
-      return `<div class="stock-row" style="flex-direction:column;align-items:stretch">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:42px;height:42px;border-radius:12px;background:${x.c}22;color:${x.c};display:grid;place-items:center;font-weight:900;font-size:13px">${x.t}</div>
-          <div style="flex:1"><b>${x.name}</b><small>${x.theme}</small></div>
-          <div style="text-align:right">
-            <b style="font-size:17px">${fmt(x.p)}</b>
-            <small class="${up?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(chg).toFixed(2)}%</small>
-          </div>
-        </div>
-        ${sparkSVG(x.hist,up?'#0fa968':'#e5383b')}
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;font-size:12.5px">
-          <span>Shares: <b>${pos.q.toLocaleString()}</b>${pos.q?` · Val ${fmt(val)} (<span class="${pl>=0?'good':'bad'}">${pl>=0?'+':''}${fmt(pl)}</span>)`:''}</span>
-          <div class="qbtns" style="margin:0">
-            <button data-buy="${x.t}|1">Buy 1</button>
-            <button data-buy="${x.t}|10">×10</button>
-            <button data-buy="${x.t}|100">×100</button>
-            <button data-buy="${x.t}|max">Max</button>
-            ${pos.q?`<button data-sell="${x.t}|half">Sell ½</button><button data-sell="${x.t}|all">Sell All</button>`:''}
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  }else if(vSub=='prop'){
-    const owned=S.prop.map((p,idx)=>{
-      const base=propOf(p.pid);
-      const gain=p.value-p.paid;
-      const renoCost=Math.round(p.value*0.18);
-      return `<div class="rec">
-        <span style="font-size:28px">${base.e}</span>
-        <div><b>${base.n} ${p.reno?`⭐ Reno Lv.${p.reno}`:''}</b>
-          <small>Value ${fmt(p.value)} (<span class="${gain>=0?'good':'bad'}">${gain>=0?'+':''}${fmt(gain)}</span>) · Net +${fmt(p.rent-p.tax)}/20s</small></div>
-        <button class="ghost" data-reno-prop="${idx}">🔨 Renovate (${fmt(renoCost)})</button>
-        <button class="sell-btn" data-sell-prop="${idx}">Sell ${fmt(p.value)}</button>
-      </div>`;
-    }).join('');
-    const market=PROPERTIES.map(p=>`<div class="rec">
-      <span style="font-size:28px">${p.e}</span>
-      <div><b>${p.n}</b>
-        <small>${fmt(p.price)} · Rent +${fmt(p.rent)}/20s · Tax −${fmt(p.tax)}/20s</small></div>
-      <button class="buy" data-buy-prop="${p.id}">Buy</button>
-    </div>`).join('');
-    body=`<div class="sec-h">Your Properties (${S.prop.length})</div>${owned||'<div class="empty">No properties yet. Buy below for passive rental income + appreciation.</div>'}<div class="sec-h">Real Estate Listings</div>${market}`;
-  }else if(vSub=='biz'){
-    const myBiz=S.biz.map((b,idx)=>{
-      if(b.kind=='startup'){
-        return `<div class="rec">
-          <span style="font-size:28px">${b.e}</span>
-          <div><b>${b.n} (${b.stage})</b>
-            <small>${b.dead?'💥 Shut down':`Stake Value: ${fmt(b.val)} (Invested ${fmt(b.invested)}) · ${b.notes||'Awaiting next round'}`}</small></div>
-          ${b.dead?`<button class="ghost" data-drop-biz="${idx}">Remove</button>`:`<button class="sell-btn" data-cash-startup="${idx}">Cash Out ${fmt(b.val)}</button>`}
-        </div>`;
-      }
-      const net=b.income*(1+(b.staff||0)*.15+(b.rd||0)*.25)-b.upkeep-(b.staff||0)*b.staffPay;
-      const rdCost=Math.round(b.cost*0.35);
-      return `<div class="rec">
-        <span style="font-size:28px">${b.e}</span>
-        <div><b>${b.n} (Staff ${b.staff||0} · R&amp;D Lv.${b.rd||0})</b>
-          <small>Net ${net>=0?'+':''}${fmt(net)}/20s · Valuation ${fmt(b.val)}</small></div>
-        <button class="ghost" data-hire="${idx}">+Staff (${fmt(b.staffPay)})</button>
-        <button class="ghost" data-rd="${idx}">🧪 R&amp;D (${fmt(rdCost)})</button>
-        <button class="sell-btn" data-sell-biz="${idx}">Sell ${fmt(b.val)}</button>
-      </div>`;
-    }).join('');
-    const shops=BIZ_TYPES.map(b=>`<div class="rec">
-      <span style="font-size:28px">${b.e}</span>
-      <div><b>${b.n}</b><small>Buy ${fmt(b.cost)} · Base net +${fmt(b.income-b.upkeep)}/20s</small></div>
-      <button class="buy" data-open-biz="${b.id}">Launch</button>
-    </div>`).join('');
-    const angels=STARTUPS.map(s=>`<div class="rec">
-      <span style="font-size:28px">${s.e}</span>
-      <div><b>${s.n} · ${s.stage}</b><small>Risk: ${s.risk} · Potential ${s.mult[0]}×–${s.mult[1]}× (rounds every 60s)</small></div>
-      <div class="qbtns" style="margin:0">
-        <button data-angel="${s.id}|25000">$25k</button>
-        <button data-angel="${s.id}|100000">$100k</button>
-        <button data-angel="${s.id}|500000">$500k</button>
-      </div>
-    </div>`).join('');
-    body=`<div class="sec-h">Your Companies &amp; Stakes (${S.biz.length})</div>${myBiz||'<div class="empty">No active businesses or angel stakes yet.</div>'}<div class="sec-h">Launch Operating Business</div>${shops}<div class="sec-h">Angel Startup Deals</div>${angels}`;
-  }else if(vSub=='games'){
-    body=`
-      <div class="sec-h">🎰 High-Stakes Executive Mini-Games (Instant Cash &amp; XP)</div>
-      <div class="rec">
-        <span style="font-size:32px">🎡</span>
-        <div><b>Executive Vault Roulette</b><small>Spin the Swiss Vault Wheel: 45% chance for <b>2.1× Payout</b>, 10% Jackpot <b>5× Payout</b>!</small></div>
-        <div class="qbtns" style="margin:0">
-          <button class="buy" data-game="wheel|5000">Bet $5k</button>
-          <button class="buy" data-game="wheel|50000">Bet $50k</button>
-          <button class="buy" data-game="wheel|500000">Bet $500k</button>
-        </div>
-      </div>
-      <div class="rec">
-        <span style="font-size:32px">🎲</span>
-        <div><b>Venture Pitch Dice (Roll 8+ on 2d6)</b><small>Beat the VC Syndicate with a roll of 8 or higher to win <b>2.4× your stake</b>!</small></div>
-        <div class="qbtns" style="margin:0">
-          <button class="buy" data-game="dice|10000">Stake $10k</button>
-          <button class="buy" data-game="dice|100000">Stake $100k</button>
-          <button class="buy" data-game="dice|1000000">Stake $1M</button>
-        </div>
-      </div>
-      <div class="rec">
-        <span style="font-size:32px">📈</span>
-        <div><b>60-Second Options Binary Call (Bull vs Bear)</b><small>Call the instant market tick direction for an immediate <b>1.95× return</b>!</small></div>
-        <div class="qbtns" style="margin:0">
-          <button class="buy" data-game="bull|25000">🟢 Bull $25k</button>
-          <button class="ghost" data-game="bear|25000">🔴 Bear $25k</button>
-          <button class="buy" data-game="bull|250000">🟢 Bull $250k</button>
-        </div>
-      </div>`;
-  }
-
-  $('#v').innerHTML=top+body;
-
-  $('#v').querySelectorAll('[data-vs]').forEach(b=>b.onclick=()=>{vSub=b.dataset.vs;renderVentures()});
-  $('#v').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{
-    const[t,qn]=b.dataset.buy.split('|'),x=tickerOf(t);if(!x)return;
-    const q=qn=='max'?Math.floor(S.bal/x.p):+qn;
-    if(q<1){toast('Not enough cash for 1 share');return}
-    const cost=+(q*x.p).toFixed(2);
-    if(!spendVenture(cost,'📈',`Bought ${q} ${t} @ ${fmt(x.p)}`,'Stock Market'))return;
-    const cur=S.stk[t]||{q:0,avg:0};
-    S.stk[t]={q:cur.q+q,avg:(cur.q*cur.avg+cost)/(cur.q+q)};
-    save();renderVentures();toast(`Bought ${q} ${t}`);
-  });
-  $('#v').querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>{
-    const[t,mode]=b.dataset.sell.split('|'),x=tickerOf(t),cur=S.stk[t];
-    if(!x||!cur||cur.q<1)return;
-    const q=mode=='half'?Math.max(1,Math.floor(cur.q/2)):cur.q;
-    const proceeds=+(q*x.p).toFixed(2);
-    cur.q-=q;if(cur.q<=0)delete S.stk[t];
-    earn(proceeds,'💵',`Sold ${q} ${t} @ ${fmt(x.p)}`,'Stock Market');
-    renderVentures();toast(`Sold ${q} ${t} for ${fmt(proceeds)}`);
-  });
-  $('#v').querySelectorAll('[data-buy-prop]').forEach(b=>b.onclick=()=>{
-    const p=propOf(b.dataset.buyProp);if(!p)return;
-    if(!spendVenture(p.price,p.e,p.n,'Real Estate'))return;
-    S.prop.push({pid:p.id,paid:p.price,value:p.price,rent:p.rent,tax:p.tax,reno:0});
-    celebrateRaw(p.e,`Purchased ${p.n}!`);renderVentures();
-  });
-  $('#v').querySelectorAll('[data-reno-prop]').forEach(b=>b.onclick=()=>{
-    const idx=+b.dataset.renoProp,p=S.prop[idx];if(!p)return;
-    const cost=Math.round(p.value*0.18);
-    if(!spendVenture(cost,'🔨',`Renovated ${propOf(p.pid).n}`,'Real Estate'))return;
-    p.reno=(p.reno||0)+1;p.value=Math.round(p.value*1.24);p.rent=Math.round(p.rent*1.35);
-    save();renderVentures();toast(`⭐ Property upgraded! Rent boosted +35% to ${fmt(p.rent)}/20s`);
-  });
-  $('#v').querySelectorAll('[data-sell-prop]').forEach(b=>b.onclick=()=>{
-    const idx=+b.dataset.sellProp,p=S.prop[idx];if(!p)return;
-    S.prop.splice(idx,1);
-    earn(p.value,'🏠',`Sold ${propOf(p.pid).n}`,'Real Estate');
-    renderVentures();toast(`Sold property for ${fmt(p.value)}`);
-  });
-  $('#v').querySelectorAll('[data-open-biz]').forEach(b=>b.onclick=()=>{
-    const bt=bizOf(b.dataset.openBiz);if(!bt)return;
-    if(!spendVenture(bt.cost,bt.e,`Launched ${bt.n}`,'Ventures'))return;
-    S.biz.push({kind:'op',bid:bt.id,n:bt.n,e:bt.e,cost:bt.cost,val:bt.cost*.85,income:bt.income,upkeep:bt.upkeep,staffPay:bt.staffPay,staff:0,rd:0});
-    celebrateRaw(bt.e,`Opened ${bt.n}!`);renderVentures();
-  });
-  $('#v').querySelectorAll('[data-hire]').forEach(b=>b.onclick=()=>{
-    const bz=S.biz[+b.dataset.hire];if(!bz)return;
-    if(!spendVenture(bz.staffPay,'👔',`Hired staff at ${bz.n}`,'Ventures'))return;
-    bz.staff=(bz.staff||0)+1;bz.val+=bz.staffPay*2;
-    save();renderVentures();toast(`Hired staff (+15% revenue)`);
-  });
-  $('#v').querySelectorAll('[data-rd]').forEach(b=>b.onclick=()=>{
-    const bz=S.biz[+b.dataset.rd];if(!bz)return;
-    const cost=Math.round(bz.cost*0.35);
-    if(!spendVenture(cost,'🧪',`R&D Upgrade at ${bz.n}`,'Ventures'))return;
-    bz.rd=(bz.rd||0)+1;bz.val+=Math.round(cost*1.3);
-    save();renderVentures();toast(`🧪 R&D Level ${bz.rd} unlocked (+25% revenue)!`);
-  });
-  $('#v').querySelectorAll('[data-sell-biz]').forEach(b=>b.onclick=()=>{
-    const idx=+b.dataset.sellBiz,bz=S.biz[idx];if(!bz)return;
-    S.biz.splice(idx,1);
-    earn(bz.val,bz.e,`Sold ${bz.n}`,'Ventures');
-    renderVentures();toast(`Sold ${bz.n} for ${fmt(bz.val)}`);
-  });
-  $('#v').querySelectorAll('[data-angel]').forEach(b=>b.onclick=()=>{
-    const[id,amtS]=b.dataset.angel.split('|'),s=stupOf(id),amt=+amtS;
-    if(!s||!spendVenture(amt,s.e,`Angel stake in ${s.n}`,'Startups'))return;
-    S.biz.push({kind:'startup',sid:s.id,n:s.n,e:s.e,stage:s.stage,win:s.win,mult:s.mult,invested:amt,val:amt,notes:'Seed round closed'});
-    celebrateRaw(s.e,`Backed ${s.n}!`);renderVentures();
-  });
-  $('#v').querySelectorAll('[data-cash-startup]').forEach(b=>b.onclick=()=>{
-    const idx=+b.dataset.cashStartup,bz=S.biz[idx];if(!bz||bz.dead)return;
-    S.biz.splice(idx,1);
-    earn(bz.val,bz.e,`Exited ${bz.n}`,'Startups');
-    renderVentures();toast(`Exited ${bz.n} for ${fmt(bz.val)}`);
-  });
-  $('#v').querySelectorAll('[data-drop-biz]').forEach(b=>b.onclick=()=>{
-    S.biz.splice(+b.dataset.dropBiz,1);save();renderVentures();
-  });
-
-  // Mini-games execution
-  $('#v').querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>{
-    const[gType,betS]=b.dataset.game.split('|'),bet=+betS;
-    if(!spendVenture(bet,'🎲',`Mini-Game Wager (${gType.toUpperCase()})`,'Executive Games'))return;
-    if(gType==='wheel'){
-      const r=Math.random();
-      if(r<0.10){const win=bet*5;earn(win,'👑','VAULT JACKPOT 5×!','Executive Games');celebrateRaw('👑',`5× JACKPOT! +${fmt(win)}`,'#fde047')}
-      else if(r<0.55){const win=Math.round(bet*2.1);earn(win,'🎡','Vault Roulette Win (2.1×)','Executive Games');toast(`🎡 Vault hit! Won ${fmt(win)}!`)}
-      else{toast('🎡 Vault missed! Better luck next spin.');sfxTone(180,.25,'sawtooth')}
-    }else if(gType==='dice'){
-      const d1=Math.ceil(Math.random()*6),d2=Math.ceil(Math.random()*6),sum=d1+d2;
-      if(sum>=8){const win=Math.round(bet*2.4);earn(win,'🎲',`Rolled ${d1}+${d2}=${sum} (2.4× Win!)`,'Executive Games');toast(`🎲 Rolled ${sum}! Won ${fmt(win)}!`)}
-      else{toast(`🎲 Rolled ${d1}+${d2}=${sum} (Needed 8+). Lost ${fmt(bet)}.`);sfxTone(180,.25,'sawtooth')}
-    }else{
-      const won=Math.random()<0.52;
-      if(won){const win=Math.round(bet*1.95);earn(win,'📈',`Options Call Hit! (1.95×)`,'Executive Games');toast(`📈 Market moved your way! Won ${fmt(win)}!`)}
-      else{toast(`📉 Market reversed! Options expired.`);sfxTone(180,.25,'sawtooth')}
-    }
-    renderVentures();
-  });
-}
-
-// ---------- My stuff, Credit Line Center, & Receipts ----------
-function renderTabs(){
-  S.creditLimit=getDynamicCreditLimit();
-  const utilPct=S.creditLimit>0?Math.min(100,(S.creditUsed/S.creditLimit)*100):0;
-
-  const creditPanel=`
-    <div class="sec-h">💳 Revolving Line of Credit &amp; Credit Bureau</div>
-    <div class="rec" style="flex-direction:column;align-items:stretch;gap:10px">
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div><b style="font-size:16px">Credit Score: <span class="good">${S.creditScore}</span> / 850</b>
-          <small>Limit scales automatically with your Net Worth · APR ${(S.apr*100).toFixed(1)}%/20s</small></div>
-        <div style="text-align:right">
-          <b>Used: <span class="${S.creditUsed>0?'bad':'good'}">${fmt(S.creditUsed)}</span> / ${fmt(S.creditLimit)}</b>
-          <small>Available Credit: <b>${fmt(getAvailCredit())}</b></small>
-        </div>
-      </div>
-      <div class="meter" style="min-width:100%"><i style="width:${utilPct}%;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad))"></i></div>
-      <div class="qbtns" style="margin:0">
-        <button class="buy" id="payLoc25" ${S.creditUsed<=0?'disabled':''}>Pay 25% (${fmt(S.creditUsed*0.25)})</button>
-        <button class="buy" id="payLocAll" ${S.creditUsed<=0?'disabled':''}>Pay Off Full Balance (${fmt(S.creditUsed)})</button>
-        <button class="ghost" id="boostCreditBtn">📈 Request Limit Increase</button>
-      </div>
-    </div>`;
-
-  const subs=Object.keys(S.subs).map(k=>{
-    const[c,it]=ITM(k);if(!it)return'';
-    return `<div class="rec"><span>${it.e}</span><div><b>${it.n}</b><small>${c.n} · ${fmt(it.p)}/20s</small></div><button class="ghost" data-k="${k}">Cancel</button></div>`;
-  }).join('');
-
-  const items=Object.keys(S.inv).map(k=>{
-    const[c,it]=ITM(k);if(!it)return'';
-    const q=S.inv[k],isAsset=!/[mshag]/.test(it.f),resale=+(it.p*0.7).toFixed(2);
-    const cfTxt=it.cf>0?` · +${fmt(it.cf*q)}/20s`:it.cf<0?` · −${fmt(Math.abs(it.cf)*q)}/20s`:'';
-    return `<div class="rec"><span>${it.e}</span><div><b>${it.n} ×${q.toLocaleString()}</b><small>${c.n} · Paid ${fmt(it.p*q)}${cfTxt}</small></div>
-      ${isAsset?`<button class="sell-btn" data-sell-item="${k}">Quick Sell 1 (${fmt(resale)})</button>`:''}</div>`;
-  }).join('');
-
-  $('#m').innerHTML=creditPanel+
-    `<div class="sec-h">Active Subscriptions</div>${subs||'<div class="empty">No active subscriptions</div>'}`+
-    `<div class="sec-h">Owned Assets &amp; Inventory (Resell at 70% or Auction in Auction House)</div>${items||'<div class="empty">Nothing owned yet — go spend!</div>'}`;
-
-  if($('#payLoc25'))$('#payLoc25').onclick=()=>{
-    const amt=Math.min(S.bal, +(S.creditUsed*0.25).toFixed(2));
-    if(amt<=0){toast('Not enough cash to pay down credit');return}
+  $('#v').querySelectorAll('[data-vt]').forEach(b=>b.onclick=()=>{vTab=b.dataset.vt;renderVentures()});
+  $('#drawLocBtn').onclick=()=>{
+    const amt=Math.min(25000,getAvailCredit());
+    if(amt<=0){toast('Line of credit limit reached! Grow net worth to expand limit.');sfxTone(150,.2,'sawtooth');return}
+    S.creditUsed=+(S.creditUsed+amt).toFixed(2);S.bal=+(S.bal+amt).toFixed(2);
+    setBal(1);flt('+'+fmt(amt)+' LOC',1);renderVentures();
+  };
+  $('#payLocBtn').onclick=()=>{
+    const amt=Math.min(25000,S.creditUsed,S.bal);
+    if(amt<=0){toast('Need cash to repay line of credit!');return}
+    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);
+    S.creditScore=Math.min(850,S.creditScore+2);
+    setBal(-1);renderVentures();toast(`Repaid ${fmt(amt)} on Line of Credit!`);
+  };
+  $('#payAllLocBtn').onclick=()=>{
+    const amt=Math.min(S.creditUsed,S.bal);
+    if(amt<=0){toast('Not enough cash to pay full balance!');return}
     S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);
     S.creditScore=Math.min(850,S.creditScore+5);
-    setBal(-1);renderTabs();toast(`💳 Paid ${fmt(amt)} toward Line of Credit! Credit Score +5`);
-  };
-  if($('#payLocAll'))$('#payLocAll').onclick=()=>{
-    const amt=Math.min(S.bal, S.creditUsed);
-    if(amt<=0){toast('Not enough cash');return}
-    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);
-    S.creditScore=Math.min(850,S.creditScore+12);
-    setBal(-1);renderTabs();toast(`🎉 Paid ${fmt(amt)}! Credit Score rose to ${S.creditScore}`);
-  };
-  if($('#boostCreditBtn'))$('#boostCreditBtn').onclick=()=>{
-    S.creditLimit=getDynamicCreditLimit();save();renderTabs();
-    toast(`🏦 Credit limit refreshed to ${fmt(S.creditLimit)} based on Net Worth!`);
+    setBal(-1);renderVentures();toast(`Cleared ${fmt(amt)} Line of Credit balance!`);
   };
 
-  $('#m').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
-    delete S.subs[b.dataset.k];save();renderTabs();toast('Subscription cancelled');
-  });
-  $('#m').querySelectorAll('[data-sell-item]').forEach(b=>b.onclick=()=>{
-    const k=b.dataset.sellItem,[c,it]=ITM(k);if(!it)return;
-    const refund=+(it.p*0.7).toFixed(2);
-    S.inv[k]--;if(S.inv[k]<=0)delete S.inv[k];
-    S.bal=+(S.bal+refund).toFixed(2);
-    S.rec.unshift({e:'🏷️',n:'Sold: '+it.n,s:c.n,q:1,tot:-refund,t:Date.now(),d:1});
-    setBal(1);flt('+'+fmt(refund),1);sfxDing(660,.15);renderTabs();toast(`Sold ${it.n} for ${fmt(refund)}`);
-  });
-
-  $('#r').innerHTML=S.rec.map(x=>{
-    const gain=x.tot<0;
-    return `<div class="rec"><span>${x.e}</span><div><b>${x.n}</b><small>${x.s}${x.q>1?' · ×'+x.q.toLocaleString():''} · ${new Date(x.t).toLocaleTimeString('en-CA')}</small></div>
-    <b class="${gain?'good':''}">${gain?'+'+fmt(Math.abs(x.tot)):fmt(x.tot)}</b></div>`;
-  }).join('')||'<div class="empty">No transactions yet</div>';
+  if(vTab=='p')renderProp($('#vBody'));
+  else if(vTab=='s')renderStartups($('#vBody'));
+  else if(vTab=='b')renderBiz($('#vBody'));
+  else renderMarkets($('#vBody'));
 }
+
+function renderProp(el){
+  const owned=S.prop.map((p,idx)=>{
+    const def=propOf(p.pid);
+    return `<div class="rec"><span style="font-size:26px">${def.e}</span>
+      <div><b>${def.n}</b><small>Value ${fmt(p.value)} · Rent +${fmt(p.rent)}/20s · Tax −${fmt(p.tax)}/20s</small></div>
+      <button class="sell-btn" data-sell-p="${idx}">Sell (${fmt(p.value*.95)})</button></div>`;
+  }).join('');
+  const catalog=PROPERTIES.map(p=>`<div class="row"><span>${p.e}</span>
+    <div><b>${p.n}</b><small>Price ${fmt(p.price)} · Rent +${fmt(p.rent)}/20s · Tax −${fmt(p.tax)}/20s</small></div>
+    <button class="buy" data-buy-p="${p.id}">Buy</button></div>`).join('');
+  el.innerHTML=`<div class="sec-h">Your Properties (${S.prop.length})</div>${owned||'<div class="empty">No properties owned yet.</div>'}
+    <div class="sec-h">Real Estate Market</div><div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden">${catalog}</div>`;
+  el.querySelectorAll('[data-buy-p]').forEach(b=>b.onclick=()=>{
+    const p=propOf(b.dataset.buyP);
+    if(S.bal<p.price){toast(`Need ${fmt(p.price)} cash!`);sfxTone(150,.2,'sawtooth');return}
+    S.bal=+(S.bal-p.price).toFixed(2);S.spent+=p.price;
+    S.prop.push({pid:p.id,value:p.price,rent:p.rent,tax:p.tax});
+    setBal(-1);celebrateRaw(p.e,`Acquired ${p.n}!`,'#34d399');renderVentures();
+  });
+  el.querySelectorAll('[data-sell-p]').forEach(b=>b.onclick=()=>{
+    const idx=+b.dataset.sellP,p=S.prop[idx];if(!p)return;
+    const net=Math.round(p.value*.95);S.prop.splice(idx,1);
+    earn(net,'🏠',`Sold ${propOf(p.pid).n}`,'Real Estate');renderVentures();
+  });
+}
+
+function renderStartups(el){
+  const active=S.biz.filter(b=>b.kind=='startup').map((b,idx)=>`<div class="rec">
+    <span style="font-size:26px">${b.e}</span>
+    <div><b>${b.n}</b><small>${b.dead?'💀 SHUT DOWN':`Valuation ${fmt(b.val)} · ${b.notes||'Active'}`}</small></div>
+    ${b.dead?`<button class="ghost" data-rm-s="${b.id}">Archive</button>`:`<button class="buy" data-exit-s="${b.id}">Exit (${fmt(b.val)})</button>`}
+  </div>`).join('');
+  const opps=STARTUPS.map(s=>`<div class="row"><span>${s.e}</span>
+    <div><b>${s.n}</b><small>${s.stage} · Win ${Math.round(s.win*100)}% · Up to ${s.mult[1]}× · Risk: ${s.risk}</small></div>
+    <button class="buy" data-inv-s="${s.id}">Invest $50k</button></div>`).join('');
+  el.innerHTML=`<div class="sec-h">Your Startup Portfolio</div>${active||'<div class="empty">No active startup equity.</div>'}
+    <div class="sec-h">Angel &amp; Venture Deals ($50,000 Ticket)</div><div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden">${opps}</div>`;
+  el.querySelectorAll('[data-inv-s]').forEach(b=>b.onclick=()=>{
+    const s=stupOf(b.dataset.invS);
+    if(S.bal<50000){toast('Need $50,000 cash to invest!');return}
+    S.bal=+(S.bal-50000).toFixed(2);S.spent+=50000;
+    S.biz.push({id:'st_'+Date.now(),kind:'startup',n:s.n,e:s.e,val:50000,win:s.win,mult:s.mult,dead:false,notes:'Seed check wired'});
+    setBal(-1);renderVentures();toast(`🚀 Invested $50,000 in ${s.n}!`);
+  });
+  el.querySelectorAll('[data-exit-s]').forEach(b=>b.onclick=()=>{
+    const st=S.biz.find(x=>x.id==b.dataset.exitS);if(!st)return;
+    const amt=Math.round(st.val);S.biz=S.biz.filter(x=>x.id!=st.id);
+    earn(amt,'🚀',`Exited ${st.n}`,'Venture Exit');confetti(70,2.8);renderVentures();
+  });
+  el.querySelectorAll('[data-rm-s]').forEach(b=>{S.biz=S.biz.filter(x=>x.id!=b.dataset.rmS);renderVentures()});
+}
+
+function renderBiz(el){
+  const owned=S.biz.filter(b=>b.kind!='startup').map(b=>{
+    const net=b.income*(1+(b.staff||0)*.15+(b.rd||0)*.25)-b.upkeep-(b.staff||0)*b.staffPay;
+    return `<div class="rec"><span style="font-size:26px">${b.e}</span>
+      <div><b>${b.n}</b><small>Net ${net>=0?'+':''}${fmt(net)}/20s · Staff Lv.${b.staff||0} · R&amp;D Lv.${b.rd||0}</small></div>
+      <button class="ghost" data-hire="${b.id}">+Staff ($25k)</button>
+      <button class="ghost" data-rd="${b.id}">+R&amp;D ($40k)</button>
+      <button class="sell-btn" data-sell-b="${b.id}">Sell</button></div>`;
+  }).join('');
+  const catalog=BIZ_TYPES.map(b=>`<div class="row"><span>${b.e}</span>
+    <div><b>${b.n}</b><small>Cost ${fmt(b.cost)} · Base +${fmt(b.income)}/20s · Upkeep −${fmt(b.upkeep)}/20s</small></div>
+    <button class="buy" data-buy-b="${b.id}">Launch</button></div>`).join('');
+  el.innerHTML=`<div class="sec-h">Your Operating Businesses</div>${owned||'<div class="empty">Launch a business to scale cashflow with Staff &amp; R&amp;D.</div>'}
+    <div class="sec-h">Start a New Venture</div><div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden">${catalog}</div>`;
+  el.querySelectorAll('[data-buy-b]').forEach(b=>b.onclick=()=>{
+    const t=bizOf(b.dataset.buyB);
+    if(S.bal<t.cost){toast(`Need ${fmt(t.cost)} cash!`);return}
+    S.bal=+(S.bal-t.cost).toFixed(2);S.spent+=t.cost;
+    S.biz.push({id:'bz_'+Date.now(),kind:'biz',n:t.n,e:t.e,val:t.cost,income:t.income,upkeep:t.upkeep,staffPay:t.staffPay,staff:0,rd:0});
+    setBal(-1);celebrateRaw(t.e,`Launched ${t.n}!`,'#38bdf8');renderVentures();
+  });
+  el.querySelectorAll('[data-hire]').forEach(b=>b.onclick=()=>{
+    const z=S.biz.find(x=>x.id==b.dataset.hire);if(!z||S.bal<25000){toast('Need $25,000 cash!');return}
+    S.bal=+(S.bal-25000).toFixed(2);z.staff=(z.staff||0)+1;setBal(-1);renderVentures();
+  });
+  el.querySelectorAll('[data-rd]').forEach(b=>b.onclick=()=>{
+    const z=S.biz.find(x=>x.id==b.dataset.rd);if(!z||S.bal<40000){toast('Need $40,000 cash!');return}
+    S.bal=+(S.bal-40000).toFixed(2);z.rd=(z.rd||0)+1;setBal(-1);renderVentures();
+  });
+  el.querySelectorAll('[data-sell-b]').forEach(b=>b.onclick=()=>{
+    const z=S.biz.find(x=>x.id==b.dataset.sellB);if(!z)return;
+    const val=Math.round((z.val||80000)*(1+(z.staff||0)*.1+(z.rd||0)*.15)*.9);
+    S.biz=S.biz.filter(x=>x.id!=z.id);earn(val,'🏪',`Sold ${z.n}`,'Business Exit');renderVentures();
+  });
+}
+
+function renderMarkets(el){
+  const rows=mkt.map(x=>{
+    const pos=S.stk[x.t]||{q:0,avg:0},chg=(x.p-x.prev)/(x.prev||1)*100,up=chg>=0;
+    const pnl=pos.q>0?(x.p-pos.avg)*pos.q:0;
+    const pts=x.hist.map((v,i)=>{
+      const min=Math.min(...x.hist),max=Math.max(...x.hist),span=max-min||1;
+      return `${(i/(x.hist.length-1||1))*100},${50-((v-min)/span)*44-3}`;
+    }).join(' ');
+    return `<div class="stock-row">
+      <div style="flex:1.4"><b>${x.t} · ${x.name}</b>
+        <small>${x.theme} · Held: <b>${pos.q.toLocaleString()}</b>${pos.q>0?` (Avg ${fmt(pos.avg)} · P/L <span class="${pnl>=0?'good':'bad'}">${pnl>=0?'+':''}${fmt(pnl)}</span>)`:''}</small>
+        <div class="qbtns">
+          <button class="buy" data-stk-b="${x.t}|1">Buy 1</button>
+          <button data-stk-b="${x.t}|10">+10</button>
+          <button data-stk-b="${x.t}|100">+100</button>
+          <button data-stk-b="${x.t}|max">Max</button>
+          ${pos.q>0?`<button class="sell-btn" data-stk-s="${x.t}|1">Sell 1</button><button class="sell-btn" data-stk-s="${x.t}|all">Sell All</button>`:''}
+        </div>
+      </div>
+      <div style="width:110px"><svg class="spark" viewBox="0 0 100 56"><polyline fill="none" stroke="${up?'#0fa968':'#e5383b'}" stroke-width="2.5" points="${pts}"/></svg></div>
+      <div style="text-align:right;min-width:92px"><b style="font-size:16px">${fmt(x.p)}</b><br><small class="${up?'good':'bad'}">${up?'+':''}${chg.toFixed(2)}%</small></div>
+    </div>`;
+  }).join('');
+  el.innerHTML=`<div class="news-ticker">${marketHeadline} · Portfolio Value: <b>${fmt(portfolioValue())}</b></div>${rows}`;
+  el.querySelectorAll('[data-stk-b]').forEach(b=>b.onclick=()=>{
+    const[t,qStr]=b.dataset.stkB.split('|'),x=tickerOf(t);if(!x)return;
+    const q=qStr=='max'?Math.floor(S.bal/x.p):+qStr;
+    if(q<=0||S.bal<q*x.p){toast('Insufficient cash for share purchase!');return}
+    const cost=+(q*x.p).toFixed(2);
+    const pos=S.stk[t]||{q:0,avg:0};
+    pos.avg=((pos.avg*pos.q)+cost)/(pos.q+q);pos.q+=q;S.stk[t]=pos;
+    S.bal=+(S.bal-cost).toFixed(2);S.spent+=cost;
+    setBal(-1);sfxDing(740,.08);renderMarkets(el);
+  });
+  el.querySelectorAll('[data-stk-s]').forEach(b=>b.onclick=()=>{
+    const[t,qStr]=b.dataset.stkS.split('|'),x=tickerOf(t),pos=S.stk[t];if(!x||!pos||pos.q<=0)return;
+    const q=qStr=='all'?pos.q:Math.min(pos.q,+qStr);
+    const proceeds=+(q*x.p).toFixed(2);
+    pos.q-=q;if(pos.q<=0)delete S.stk[t];else S.stk[t]=pos;
+    earn(proceeds,'📈',`Sold ${q}× ${t}`,'Stock Market');renderMarkets(el);
+  });
+}
+
+// ---------- My Stuff & Receipts ----------
+function renderTabs(){
+  const keys=Object.keys(S.inv);
+  let mHtml=`<div class="rec"><div><b>💳 Credit Profile &amp; Line of Credit</b>
+    <small>Credit Score: <b>${S.creditScore}</b> · Used: <b>${fmt(S.creditUsed)}</b> / Limit: <b>${fmt(S.creditLimit)}</b> · Available: <b class="good">${fmt(getAvailCredit())}</b></small></div></div>`;
+  mHtml+=keys.length?keys.map(k=>{
+    const[c,it]=ITM(k);if(!it)return'';
+    const q=S.inv[k],isSub=S.subs[k],canSell=!/[mshag]/.test(it.f);
+    return `<div class="rec"><span style="font-size:26px">${it.e}</span>
+      <div><b>${it.n}</b><small>${c.n} · ${isSub?'Active Subscription':`Owned: ${q.toLocaleString()}`}</small></div>
+      ${isSub?`<button class="sell-btn" data-cancel="${k}">Cancel</button>`:''}
+      ${canSell?`<button class="sell-btn" data-sell="${k}">Sell 1 (${fmt(it.p*.7)})</button>`:''}</div>`;
+  }).join(''):'<div class="empty">No items owned yet. Tap any company to start spending!</div>';
+  $('#m').innerHTML=mHtml;
+
+  $('#m').querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{delete S.subs[b.dataset.cancel];save();renderTabs();toast('Subscription cancelled')});
+  $('#m').querySelectorAll('[data-sell]').forEach(b=>{
+    b.onclick=()=>{
+      const k=b.dataset.sell,[c,it]=ITM(k);if(!it||!S.inv[k])return;
+      S.inv[k]--;if(!S.inv[k])delete S.inv[k];
+      earn(Math.round(it.p*.7),it.e,'Sold: '+it.n,c.n);
+    };
+  });
+
+  $('#r').innerHTML=S.rec.length?S.rec.map(x=>`<div class="rec">
+    <span style="font-size:24px">${x.e}</span>
+    <div><b>${x.n}</b><small>${x.s}${x.q>1?' ×'+x.q.toLocaleString():''}${x.d?' · auto':''} · ${new Date(x.t).toLocaleTimeString('en-CA')}</small></div>
+    <b class="${x.tot<0?'good':''}">${x.tot<0?'+'+fmt(-x.tot):'−'+fmt(x.tot)}</b></div>`).join(''):'<div class="empty">No receipts yet.</div>';
+}
+renderTabs();
 </script>
 </body>
 </html>
