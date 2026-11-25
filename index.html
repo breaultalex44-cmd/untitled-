@@ -593,9 +593,15 @@ const BLANK=()=>({
   creditUsed:0,creditLimit:250000,creditScore:720,apr:0.018,
   myListings:[],deals:[],achievements:{},
   bank:{sav:0,terms:[],earned:0},ins:{health:0,prop:0,biz:0},evLog:[],nwHist:[],catSpend:{},wish:{},
-  buys:0,gameWins:0,flashBuys:0,cycles:0
+  buys:0,gameWins:0,flashBuys:0,cycles:0,
+  mode:'classic',borrowed:0,clears:0
 });
 let S=BLANK();
+// ---------- Start modes (Hard mode = $0 cash + $20,000 line of credit) ----------
+const HARD_LOC=20000,CASH_ADV_FEE=0.02;
+const isHard=()=>S.mode==='hard';
+// reference wealth used for ratios/progress: Hard mode has no starting cash, so its baseline is the opening credit line
+const startBase=()=>isHard()?HARD_LOC:(S.start>0?S.start:1);
 let shown=S.bal,raf,openCo=null,busy=false,cat='All',next=Date.now()+20000,tab='s';
 try{
   const d=JSON.parse(localStorage.getItem(KEY));
@@ -612,10 +618,17 @@ const gauss=()=>Math.sqrt(-2*Math.log(Math.random()+1e-12))*Math.cos(2*Math.PI*M
 
 // ---------- Dynamic Line of Credit Limit ----------
 function getDynamicCreditLimit(){
-  const base=Math.max(250000, S.start*0.25);
-  const nwBoost=Math.max(0, getNetWorthRaw()*0.35);
-  const scoreMult=clamp((S.creditScore-300)/550, 0.35, 1.65);
+  // Base line scales with the starting tier. Hard mode opens at exactly $20,000 (at the starting 720 score).
+  const base=isHard()?HARD_LOC:S.start>=1e6?Math.max(250000,S.start*0.25):Math.max(2500,S.start*0.25);
+  // Boost comes from TRUE net worth (assets minus debt), so drawing credit never inflates your own limit
+  const nwBoost=Math.max(0, getNetWorth()*0.35);
+  let scoreMult=clamp((S.creditScore-300)/550, 0.35, 1.65);
+  if(isHard())scoreMult/=clamp((720-300)/550, 0.35, 1.65);
   return Math.round((base+nwBoost)*scoreMult);
+}
+// Counts a full payoff of the credit line (used by achievements): pass the balance owed BEFORE the payment
+function trackLoc(before){
+  if(before>0.005&&S.creditUsed<=0.005){S.creditUsed=0;S.clears=(S.clears||0)+1}
 }
 function getAvailCredit(){
   S.creditLimit=getDynamicCreditLimit();
@@ -748,8 +761,8 @@ function setBal(dir=0){
     $('#bal').textContent=fmt(shown);
     if(k<1)raf=requestAnimationFrame(s);
   })(t0);
-  $('#mt').style.width=clamp(S.bal/S.start*100,0,100)+'%';
-  $('#modeLabel').textContent=`Cash · CAD · Credit Avail ${fmt(getAvailCredit())}`;
+  $('#mt').style.width=clamp(S.bal/startBase()*100,0,100)+'%';
+  $('#modeLabel').textContent=`${isHard()?'🔥 Hard · ':''}Cash · CAD · Credit Avail ${fmt(getAvailCredit())}`;
   stats();save();
   if(tab==='m'||tab==='r')renderTabs();
   try{if(FEAT_TABS.includes(tab))renderExtra();else if(tab==='s')renderStoreExtras();checkAch()}catch(e){}
@@ -955,7 +968,7 @@ function refreshStore(){
 // ---------- Commit a purchase ----------
 function commit(c,it,i,q,tot,msg,useCredit=false){
   if(useCredit){
-    S.creditUsed=+(S.creditUsed+tot).toFixed(2);
+    S.creditUsed=+(S.creditUsed+tot).toFixed(2);S.borrowed=+((S.borrowed||0)+tot).toFixed(2);
     if(S.creditUsed/S.creditLimit>0.8) S.creditScore=Math.max(300,S.creditScore-4);
   }else{
     S.bal=+(S.bal-tot).toFixed(2);
@@ -1317,8 +1330,11 @@ setInterval(()=>{
         S.bal=+(S.bal-minPay).toFixed(2);
         S.creditUsed=+(S.creditUsed-minPay).toFixed(2);
         S.creditScore=Math.min(850,S.creditScore+3);
+        trackLoc(minPay+S.creditUsed);
         delta-=minPay;
         S.rec.unshift({e:'💳',n:`LOC Min Payment (Score ${S.creditScore})`,s:'Credit Line',q:1,tot:minPay,t:Date.now(),d:1});
+      }else if(isHard()&&(S.cycles||0)<3){
+        toast('🔥 Hard mode grace period: missed minimum payment forgiven — get earning!');
       }else{
         S.creditScore=Math.max(300,S.creditScore-8);
         toast('⚠️ Missed Line of Credit minimum payment! Credit score dropped.');
@@ -1589,9 +1605,9 @@ const ACH=[
   {id:'debtfree',e:'🕊️',n:'Debt-Free & Proud',d:'Hold a 760+ score with zero credit used',tier:2,tg:760,cur:()=>S.creditUsed<=0?S.creditScore:0},
   {id:'saver',e:'🐷',n:'Rainy-Day Saver',d:'Hold $100,000 in the bank',tier:2,tg:1e5,f:'$',cur:bankValue},
   {id:'vault',e:'🔐',n:'Vault Baron',d:'Hold $5,000,000 in the bank',tier:3,tg:5e6,f:'$',cur:bankValue},
-  {id:'grow',e:'🌱',n:'Growing Fortune',d:'Reach 1.5× your starting wealth',tier:1,tg:1.5,f:'x',cur:()=>getNetWorth()/S.start},
-  {id:'double',e:'🚀',n:'Double Up',d:'Reach 2× your starting wealth',tier:2,tg:2,f:'x',cur:()=>getNetWorth()/S.start},
-  {id:'ten',e:'🌌',n:'Ten-Bagger',d:'Reach 10× your starting wealth',tier:4,tg:10,f:'x',cur:()=>getNetWorth()/S.start},
+  {id:'grow',e:'🌱',n:'Growing Fortune',d:'Reach 1.5× your starting wealth',tier:1,tg:1.5,f:'x',cur:()=>getNetWorth()/startBase()},
+  {id:'double',e:'🚀',n:'Double Up',d:'Reach 2× your starting wealth',tier:2,tg:2,f:'x',cur:()=>getNetWorth()/startBase()},
+  {id:'ten',e:'🌌',n:'Ten-Bagger',d:'Reach 10× your starting wealth',tier:4,tg:10,f:'x',cur:()=>getNetWorth()/startBase()},
   {id:'influ',e:'📣',n:'Influencer',d:'Generate 1,000,000 ad impressions',tier:2,tg:1e6,cur:()=>S.imp||0},
   {id:'phil',e:'💖',n:'Philanthropist',d:'Earn 50 kindness points through charity',tier:2,tg:50,cur:()=>S.k},
   {id:'insured',e:'🛡️',n:'Fully Covered',d:'Have all 3 insurance policies active',tier:2,tg:3,cur:()=>POLICIES.filter(p=>S.ins[p.id]).length},
@@ -1599,16 +1615,29 @@ const ACH=[
   {id:'deal',e:'⚡',n:'Deal Hunter',d:'Buy something on flash sale',tier:1,tg:1,cur:()=>S.flashBuys||0},
   {id:'dream',e:'⭐',n:'Dreamer',d:'Put 5 items on your wishlist',tier:1,tg:5,cur:()=>Object.keys(S.wish||{}).length},
   {id:'roller',e:'🎰',n:'High Roller',d:'Win 5 executive mini-games',tier:2,tg:5,cur:()=>S.gameWins||0},
-  {id:'lv10',e:'🎖️',n:'Seasoned Spender',d:'Reach player level 10',tier:3,tg:10,cur:()=>lvlOf(S.xp)}
+  {id:'lv10',e:'🎖️',n:'Seasoned Spender',d:'Reach player level 10',tier:3,tg:10,cur:()=>lvlOf(S.xp)},
+  // ---- Expansion pack ----
+  {id:'bootstrap',e:'🥾',n:'Bootstrapper',d:'Hard mode: build $10,000 net worth from a $0 start',tier:2,tg:1e4,f:'$',hard:1,cur:()=>isHard()?getNetWorth():0},
+  {id:'hardmoney',e:'🔥',n:'Hard Money',d:'Hard mode: reach $100,000 net worth',tier:3,tg:1e5,f:'$',hard:1,cur:()=>isHard()?getNetWorth():0},
+  {id:'borrow100k',e:'🧗',n:'Leverage Master',d:'Borrow $100,000 in total on your credit line',tier:2,tg:1e5,f:'$',cur:()=>S.borrowed||0},
+  {id:'clear3',e:'🧾',n:'Paid In Full',d:'Fully pay off your credit line 3 times',tier:2,tg:3,cur:()=>S.clears||0},
+  {id:'score850',e:'💎',n:'Perfect Credit',d:'Reach the maximum credit score of 850',tier:3,tg:850,cur:()=>S.creditScore},
+  {id:'quad',e:'🏔️',n:'Quadruple Down',d:'Reach 4× your starting wealth',tier:3,tg:4,f:'x',cur:()=>getNetWorth()/startBase()},
+  {id:'passive',e:'⛲',n:'Passive Machine',d:'Earn +$1,000 net every billing cycle',tier:2,tg:1e3,f:'$',cur:()=>Math.max(0,getCycleNet())},
+  {id:'interest',e:'🏧',n:'Interest Earner',d:'Earn $10,000 in bank interest',tier:2,tg:1e4,f:'$',cur:()=>(S.bank&&S.bank.earned)||0},
+  {id:'marathon',e:'⏳',n:'Marathoner',d:'Survive 50 billing cycles',tier:2,tg:50,cur:()=>S.cycles||0},
+  {id:'gamer20',e:'🃏',n:'Table Shark',d:'Win 20 executive mini-games',tier:3,tg:20,cur:()=>S.gameWins||0}
 ];
-const achReward=a=>Math.max(100,Math.round(S.start*[.0005,.0015,.004,.01][a.tier-1]/100)*100);
+const achOn=a=>!a.hard||isHard();
+let achFilter='all';
+const achReward=a=>Math.max(100,Math.round(startBase()*[.0005,.0015,.004,.01][a.tier-1]/100)*100);
 const achFmt=(a,v)=>a.f==='$'?fmt(v):a.f==='x'?(Math.round(v*100)/100)+'×':Math.floor(v).toLocaleString();
 let achLast=0;
 function checkAch(force){
   const n=Date.now();if(!force&&n-achLast<1500)return;achLast=n;
   let fresh=0;
   ACH.forEach(a=>{
-    if(S.achievements[a.id])return;
+    if(S.achievements[a.id]||!achOn(a))return;
     let v=0;try{v=a.cur()}catch(e){}
     if(v>=a.tg){S.achievements[a.id]={t:n,claimed:0};fresh++;toast(`🏆 Achievement unlocked: ${a.n}`)}
   });
@@ -1625,31 +1654,34 @@ function claimAch(id){
 }
 function renderAch(){
   const L=lvlOf(S.xp),a0=lvlStart(L),a1=lvlStart(L+1),title=LVL_TITLES[Math.min(LVL_TITLES.length-1,L-1)];
-  const got=ACH.filter(a=>S.achievements[a.id]),pend=got.filter(a=>!S.achievements[a.id].claimed);
+  const total=ACH.filter(achOn).length,got=ACH.filter(a=>S.achievements[a.id]&&achOn(a)),pend=got.filter(a=>!S.achievements[a.id].claimed);
   const pendTot=pend.reduce((s,a)=>s+achReward(a),0);
   const rows=ACH.map(a=>{
     const st=S.achievements[a.id];let v=0;try{v=a.cur()}catch(e){}
-    const p=st?100:pct100(v/a.tg*100),state=st?(st.claimed?2:0):1;
-    return{a,st,v,p,state};
-  }).sort((x,y)=>x.state-y.state||y.p-x.p);
-  const cards=rows.map(({a,st,v,p})=>`<div class="xc xach ${st?(st.claimed?'done':''):'lock'}">
-    <div class="xh"><span class="xe">${a.e}</span><div><b>${a.n}</b><small style="display:block;color:var(--mut);font-size:12px">${a.d}</small></div></div>
+    const on=achOn(a),p=st?100:on?pct100(v/a.tg*100):0,state=st?(st.claimed?2:0):on?1:3;
+    return{a,st,v,p,state,on};
+  }).filter(r=>achFilter=='all'||(achFilter=='ready'&&r.state==0)||(achFilter=='prog'&&r.state==1)||(achFilter=='done'&&r.st)).sort((x,y)=>x.state-y.state||y.p-x.p);
+  const cards=rows.map(({a,st,v,p,on})=>`<div class="xc xach ${st?(st.claimed?'done':''):'lock'}">
+    <div class="xh"><span class="xe">${a.e}</span><div><b>${a.n}</b> <small style="color:var(--warn);letter-spacing:1px">${'★'.repeat(a.tier)}</small><small style="display:block;color:var(--mut);font-size:12px">${a.d}</small></div></div>
     <div class="xbar"><i style="width:${p}%"></i></div>
-    <div class="xrow"><small style="color:var(--mut)">${st?'Completed':achFmt(a,Math.min(v,a.tg))+' / '+achFmt(a,a.tg)}</small><span class="sp"></span>
+    <div class="xrow"><small style="color:var(--mut)">${st?'Completed':!on?'🔥 Hard mode only':achFmt(a,Math.min(v,a.tg))+' / '+achFmt(a,a.tg)}</small><span class="sp"></span>
       ${st?(st.claimed?'<span class="xtag ok">Claimed ✓</span>':`<button class="buy" data-claim="${a.id}">Claim ${fmt(achReward(a))} +${a.tier*50} XP</button>`):`<span class="xtag">Reward ${fmt(achReward(a))}</span>`}</div></div>`).join('');
   $('#g').innerHTML=`
     <div class="xc"><div class="xrow"><div class="sp"><small style="color:var(--mut);font-weight:700;letter-spacing:.04em">PLAYER LEVEL</small>
       <div class="xbig">⭐ Level ${L} · ${title}</div></div>
-      <div style="text-align:right"><b>${got.length}/${ACH.length}</b><small style="display:block;color:var(--mut)">achievements</small></div></div>
+      <div style="text-align:right"><b>${got.length}/${total}</b><small style="display:block;color:var(--mut)">achievements · ${Math.round(got.length/Math.max(1,total)*100)}%</small></div></div>
       <div class="xbar big"><i style="width:${pct100((S.xp-a0)/(a1-a0)*100)}%"></i></div>
       <small style="color:var(--mut)">${Math.round(S.xp).toLocaleString()} XP · ${Math.max(0,Math.ceil(a1-S.xp)).toLocaleString()} XP to Level ${L+1} · earn XP by shopping and claiming achievements</small></div>
     ${pend.length?`<div class="xc xrow" style="border-color:var(--warn)"><div class="sp"><b>🎁 ${pend.length} reward${pend.length>1?'s':''} ready</b><small style="display:block;color:var(--mut)">${fmt(pendTot)} waiting to be claimed</small></div><button class="buy" id="claimAll">Claim all</button></div>`:''}
-    <div class="sec-h">Achievements</div><div class="xgrid">${cards}</div>`;
+    <div class="sec-h">Achievements</div>
+    <div class="chips">${[['all','All'],['ready','🎁 Ready'],['prog','⏳ In progress'],['done','✅ Unlocked']].map(([k,n])=>`<button data-af="${k}" class="${achFilter==k?'on':''}">${n}</button>`).join('')}</div>
+    <div class="xgrid">${cards||'<div class="empty">Nothing here yet — keep playing!</div>'}</div>`;
+  $('#g').querySelectorAll('[data-af]').forEach(b=>b.onclick=()=>{achFilter=b.dataset.af;renderAch()});
   $('#g').querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>{
     const r=claimAch(b.dataset.claim);if(r){setBal(1);flt('+'+fmt(r),1);sfxDing(880,.15);confetti(40,2.2);checkAch(true)}
   });
   if($('#claimAll'))$('#claimAll').onclick=()=>{
-    let tot=0;ACH.forEach(a=>{tot+=claimAch(a.id)});
+    let tot=0;ACH.forEach(a=>{if(achOn(a))tot+=claimAch(a.id)});
     if(tot){setBal(1);flt('+'+fmt(tot),1);sfxFanfare(0);confetti(70,2.6);toast(`🎁 Claimed ${fmt(tot)} in rewards`);checkAch(true)}
   };
 }
@@ -1682,14 +1714,14 @@ function nwChart(){
 }
 let bkMsg='';
 function renderInsights(){
-  const nw=getNetWorth(),start=S.start||1,change=nw-start;
+  const nw=getNetWorth(),start=isHard()?0:(S.start||1),change=nw-start;
   const parts=[{n:'Cash',v:S.bal,c:'#0fa968'},{n:'Bank',v:bankValue(),c:'#06b6d4'},{n:'Stocks',v:portfolioValue(),c:'#5b3df5'},{n:'Property',v:propValue(),c:'#f59e0b'},{n:'Businesses',v:bizValue(),c:'#ec4899'},{n:'Items (70%)',v:itemsValue(),c:'#8b5cf6'}].filter(x=>x.v>.5);
   const gross=parts.reduce((a,x)=>a+x.v,0)||1;
   const cs=Object.entries(S.catSpend||{}).sort((a,b)=>b[1]-a[1]),sumC=cs.reduce((a,x)=>a+x[1],0),other=Math.max(0,S.spent-sumC);
   if(other>1)cs.push(['Ventures, bills & other',other]);
   const top=cs.sort((a,b)=>b[1]-a[1]).slice(0,9),mx=top.length?top[0][1]:1;
   const cp=cashParts(),net=getCycleNet();
-  const life=[['⭐ Level',lvlOf(S.xp)],['🛍️ Purchases',(S.buys||0).toLocaleString()],['💸 Total spent',fmt(S.spent)],['🔨 Auctions won',S.wins||0],['📣 Ad impressions',(S.imp||0).toLocaleString()],['⚡ Flash deals used',S.flashBuys||0],['🎰 Games won',S.gameWins||0],['🌦️ Life events',S.evLog.length],['🏆 Achievements',Object.keys(S.achievements).length+'/'+ACH.length],['⏳ Cycles played',S.cycles||0]];
+  const life=[['⭐ Level',lvlOf(S.xp)],['🛍️ Purchases',(S.buys||0).toLocaleString()],['💸 Total spent',fmt(S.spent)],['🔨 Auctions won',S.wins||0],['📣 Ad impressions',(S.imp||0).toLocaleString()],['⚡ Flash deals used',S.flashBuys||0],['🎰 Games won',S.gameWins||0],['🌦️ Life events',S.evLog.length],['🏆 Achievements',ACH.filter(a=>S.achievements[a.id]&&achOn(a)).length+'/'+ACH.filter(achOn).length],['⏳ Cycles played',S.cycles||0]];
   $('#i').innerHTML=`
     <div class="xstats">
       <div><small>Net worth</small><b>${fmt(nw)}</b></div>
@@ -1797,6 +1829,9 @@ function openResetModal(){
     <h2>Select Wealth Tier / Reset</h2>
     <p>Choose a starting fortune. This wipes your current portfolio.</p>
     <div class="preset-grid">
+      <button class="preset-btn" data-amt="0" data-mode="hard"><span>🔥 Hard Mode<br><small style="color:var(--mut);font-weight:600">$0 cash + $20,000 line of credit</small></span><span class="good">$0 CAD</span></button>
+      <button class="preset-btn" data-amt="10000"><span>🪙 Pocket Change</span><span class="good">$10K CAD</span></button>
+      <button class="preset-btn" data-amt="100000"><span>💵 Six-Figure Start</span><span class="good">$100K CAD</span></button>
       <button class="preset-btn" data-amt="1000000"><span>💼 Classic Millionaire</span><span class="good">$1M CAD</span></button>
       <button class="preset-btn" data-amt="100000000"><span>🛩️ Centi-Millionaire</span><span class="good">$100M CAD</span></button>
       <button class="preset-btn" data-amt="1000000000"><span>🚀 Billionaire Mode</span><span class="good">$1B CAD</span></button>
@@ -1804,7 +1839,7 @@ function openResetModal(){
     </div>
     <button style="margin-top:14px;color:var(--mut);font-weight:700" onclick="cls('lay')">Cancel</button>
   </div></div>`);
-  $('#lay').querySelectorAll('[data-amt]').forEach(btn=>btn.onclick=()=>reset(+btn.dataset.amt));
+  $('#lay').querySelectorAll('[data-amt]').forEach(btn=>btn.onclick=()=>reset(+btn.dataset.amt,btn.dataset.mode||'classic'));
 }
 $('#rs').onclick=openResetModal;
 const sndBtn=$('#snd'),syncSnd=()=>{sndBtn.textContent=muted?'🔇':'🔊'};syncSnd();
@@ -1818,16 +1853,17 @@ addEventListener('keydown',e=>{
     }
   }
 });
-function reset(amount=1e6){
-  S={...BLANK(),start:amount,bal:amount,creditLimit:Math.round(amount*0.25)};
+function reset(amount=1e6,mode='classic'){
+  S={...BLANK(),start:amount,bal:amount,mode};
+  S.creditLimit=getDynamicCreditLimit();
   mkt.forEach(x=>{x.p=x.hist[0];x.hist=[x.p]});
   generateAuctionLots();
   next=Date.now()+20000;cls('lay');setBal(1);renderTabs();if(tab==='v')renderVentures();if(tab==='a')renderAuctions();
   if(openCo)openStore(openCo);
-  toast(`Fresh ${fmt(amount)} CAD loaded!`);
+  toast(mode==='hard'?`🔥 Hard mode! $0 cash and a ${fmt(HARD_LOC)} line of credit — scale it up!`:`Fresh ${fmt(amount)} CAD loaded!`);
 }
 function broke(){
-  show('lay',`<div class="sheet"><div class="res"><div style="font-size:60px">🪦</div><h2>You’re out of cash &amp; credit!</h2><p>You turned ${fmt(S.start)} into memories, assets and receipts.</p><p>Total spent: <b>${fmt(S.spent)}</b></p><br><button class="pay" onclick="openResetModal()">Choose New Starting Fortune</button></div></div>`);
+  show('lay',`<div class="sheet"><div class="res"><div style="font-size:60px">🪦</div><h2>You’re out of cash &amp; credit!</h2><p>${isHard()?'You ran '+fmt(HARD_LOC)+' of credit into memories, assets and receipts.':'You turned '+fmt(S.start)+' into memories, assets and receipts.'}</p><p>Total spent: <b>${fmt(S.spent)}</b></p><br><button class="pay" onclick="openResetModal()">Choose New Starting Fortune</button></div></div>`);
 }
 
 $('#q').oninput=grid;
@@ -2843,7 +2879,7 @@ function renderTabs(){
     <div class="rec" style="flex-direction:column;align-items:stretch;gap:10px">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div><b style="font-size:16px">Credit Score: <span class="good">${S.creditScore}</span> / 850</b>
-          <small>Limit scales automatically with your Net Worth · APR ${(S.apr*100).toFixed(1)}%/20s</small></div>
+          <small>Limit scales automatically with your net worth &amp; score · APR ${(S.apr*100).toFixed(1)}%/20s</small></div>
         <div style="text-align:right">
           <b>Used: <span class="${S.creditUsed>0?'bad':'good'}">${fmt(S.creditUsed)}</span> / ${fmt(S.creditLimit)}</b>
           <small>Available Credit: <b>${fmt(getAvailCredit())}</b></small>
@@ -2854,6 +2890,10 @@ function renderTabs(){
         <button class="buy" id="payLoc25" ${S.creditUsed<=0?'disabled':''}>Pay 25% (${fmt(S.creditUsed*0.25)})</button>
         <button class="buy" id="payLocAll" ${S.creditUsed<=0?'disabled':''}>Pay Off Full Balance (${fmt(S.creditUsed)})</button>
         <button class="ghost" id="boostCreditBtn">📈 Request Limit Increase</button>
+      </div>
+      <div class="sec-h" style="margin:4px 0 0">💵 Cash Advance · ${(CASH_ADV_FEE*100).toFixed(0)}% fee added to debt${isHard()?' · use it to fund stocks, businesses & auctions':''}</div>
+      <div class="qbtns" style="margin:0">
+        ${[.1,.25,1].map(f=>{const a=Math.floor(getAvailCredit()/(1+CASH_ADV_FEE)*f);return `<button class="buy" data-adv="${f}" ${a<1?'disabled':''}>${f==1?'Draw max':'Draw '+(f*100)+'%'} (${fmt(a)})</button>`}).join('')}
       </div>
     </div>`;
 
@@ -2877,17 +2917,30 @@ function renderTabs(){
   if($('#payLoc25'))$('#payLoc25').onclick=()=>{
     const amt=Math.min(S.bal, +(S.creditUsed*0.25).toFixed(2));
     if(amt<=0){toast('Not enough cash to pay down credit');return}
-    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);
+    const before=S.creditUsed;
+    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);trackLoc(before);
     S.creditScore=Math.min(850,S.creditScore+5);
     setBal(-1);renderTabs();toast(`💳 Paid ${fmt(amt)} toward Line of Credit! Credit Score +5`);
   };
   if($('#payLocAll'))$('#payLocAll').onclick=()=>{
     const amt=Math.min(S.bal, S.creditUsed);
     if(amt<=0){toast('Not enough cash');return}
-    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);
+    const before=S.creditUsed;
+    S.bal=+(S.bal-amt).toFixed(2);S.creditUsed=+(S.creditUsed-amt).toFixed(2);trackLoc(before);
     S.creditScore=Math.min(850,S.creditScore+12);
     setBal(-1);renderTabs();toast(`🎉 Paid ${fmt(amt)}! Credit Score rose to ${S.creditScore}`);
   };
+  $('#m').querySelectorAll('[data-adv]').forEach(b=>b.onclick=()=>{
+    const amt=Math.floor(getAvailCredit()/(1+CASH_ADV_FEE)*(+b.dataset.adv));
+    if(amt<1){toast('No credit available for a cash advance');return}
+    const debt=+(amt*(1+CASH_ADV_FEE)).toFixed(2);
+    S.creditUsed=+(S.creditUsed+debt).toFixed(2);S.borrowed=+((S.borrowed||0)+amt).toFixed(2);
+    S.bal=+(S.bal+amt).toFixed(2);
+    if(S.creditUsed/Math.max(1,getDynamicCreditLimit())>0.8)S.creditScore=Math.max(300,S.creditScore-4);
+    S.rec.unshift({e:'💵',n:`Cash Advance (fee ${fmt(debt-amt)})`,s:'Credit Line',q:1,tot:-amt,t:Date.now(),d:1});
+    setBal(1);flt('+'+fmt(amt),1);sfxDing(720,.15);renderTabs();
+    toast(`💵 ${fmt(amt)} advanced to cash · ${fmt(debt)} added to your credit balance`);
+  });
   if($('#boostCreditBtn'))$('#boostCreditBtn').onclick=()=>{
     S.creditLimit=getDynamicCreditLimit();save();renderTabs();
     toast(`🏦 Credit limit refreshed to ${fmt(S.creditLimit)} based on Net Worth!`);
