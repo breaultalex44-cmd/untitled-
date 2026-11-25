@@ -324,6 +324,66 @@ main{max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-ri
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
 .card-top,.card-mid,.card-bot{backface-visibility:hidden}
 .tt-live{height:min(88dvh,760px)}
+
+/* ===== Feature pack: Bank, Insurance & Events, Achievements, Insights, Flash Sales & Wishlist ===== */
+.xstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
+.xstats>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 13px;min-width:0}
+.xstats small{display:block;color:var(--mut);font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.xstats b{display:block;font-size:17px;font-variant-numeric:tabular-nums;margin-top:2px;overflow-wrap:anywhere}
+.xc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;min-width:0}
+.xc h4{margin:0 0 4px;font-size:15px}
+.xc p{margin:2px 0 8px;color:var(--mut);font-size:12.5px}
+.xrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.xrow>input{flex:1;min-width:120px}
+.xrow>.sp{flex:1}
+.xbar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0}
+.xbar>i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--acc),var(--ok));transition:width .6s}
+.xbar.big{height:12px}
+.xgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.xgrid .xc{margin:0;display:flex;flex-direction:column;gap:2px}
+.xach{position:relative}
+.xach.lock{opacity:.78}
+.xach.done{opacity:.6}
+.xach .xe{font-size:30px;line-height:1}
+.xach .xh{display:flex;gap:10px;align-items:center}
+.xach .xh>div{flex:1;min-width:0}
+.xtag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:800;background:var(--line);color:var(--mut)}
+.xtag.ok{background:#0fa96822;color:var(--ok)}
+.xtag.warn{background:#f59e0b22;color:var(--warn)}
+.xtag.bad{background:#e5383b22;color:var(--bad)}
+.xbig{font-size:clamp(24px,6vw,34px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.xstack{display:flex;height:16px;border-radius:9px;overflow:hidden;background:var(--line);margin:8px 0}
+.xstack>i{display:block;height:100%}
+.xleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px}
+.xleg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:6px}
+.xchart{width:100%;height:170px;display:block}
+.xaxis{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut);font-weight:700}
+.xbarrow{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:8px;align-items:center;font-size:12.5px;margin:6px 0}
+.xbarrow .xbar{margin:0}
+.xbarrow span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xlog{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.xlog:first-child{border-top:0}
+.xlog>span:first-child{font-size:24px}
+.xlog>div{flex:1;min-width:0}
+.xlog small{display:block;color:var(--mut);font-size:12px}
+.xta{width:100%;min-height:70px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:9px 11px;resize:vertical}
+.flrow{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:thin}
+.flc{flex:0 0 168px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px;position:relative;display:flex;flex-direction:column;gap:2px;transition:transform .15s,border-color .15s}
+.flc:hover{transform:translateY(-2px);border-color:var(--acc)}
+.flc .fle{font-size:28px}
+.flc b{font-size:13.5px;line-height:1.2}
+.flc small{color:var(--mut);font-size:11.5px}
+.flc .flp{position:absolute;top:8px;right:8px;background:var(--bad);color:#fff;border-radius:7px;padding:2px 6px;font-size:11px;font-weight:800}
+.flc .fprice{font-weight:800;font-size:13px;color:var(--ok);margin-top:3px}
+.flc .fprice s{color:var(--mut);font-weight:600;margin-right:4px}
+.flc .xrow{margin-top:6px}
+.flc .xrow button{font-size:12px;font-weight:700;padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
+.flc .xrow .buy{background:var(--acc);color:#fff;border-color:var(--acc)}
+.saletag{color:var(--ok);font-weight:800}
+.row s,.xc s{color:var(--mut)}
+.wl{font-size:20px;line-height:1;padding:6px 4px;color:var(--mut)}
+.wl.on{color:#f5b301}
+@media(max-width:520px){.xbarrow{grid-template-columns:90px 1fr auto}}
 </style>
 </head>
 <body>
@@ -343,10 +403,15 @@ main{max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-ri
     <button data-t="v">Ventures &amp; Markets</button>
     <button data-t="m">My Stuff &amp; Credit</button>
     <button data-t="r">Receipts</button>
+    <button data-t="b">🏦 Bank &amp; Insurance</button>
+    <button data-t="g">🏆 Achievements</button>
+    <button data-t="i">📊 Insights</button>
     <button id="rs">Mode / Reset</button>
     <button id="snd" title="Toggle sound">🔊</button>
   </nav>
   <section id="s">
+    <div id="flash"></div>
+    <div id="wishBox"></div>
     <div class="controls"><input type="search" id="q" placeholder="Search companies &amp; items…"></div>
     <div class="chips" id="ch"></div>
     <div class="grid" id="gr"></div>
@@ -355,6 +420,9 @@ main{max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-ri
   <section id="v" hidden></section>
   <section id="m" hidden></section>
   <section id="r" hidden></section>
+  <section id="b" hidden></section>
+  <section id="g" hidden></section>
+  <section id="i" hidden></section>
 </main>
 
 <div class="layer" id="ov"></div>
@@ -443,7 +511,7 @@ LinkedIn|💼|#0a66c2|Social|⭐ LinkedIn Sales Navigator:115:m;📢 B2B Executi
 Riot Games|⚔️|#d13639|Gaming|💎 Valorant Points ×10 Bundle:139.99:g;🏆 Radiant Champions Skin Bundle:289.99;📢 Worlds Esports Arena Sponsor:85000:a;🏆 League of Legends Worlds VIP Floor Box:22000;⚔️ Complete Valorant + LoL Lifetime Skin Vault:18500;🏟️ Co-Sponsor VCT Masters International LAN:450000:a
 Meta|🥽|#0668e1|Tech|🕶️ Ray-Ban Meta Smart Glasses:369;🥽 Meta Quest 3 512GB:679.99;📢 Cross-App Meta Ad Blitz:45000:a;🤖 Llama Compute Cluster Node:185000::4800;🥽 Meta Quest Pro Enterprise Lab ×20:29999;🤖 Custom Llama-4 405B Inference Cluster:680000::18500;📢 Global Instagram + WhatsApp Launch Blitz:290000:a
 Sony|📷|#2a2a2a|Tech|🎧 WH-1000XM5 Headphones:499.99;📷 Alpha a7R V Mirrorless Body:5299.99;📺 85-inch Bravia XR Master TV:7999.99;🎬 CineAlta Cinema Camera Kit:43500;📷 Sony FE 600mm f/4 GM Super-Telephoto:17999;🎮 PS5 Pro DevKit & Indie Studio Grant:65000;🎬 Co-Finance Sony Pictures Blockbuster:12000000::165000
-LEGO|🧱|#eab308|Fun|🚀 NASA Space Shuttle Discovery:259.99;🏰 Lion Knights' Castle Set:519.99;🏎️ Technic Ferrari Daytona SP3:589.99;🏗️ Pallet of 500,000 Loose Bricks:28500;🌟 UCS Millennium Falcon Collector Set:1049.99;🏛️ Master Builder Custom 1:1 Supercar:145000;🏪 Open a Certified LEGO Flagship Store:1350000::24000
+LEGO|🧱|#eab308|Fun|🚀 NASA Space Shuttle Discovery:259.99;🏰 Lion Knights' Castle Set:519.99;🏎️ Technic Ferrari Daytona SP3:589.99;🏗️ Pallet of 500,000 Loose Bricks:28500;🌟 UCS Millennium Falcon Collector Set:1049.99;🏛️ Master Builder Custom 1∶1 Supercar:145000;🏪 Open a Certified LEGO Flagship Store:1350000::24000
 BMW|🚘|#1c69d4|Cars|🏁 M Driving School Track Day:4400;🚘 BMW M3 Competition xDrive:113900;⚡ BMW i7 M70 Flagship:189900;🏎️ BMW M4 GT3 Race Car:695000;🏎️ BMW M5 Touring V8 Hybrid:158900;🏍️ BMW M 1000 RR Superbike:44995;👑 BMW 3.0 CSL Hommage Collector Coupe:1150000
 Harley-Davidson|🏍️|#f97316|Cars|🧥 Screamin' Eagle Leather Gear:1850;🏍️ Sportster S:20499;🏍️ CVO Street Glide Limited:55999;🏍️ Road Glide CVO ST Performance Bagger:62999;🔧 Screamin' Eagle 135ci Stage IV Crate Engine:14500;🏪 Open a Harley-Davidson Dealership:2200000::38000
 Rivian|🛻|#f5a623|Cars|🏕️ Slide-Out Camp Kitchen:1250;🚙 R1S Tri-Motor Max SUV:126000;🛻 R1T Quad-Motor Adventure Truck:132000;🚐 Rivian Commercial Electric Delivery Van:92000;🚙 R2 + R3X Adventure Garage Duo:148000;⚡ Rivian Adventure Network Charging Hub:340000::7800
@@ -523,7 +591,9 @@ const BLANK=()=>({
   h:0,c:0,k:0,imp:0,xp:0,wins:0,losses:0,
   stk:{},prop:[],biz:[],
   creditUsed:0,creditLimit:250000,creditScore:720,apr:0.018,
-  myListings:[],deals:[],achievements:{}
+  myListings:[],deals:[],achievements:{},
+  bank:{sav:0,terms:[],earned:0},ins:{health:0,prop:0,biz:0},evLog:[],nwHist:[],catSpend:{},wish:{},
+  buys:0,gameWins:0,flashBuys:0,cycles:0
 });
 let S=BLANK();
 let shown=S.bal,raf,openCo=null,busy=false,cat='All',next=Date.now()+20000,tab='s';
@@ -532,7 +602,7 @@ try{
   if(d&&typeof d.bal=='number'){S={...BLANK(),...d};delete S.karma;['h','c','k','imp','xp'].forEach(f=>{if(!Number.isFinite(S[f]))S[f]=0})}
   shown=S.bal;
 }catch(e){}
-const save=()=>{try{if(S.rec.length>150)S.rec.length=150;localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{try{if(S.rec.length>150)S.rec.length=150;let esc=0;try{auctionLots.forEach(l=>{if(l.youAreHigh&&l.escrow)esc+=l.escrow})}catch(e){}localStorage.setItem(KEY,JSON.stringify(esc?{...S,bal:+(S.bal+esc).toFixed(2)}:S))}catch(e){}};
 const ITM=k=>{const[a,b]=k.split('.');return CO[a]&&CO[a].it[b]?[CO[a],CO[a].it[b]]:[null,null]};
 // consumed things (donations, meals, trips) are not resellable assets unless they produce income
 const isAsset=(c,it)=>!!it&&!/[mshag]/.test(it.f)&&!!(it.cf||!['Charity','Food','Travel'].includes(c.cat));
@@ -649,7 +719,7 @@ function getNetWorthRaw(){
     const[c,it]=ITM(k);
     if(isAsset(c,it))assets+=it.p*S.inv[k]*.7;
   }
-  return S.bal+assets+portfolioValue()+propValue()+bizValue();
+  return S.bal+assets+portfolioValue()+propValue()+bizValue()+bankValue();
 }
 function getNetWorth(){
   return Math.max(0, getNetWorthRaw() - S.creditUsed);
@@ -661,6 +731,7 @@ function getCycleNet(){
   S.prop.forEach(p=>{net+=p.rent-p.tax});
   S.biz.forEach(b=>{if(!b.dead&&b.kind!='startup')net+=b.income*(1+(b.staff||0)*.15+(b.rd||0)*.25)-b.upkeep-(b.staff||0)*b.staffPay});
   if(S.creditUsed>0) net -= S.creditUsed * S.apr;
+  net+=(S.bank?S.bank.sav*VAULT_RATE:0)-premTotal();
   return net;
 }
 
@@ -681,6 +752,7 @@ function setBal(dir=0){
   $('#modeLabel').textContent=`Cash · CAD · Credit Avail ${fmt(getAvailCredit())}`;
   stats();save();
   if(tab==='m'||tab==='r')renderTabs();
+  try{if(FEAT_TABS.includes(tab))renderExtra();else if(tab==='s')renderStoreExtras();checkAch()}catch(e){}
 }
 function stats(){
   const net=getCycleNet(),
@@ -689,6 +761,7 @@ function stats(){
         netStr=net===0?'$0/20s':(net>0?`+${fmt(net)}/20s`:`−${fmt(Math.abs(net))}/20s`);
   $('#st').innerHTML=`
     <span>🏅 ${S.bal<1&&getAvailCredit()<10&&getNetWorth()<10?'Broke Legend':r}</span>
+    <span>⭐ Lv ${lvlOf(S.xp)}</span>
     <span>🏦 Net Worth ${fmt(getNetWorth())}</span>
     <span style="color:${S.creditUsed>0?'var(--warn)':'inherit'}">💳 LOC ${fmt(S.creditUsed)}/${fmt(S.creditLimit)} (${S.creditScore})</span>
     <span>😊 ${Math.round(S.h)}</span>
@@ -731,15 +804,18 @@ function openStore(c){
   e.querySelector('button').onclick=()=>{cls('ov');openCo=null};
   const list=/TikTok/.test(c.n)?c.it.map((x,i)=>[x,i]).sort((a,b)=>a[0].p-b[0].p):c.it.map((x,i)=>[x,i]);
   list.forEach(([it,i])=>{
-    const r=document.createElement('div'),own=S.inv[c.id+'.'+i],sub=S.subs[c.id+'.'+i];
+    const r=document.createElement('div'),own=S.inv[c.id+'.'+i],sub=S.subs[c.id+'.'+i],sale=saleOf(c.id+'.'+i);
     r.className='row';
     const flagTxt={m:' · per month 🔁',s:' · Live Super Chat 💬',g:' · Animated Gift ✨',h:' · Hype Train / PK Boost 🚂',a:' · Viral Ad Campaign 📈'}[it.f]||'';
     const cfBadge=it.cf>0?`<span class="badge inc">+${fmt(it.cf)}/20s income</span>`:it.cf<0?`<span class="badge upk">−${fmt(Math.abs(it.cf))}/20s upkeep</span>`:'';
     const ownBadge=own&&!sub?`<span class="badge per">Owned: ${own.toLocaleString()}</span>`:'';
-    r.innerHTML=`<span>${it.e}</span><div><b>${it.n}</b><small>${fmt(it.p)}${flagTxt}</small>${cfBadge}${ownBadge}</div><button class="buy">${sub?'Subscribed ✓':'Buy'}</button>`;
+    r.innerHTML=`<span>${it.e}</span><div><b>${it.n}</b><small>${sale?`<s>${fmt(it.p)}</s> <span class="saletag">${fmt(sale.price)} · ⚡ −${sale.pct}% flash sale</span>`:fmt(it.p)}${flagTxt}</small>${cfBadge}${ownBadge}</div><button class="buy">${sub?'Subscribed ✓':'Buy'}</button>`;
     const b=r.querySelector('button');
     b.disabled=!!sub;
-    b.onclick=()=>checkout(c,it,i);
+    b.onclick=()=>checkout(c,sale?{...it,p:sale.price,_flash:1}:it,i);
+    const wk=c.id+'.'+i,wb=document.createElement('button');
+    wb.className='wl'+(S.wish[wk]?' on':'');wb.textContent=S.wish[wk]?'★':'☆';wb.title='Wishlist';wb.setAttribute('aria-label','Toggle wishlist');
+    wb.onclick=()=>toggleWish(wk);r.insertBefore(wb,b);
     e.querySelector('.sheet').append(r);
   });
 }
@@ -885,6 +961,7 @@ function commit(c,it,i,q,tot,msg,useCredit=false){
     S.bal=+(S.bal-tot).toFixed(2);
   }
   S.spent+=tot;
+  S.buys=(S.buys||0)+1;S.catSpend[c.cat]=(S.catSpend[c.cat]||0)+tot;if(it._flash)S.flashBuys=(S.flashBuys||0)+1;
   const k=c.id+'.'+i;
   S.inv[k]=(S.inv[k]||0)+q;
   if(it.f=='m')S.subs[k]=1;
@@ -1161,7 +1238,7 @@ function renderAuctions(){
 
   for(const id in keep){const el=$('#'+id);if(el&&(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===keep[id])))el.value=keep[id]}
   if(focusId&&$('#'+focusId)){const el=$('#'+focusId);el.focus();try{const l=el.value.length;el.setSelectionRange(l,l)}catch(e){}}
-  $('#forceRefreshAuc').onclick=()=>{resolveEndedAuctions();renderAuctions();toast('🔄 5 fresh auction lots loaded!')};
+  $('#forceRefreshAuc').onclick=()=>{let back=0;auctionLots.forEach(l=>{if(l.youAreHigh&&l.escrow){S.bal=+(S.bal+l.escrow).toFixed(2);back+=l.escrow;l.escrow=0;l.youAreHigh=false}});if(back){setBal(1);toast(`↩️ Your ${fmt(back)} in active bids was refunded`)}resolveEndedAuctions();renderAuctions();toast('🔄 5 fresh auction lots loaded!')};
   $('#a').querySelectorAll('[data-auc-bid]').forEach(b=>b.onclick=()=>{
     const[id,amt]=b.dataset.aucBid.split('|');placePlayerBid(id,+amt);
   });
@@ -1255,6 +1332,7 @@ setInterval(()=>{
       flt((delta>0?'+':'−')+fmt(Math.abs(delta)),delta>0);
       sfxDing(delta>0?660:330,.1);
     }
+    featureCycle();
     renderTabs();
     save();
   }
@@ -1264,13 +1342,453 @@ setInterval(()=>{
   if(tab=='v'&&venturesDirty){venturesDirty=false;renderVentures()}
 },1000);
 
+// =====================================================================
+// FEATURE PACK — 🏦 Bank & Vault · 🛡️ Insurance & Life Events · 🏆 Achievements & Levels
+//                📊 Insights & Backup · ⚡ Flash Sales & ⭐ Wishlist
+// =====================================================================
+const FEAT_TABS=['b','g','i'];
+const VAULT_RATE=0.004;
+const TERMS=[
+  {id:'t1',e:'⚡',n:'Express Note',cycles:6,rate:.03},
+  {id:'t2',e:'📜',n:'Growth Bond',cycles:18,rate:.12},
+  {id:'t3',e:'🏛️',n:'Blue-Chip GIC',cycles:45,rate:.36}
+];
+const clk=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const cycTime=n=>{const s=n*20;return s>=60?(Math.round(s/6)/10)+' min':s+'s'};
+const pct100=v=>Math.max(0,Math.min(100,v));
+const bizOps=()=>S.biz.filter(b=>b.kind!='startup'&&!b.dead);
+function bankValue(){const b=S.bank||{};return (b.sav||0)+(b.terms||[]).reduce((a,t)=>a+t.principal,0)}
+function normalizeState(d){
+  const B=BLANK(),o={...B,...d};
+  for(const k in B){
+    const bt=Array.isArray(B[k])?'a':typeof B[k],ot=Array.isArray(o[k])?'a':o[k]===null?'n':typeof o[k];
+    if(bt!==ot||(bt==='number'&&!Number.isFinite(o[k])))o[k]=B[k];
+  }
+  o.bank={...B.bank,...o.bank};if(!Array.isArray(o.bank.terms))o.bank.terms=[];
+  o.ins={...B.ins,...o.ins};
+  return o;
+}
+
+// ---------- Theme (auto / light / dark) ----------
+let themeMode='auto';try{themeMode=localStorage.getItem('spendsim-theme')||'auto'}catch(e){}
+function applyTheme(m){
+  themeMode=m;try{localStorage.setItem('spendsim-theme',m)}catch(e){}
+  if(m==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',m);
+}
+applyTheme(['auto','light','dark'].includes(themeMode)?themeMode:'auto');
+
+// ---------- Generic re-render for the new tabs (keeps typed input + focus) ----------
+function renderExtra(){
+  const sec=$('#'+tab);if(!sec)return;
+  const keep={},ae=document.activeElement;
+  sec.querySelectorAll('input,textarea,select').forEach(el=>{if(el.id)keep[el.id]=el.value});
+  const fid=ae&&ae.id&&sec.contains(ae)?ae.id:null,sy=window.scrollY;
+  ({b:renderBank,g:renderAch,i:renderInsights})[tab]();
+  for(const id in keep){const el=document.getElementById(id);if(el&&sec.contains(el)&&(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===keep[id])))el.value=keep[id]}
+  if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});try{const l=el.value.length;el.setSelectionRange(l,l)}catch(e){}}}
+  if(Math.abs(window.scrollY-sy)>2)window.scrollTo(0,sy);
+}
+
+// =====================================================================
+// FEATURE 1 — 🏦 BANK: Savings Vault + Term Deposits
+// =====================================================================
+let bSub='sav';
+function vaultMove(kind,amt){
+  amt=Math.floor((+amt||0)*100)/100;
+  if(!(amt>0)){toast('Enter an amount first');return}
+  if(kind==='dep'){
+    if(amt>S.bal+1e-9){toast('Not enough cash for that deposit');sfxTone(150,.2,'sawtooth');return}
+    S.bal=+(S.bal-amt).toFixed(2);S.bank.sav=+(S.bank.sav+amt).toFixed(2);
+    toast(`🏦 Deposited ${fmt(amt)} into your Savings Vault`);
+  }else{
+    if(amt>S.bank.sav+1e-9){toast('That is more than your vault holds');sfxTone(150,.2,'sawtooth');return}
+    S.bank.sav=+Math.max(0,S.bank.sav-amt).toFixed(2);S.bal=+(S.bal+amt).toFixed(2);
+    toast(`💵 Withdrew ${fmt(amt)} from your Savings Vault`);
+  }
+  sfxDing(kind==='dep'?520:740,.1);setBal(kind==='dep'?-1:1);
+}
+function openTerm(tid,amt){
+  const T=TERMS.find(x=>x.id===tid);amt=Math.floor((+amt||0)*100)/100;
+  if(!T)return;
+  if(amt<100){toast('Minimum term deposit is $100');return}
+  if(amt>S.bal+1e-9){toast('Not enough cash for that deposit');sfxTone(150,.2,'sawtooth');return}
+  S.bal=+(S.bal-amt).toFixed(2);
+  S.bank.terms.push({id:'td_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),tid:T.id,e:T.e,n:T.n,principal:amt,rate:T.rate,cycles:T.cycles,left:T.cycles});
+  toast(`${T.e} ${T.n} opened: ${fmt(amt)} locked for ${cycTime(T.cycles)}`);sfxDing(660,.12);setBal(-1);
+}
+function breakTerm(id){
+  const i=S.bank.terms.findIndex(t=>t.id===id);if(i<0)return;
+  const t=S.bank.terms.splice(i,1)[0],back=+(t.principal*.98).toFixed(2);
+  S.bal=+(S.bal+back).toFixed(2);
+  S.rec.unshift({e:'💔',n:'Broke term deposit early: '+t.n,s:'Bank',q:1,tot:+(t.principal-back).toFixed(2),t:Date.now(),d:1});
+  S.spent+=t.principal-back;
+  toast(`Deposit broken early — ${fmt(back)} returned (2% penalty, no interest)`);setBal(1);
+}
+function renderBank(){
+  const b=S.bank,termTot=b.terms.reduce((a,t)=>a+t.principal,0);
+  const head=`<div class="xstats">
+    <div><small>Cash</small><b>${fmt(S.bal)}</b></div>
+    <div><small>Savings Vault</small><b>${fmt(b.sav)}</b></div>
+    <div><small>Term Deposits</small><b>${fmt(termTot)}</b></div>
+    <div><small>Interest Earned</small><b class="good">${fmt(b.earned)}</b></div></div>
+    <div class="chips"><button data-bs="sav" class="${bSub=='sav'?'on':''}">💰 Savings Vault</button><button data-bs="term" class="${bSub=='term'?'on':''}">📜 Term Deposits</button><button data-bs="ins" class="${bSub=='ins'?'on':''}">🛡️ Insurance &amp; Life Events</button></div>`;
+  let body='';
+  if(bSub=='sav'){
+    body=`<div class="xc"><h4>💰 High-Interest Savings Vault</h4>
+      <p>Earns <b>${(VAULT_RATE*100).toFixed(1)}%</b> every 20s billing cycle, compounding. Your line of credit costs ${(S.apr*100).toFixed(1)}% — park spare cash here, withdraw any time.</p>
+      <div class="xbig">${fmt(b.sav)}</div>
+      <small style="color:var(--mut)">Next cycle interest: <b class="good">+${fmt(b.sav*VAULT_RATE)}</b></small>
+      <div class="xrow" style="margin-top:10px"><input type="number" id="vAmt" min="0" placeholder="Amount (CAD)">
+        <button class="buy" data-vm="dep|in">Deposit</button><button class="ghost" data-vm="wd|in">Withdraw</button></div>
+      <div class="qbtns"><button data-vm="dep|25">Deposit 25% cash</button><button data-vm="dep|50">50% cash</button><button data-vm="dep|100">All cash</button>
+        <button data-vm="wd|50" ${b.sav>0?'':'disabled'}>Withdraw ½</button><button data-vm="wd|100" ${b.sav>0?'':'disabled'}>Withdraw all</button></div></div>`;
+  }else if(bSub=='term'){
+    const prods=TERMS.map(T=>`<div class="xc"><div class="xrow"><span style="font-size:28px">${T.e}</span>
+        <div class="sp"><b>${T.n}</b><small style="display:block;color:var(--mut)">Locked ${cycTime(T.cycles)} (${T.cycles} cycles) · <b class="good">+${(T.rate*100).toFixed(0)}%</b> at maturity</small></div>
+        <button class="buy" data-open-term="${T.id}">Open</button></div></div>`).join('');
+    const mine=b.terms.map(t=>`<div class="xc"><div class="xrow"><span style="font-size:26px">${t.e}</span>
+        <div class="sp"><b>${t.n} · ${fmt(t.principal)}</b><small style="display:block;color:var(--mut)">Pays ${fmt(t.principal*(1+t.rate))} in ${cycTime(t.left)} (${t.left} cycles left)</small></div>
+        <button class="sell-btn" data-break-term="${t.id}">Break early</button></div>
+        <div class="xbar"><i style="width:${pct100((t.cycles-t.left)/t.cycles*100)}%"></i></div></div>`).join('');
+    body=`<div class="xc"><h4>📜 Open a Term Deposit</h4><p>Lock cash for a fixed term for a much higher return than the vault. Breaking early forfeits the interest and costs a 2% penalty.</p>
+      <div class="xrow"><input type="number" id="tAmt" min="100" placeholder="Amount to lock (min $100)"></div></div>
+      ${prods}<div class="sec-h">Your Term Deposits (${b.terms.length})</div>${mine||'<div class="empty">No active term deposits.</div>'}`;
+  }else{
+    const pol=POLICIES.map(p=>{
+      const on=!!S.ins[p.id],ok=p.avail();
+      return `<div class="xc"><div class="xrow"><span style="font-size:28px">${p.e}</span>
+        <div class="sp"><b>${p.n}</b> ${on?'<span class="xtag ok">ACTIVE</span>':'<span class="xtag">NOT COVERED</span>'}
+          <small style="display:block;color:var(--mut)">${p.d} · Premium ≈ <b>${fmt(p.prem())}</b>/20s${ok?'':' · requires you to own one'}</small></div>
+        <button class="${on?'ghost':'buy'}" data-pol="${p.id}" ${!on&&!ok?'disabled':''}>${on?'Cancel':'Insure'}</button></div></div>`}).join('');
+    const log=S.evLog.map(x=>`<div class="xlog"><span>${x.e}</span><div><b>${x.n}</b><small>${x.txt} · ${new Date(x.t).toLocaleTimeString('en-CA')}</small></div>
+        <div style="text-align:right;flex:0 0 auto"><b class="${x.amt>=0?'good':'bad'}">${x.amt>=0?'+':'−'}${fmt(Math.abs(x.amt))}</b>${x.saved?`<small class="good">insurance saved ${fmt(x.saved)}</small>`:''}</div></div>`).join('');
+    body=`<div class="xc"><h4>🛡️ Insurance &amp; Life Events</h4><p>Random life events strike every few minutes — medical bills, storms, audits, but also windfalls and dividends. Policies cost a small premium each cycle and absorb most of the damage. Policies lapse if you cannot pay or no longer own the covered asset.</p>
+      <small style="color:var(--mut)">Total premiums: <b>${fmt(premTotal())}</b>/20s</small></div>${pol}
+      <div class="sec-h">Event Log (${S.evLog.length})</div><div class="xc">${log||'<div class="empty" style="border:0;padding:12px">Nothing has happened yet — events begin after a few billing cycles.</div>'}</div>`;
+  }
+  $('#b').innerHTML=head+body;
+  $('#b').querySelectorAll('[data-bs]').forEach(x=>x.onclick=()=>{bSub=x.dataset.bs;renderBank()});
+  $('#b').querySelectorAll('[data-vm]').forEach(x=>x.onclick=()=>{
+    const[kind,m]=x.dataset.vm.split('|');
+    const base=kind==='dep'?S.bal:S.bank.sav;
+    vaultMove(kind,m==='in'?$('#vAmt').value:(m==='100'?base:base*(+m/100)));
+  });
+  $('#b').querySelectorAll('[data-open-term]').forEach(x=>x.onclick=()=>openTerm(x.dataset.openTerm,$('#tAmt').value));
+  $('#b').querySelectorAll('[data-break-term]').forEach(x=>x.onclick=()=>breakTerm(x.dataset.breakTerm));
+  $('#b').querySelectorAll('[data-pol]').forEach(x=>x.onclick=()=>{
+    const id=x.dataset.pol,p=POLICIES.find(q=>q.id===id);if(!p)return;
+    if(S.ins[id]){S.ins[id]=0;toast(`${p.e} ${p.n} cancelled`)}else{if(!p.avail())return;S.ins[id]=1;toast(`${p.e} ${p.n} is now active`);sfxDing(700,.12)}
+    save();stats();renderBank();
+  });
+}
+
+// =====================================================================
+// FEATURE 2 — 🛡️ INSURANCE & RANDOM LIFE EVENTS
+// =====================================================================
+const POLICIES=[
+  {id:'health',e:'🏥',n:'Health & Life Cover',cover:.8,d:'Covers 80% of medical emergencies',avail:()=>true,prem:()=>Math.max(40,Math.round(getNetWorthRaw()*.00005))},
+  {id:'prop',e:'🏠',n:'Property Cover',cover:.85,d:'Covers 85% of storm, fire and flood damage',avail:()=>S.prop.length>0,prem:()=>Math.max(25,Math.round(propValue()*.0006))},
+  {id:'biz',e:'🏢',n:'Business Interruption',cover:.8,d:'Covers 80% of operating-business setbacks',avail:()=>bizOps().length>0,prem:()=>Math.max(25,Math.round(bizOps().reduce((a,b)=>a+(b.val||0),0)*.0008))}
+];
+function premTotal(){return POLICIES.reduce((a,p)=>a+((S.ins&&S.ins[p.id]&&p.avail())?p.prem():0),0)}
+const EVENTS=[
+  {w:3,e:'🏥',n:'Medical emergency',ins:'health',txt:'An unexpected hospital stay',cost:()=>clamp(getNetWorthRaw()*.0008,1500,400000)},
+  {w:2,e:'🌪️',n:'Storm damage',ins:'prop',txt:'A severe storm tore through one of your properties',ok:()=>S.prop.length>0,cost:()=>Math.max(2000,pick(S.prop).value*.03)},
+  {w:2,e:'🔧',n:'Business setback',ins:'biz',txt:'Equipment failure shut an operating business for a week',ok:()=>bizOps().length>0,cost:()=>Math.max(2000,pick(bizOps()).val*.08)},
+  {w:2,e:'🧾',n:'Tax audit',ins:null,txt:'The tax office found paperwork to reconcile',cost:()=>clamp(getNetWorthRaw()*.0012,2000,800000)},
+  {w:2,e:'🎁',n:'Surprise windfall',txt:'A forgotten bond matured',gain:()=>clamp(getNetWorthRaw()*.001,2500,500000)},
+  {w:2,e:'💹',n:'Dividend surprise',txt:'Your holdings paid a special dividend',ok:()=>portfolioValue()>0,gain:()=>portfolioValue()*.012},
+  {w:1,e:'🚀',n:'Business boom',txt:'A viral moment drove record sales',ok:()=>bizOps().length>0,gain:()=>pick(bizOps()).income*8}
+];
+function runEvent(){
+  const pool=EVENTS.filter(x=>!x.ok||x.ok());
+  let r=Math.random()*pool.reduce((a,x)=>a+x.w,0),ev=pool[0];
+  for(const x of pool){r-=x.w;if(r<=0){ev=x;break}}
+  const now=Date.now();let delta=0,entry;
+  if(ev.gain){
+    const g=Math.round(ev.gain());
+    S.bal=+(S.bal+g).toFixed(2);delta=g;
+    S.rec.unshift({e:ev.e,n:ev.n,s:'Life Event',q:1,tot:-g,t:now,d:1});
+    entry={e:ev.e,n:ev.n,txt:ev.txt,amt:g,saved:0,t:now};
+    toast(`${ev.e} ${ev.n}: +${fmt(g)}`);
+  }else{
+    const cost=Math.round(ev.cost()),pol=ev.ins?POLICIES.find(p=>p.id===ev.ins):null,
+          cov=pol&&S.ins[pol.id]?Math.round(cost*pol.cover):0,pay=Math.min(S.bal,cost-cov);
+    S.bal=+(S.bal-pay).toFixed(2);S.spent+=pay;delta=-pay;
+    S.rec.unshift({e:ev.e,n:ev.n+(cov?' (insured)':''),s:'Life Event',q:1,tot:pay,t:now,d:1});
+    entry={e:ev.e,n:ev.n,txt:ev.txt,amt:-pay,saved:cov,t:now};
+    toast(cov?`${ev.e} ${ev.n}: −${fmt(pay)} (insurance covered ${fmt(cov)})`:`${ev.e} ${ev.n}: −${fmt(pay)}`);
+    sfxTone(220,.25,'triangle',.08);
+  }
+  S.evLog.unshift(entry);S.evLog=S.evLog.slice(0,25);
+  return delta;
+}
+
+// ---------- Once per 20s billing cycle: vault interest, term maturity, premiums, events, history ----------
+function featureCycle(){
+  try{
+    S.cycles=(S.cycles||0)+1;
+    let d=0;const b=S.bank;
+    if(b.sav>0){
+      const i=+(b.sav*VAULT_RATE).toFixed(2);
+      if(i>0){b.sav=+(b.sav+i).toFixed(2);b.earned=+(b.earned+i).toFixed(2);S.rec.unshift({e:'🏦',n:'Savings Vault interest',s:'Bank',q:1,tot:-i,t:Date.now(),d:1})}
+    }
+    b.terms.forEach(t=>{t.left--});
+    const done=b.terms.filter(t=>t.left<=0);
+    if(done.length){
+      b.terms=b.terms.filter(t=>t.left>0);
+      done.forEach(t=>{
+        const pay=+(t.principal*(1+t.rate)).toFixed(2);
+        S.bal=+(S.bal+pay).toFixed(2);d+=pay;b.earned=+(b.earned+pay-t.principal).toFixed(2);
+        S.rec.unshift({e:t.e,n:`${t.n} matured`,s:'Bank',q:1,tot:-pay,t:Date.now(),d:1});
+        toast(`${t.e} ${t.n} matured: +${fmt(pay)} (interest ${fmt(pay-t.principal)})`);
+      });
+    }
+    POLICIES.forEach(p=>{
+      if(!S.ins[p.id])return;
+      if(!p.avail()){S.ins[p.id]=0;toast(`${p.e} ${p.n} lapsed — nothing left to cover`);return}
+      const pr=p.prem();
+      if(S.bal<pr){S.ins[p.id]=0;toast(`⚠️ ${p.n} lapsed: could not pay premium`);return}
+      S.bal=+(S.bal-pr).toFixed(2);S.spent+=pr;d-=pr;
+      S.rec.unshift({e:p.e,n:`Premium: ${p.n}`,s:'Insurance',q:1,tot:pr,t:Date.now(),d:1});
+    });
+    if(S.cycles>=3&&Math.random()<.16)d+=runEvent();
+    S.nwHist.push({t:Date.now(),v:Math.round(getNetWorthRaw()-S.creditUsed)});
+    if(S.nwHist.length>120)S.nwHist.shift();
+    setBal(d>0?1:d<0?-1:0);
+  }catch(e){console.error('featureCycle',e)}
+}
+
+// =====================================================================
+// FEATURE 3 — 🏆 ACHIEVEMENTS & PLAYER LEVELS
+// =====================================================================
+const LVL_TITLES=['Rookie','Shopper','Spender','Collector','Mogul','Magnate','Tycoon','Titan','Legend','Sovereign'];
+function lvlOf(xp){return 1+Math.floor(Math.sqrt(Math.max(0,xp||0)/60))}
+const lvlStart=L=>60*(L-1)*(L-1);
+const stockKinds=()=>Object.keys(S.stk||{}).length;
+const bestStartup=()=>S.biz.reduce((m,b)=>b.kind=='startup'&&!b.dead&&b.invested?Math.max(m,b.val/b.invested):m,0);
+const ACH=[
+  {id:'first',e:'🛍️',n:'First Splurge',d:'Make your first purchase',tier:1,tg:1,cur:()=>S.buys||0},
+  {id:'shop25',e:'🛒',n:'Shopaholic',d:'Make 25 purchases',tier:2,tg:25,cur:()=>S.buys||0},
+  {id:'shop100',e:'🧾',n:'Retail Legend',d:'Make 100 purchases',tier:3,tg:100,cur:()=>S.buys||0},
+  {id:'sp10k',e:'💸',n:'Big Spender',d:'Spend $10,000 in total',tier:1,tg:1e4,f:'$',cur:()=>S.spent},
+  {id:'sp1m',e:'💰',n:'Millionaire Habits',d:'Spend $1,000,000 in total',tier:2,tg:1e6,f:'$',cur:()=>S.spent},
+  {id:'sp100m',e:'🏦',n:'Nine-Figure Spree',d:'Spend $100,000,000 in total',tier:3,tg:1e8,f:'$',cur:()=>S.spent},
+  {id:'sp10b',e:'👑',n:'Economy Mover',d:'Spend $10,000,000,000 in total',tier:4,tg:1e10,f:'$',cur:()=>S.spent},
+  {id:'land',e:'🏠',n:'Landlord',d:'Own a property',tier:1,tg:1,cur:()=>S.prop.length},
+  {id:'mogul',e:'🏙️',n:'Real Estate Mogul',d:'Own 5 properties at once',tier:3,tg:5,cur:()=>S.prop.length},
+  {id:'found',e:'☕',n:'Founder',d:'Launch an operating business',tier:1,tg:1,cur:()=>bizOps().length},
+  {id:'empire',e:'🏢',n:'Business Empire',d:'Run 4 operating businesses at once',tier:3,tg:4,cur:()=>bizOps().length},
+  {id:'angel',e:'😇',n:'Angel Investor',d:'Back a startup',tier:1,tg:1,cur:()=>S.biz.filter(b=>b.kind=='startup').length},
+  {id:'unicorn',e:'🦄',n:'Unicorn Hunter',d:'Grow a startup stake to 5× your investment',tier:3,tg:5,f:'x',cur:bestStartup},
+  {id:'trader',e:'📈',n:'Trader',d:'Hold 3 different stocks',tier:1,tg:3,cur:stockKinds},
+  {id:'divers',e:'🌐',n:'Diversified',d:'Hold 8 different stocks',tier:3,tg:8,cur:stockKinds},
+  {id:'gavel',e:'🔨',n:'Going Once…',d:'Win an auction',tier:1,tg:1,cur:()=>S.wins||0},
+  {id:'collector',e:'🏺',n:'Auction Collector',d:'Win 10 auctions',tier:3,tg:10,cur:()=>S.wins||0},
+  {id:'score800',e:'💳',n:'Credit Wizard',d:'Reach a credit score of 800',tier:2,tg:800,cur:()=>S.creditScore},
+  {id:'debtfree',e:'🕊️',n:'Debt-Free & Proud',d:'Hold a 760+ score with zero credit used',tier:2,tg:760,cur:()=>S.creditUsed<=0?S.creditScore:0},
+  {id:'saver',e:'🐷',n:'Rainy-Day Saver',d:'Hold $100,000 in the bank',tier:2,tg:1e5,f:'$',cur:bankValue},
+  {id:'vault',e:'🔐',n:'Vault Baron',d:'Hold $5,000,000 in the bank',tier:3,tg:5e6,f:'$',cur:bankValue},
+  {id:'grow',e:'🌱',n:'Growing Fortune',d:'Reach 1.5× your starting wealth',tier:1,tg:1.5,f:'x',cur:()=>getNetWorth()/S.start},
+  {id:'double',e:'🚀',n:'Double Up',d:'Reach 2× your starting wealth',tier:2,tg:2,f:'x',cur:()=>getNetWorth()/S.start},
+  {id:'ten',e:'🌌',n:'Ten-Bagger',d:'Reach 10× your starting wealth',tier:4,tg:10,f:'x',cur:()=>getNetWorth()/S.start},
+  {id:'influ',e:'📣',n:'Influencer',d:'Generate 1,000,000 ad impressions',tier:2,tg:1e6,cur:()=>S.imp||0},
+  {id:'phil',e:'💖',n:'Philanthropist',d:'Earn 50 kindness points through charity',tier:2,tg:50,cur:()=>S.k},
+  {id:'insured',e:'🛡️',n:'Fully Covered',d:'Have all 3 insurance policies active',tier:2,tg:3,cur:()=>POLICIES.filter(p=>S.ins[p.id]).length},
+  {id:'surv',e:'🌦️',n:'Life Goes On',d:'Live through 5 life events',tier:2,tg:5,cur:()=>S.evLog.length},
+  {id:'deal',e:'⚡',n:'Deal Hunter',d:'Buy something on flash sale',tier:1,tg:1,cur:()=>S.flashBuys||0},
+  {id:'dream',e:'⭐',n:'Dreamer',d:'Put 5 items on your wishlist',tier:1,tg:5,cur:()=>Object.keys(S.wish||{}).length},
+  {id:'roller',e:'🎰',n:'High Roller',d:'Win 5 executive mini-games',tier:2,tg:5,cur:()=>S.gameWins||0},
+  {id:'lv10',e:'🎖️',n:'Seasoned Spender',d:'Reach player level 10',tier:3,tg:10,cur:()=>lvlOf(S.xp)}
+];
+const achReward=a=>Math.max(100,Math.round(S.start*[.0005,.0015,.004,.01][a.tier-1]/100)*100);
+const achFmt=(a,v)=>a.f==='$'?fmt(v):a.f==='x'?(Math.round(v*100)/100)+'×':Math.floor(v).toLocaleString();
+let achLast=0;
+function checkAch(force){
+  const n=Date.now();if(!force&&n-achLast<1500)return;achLast=n;
+  let fresh=0;
+  ACH.forEach(a=>{
+    if(S.achievements[a.id])return;
+    let v=0;try{v=a.cur()}catch(e){}
+    if(v>=a.tg){S.achievements[a.id]={t:n,claimed:0};fresh++;toast(`🏆 Achievement unlocked: ${a.n}`)}
+  });
+  if(fresh){sfxDing(990,.15);save();if(tab==='g')renderExtra()}
+}
+function claimAch(id){
+  const a=ACH.find(x=>x.id===id),st=S.achievements[id];
+  if(!a||!st||st.claimed)return 0;
+  const r=achReward(a),L0=lvlOf(S.xp);
+  st.claimed=1;S.bal=+(S.bal+r).toFixed(2);S.xp+=a.tier*50;
+  S.rec.unshift({e:a.e,n:'Achievement reward: '+a.n,s:'Achievements',q:1,tot:-r,t:Date.now(),d:1});
+  if(lvlOf(S.xp)>L0)toast(`⭐ Level up! You are now Level ${lvlOf(S.xp)} — ${LVL_TITLES[Math.min(LVL_TITLES.length-1,lvlOf(S.xp)-1)]}`);
+  return r;
+}
+function renderAch(){
+  const L=lvlOf(S.xp),a0=lvlStart(L),a1=lvlStart(L+1),title=LVL_TITLES[Math.min(LVL_TITLES.length-1,L-1)];
+  const got=ACH.filter(a=>S.achievements[a.id]),pend=got.filter(a=>!S.achievements[a.id].claimed);
+  const pendTot=pend.reduce((s,a)=>s+achReward(a),0);
+  const rows=ACH.map(a=>{
+    const st=S.achievements[a.id];let v=0;try{v=a.cur()}catch(e){}
+    const p=st?100:pct100(v/a.tg*100),state=st?(st.claimed?2:0):1;
+    return{a,st,v,p,state};
+  }).sort((x,y)=>x.state-y.state||y.p-x.p);
+  const cards=rows.map(({a,st,v,p})=>`<div class="xc xach ${st?(st.claimed?'done':''):'lock'}">
+    <div class="xh"><span class="xe">${a.e}</span><div><b>${a.n}</b><small style="display:block;color:var(--mut);font-size:12px">${a.d}</small></div></div>
+    <div class="xbar"><i style="width:${p}%"></i></div>
+    <div class="xrow"><small style="color:var(--mut)">${st?'Completed':achFmt(a,Math.min(v,a.tg))+' / '+achFmt(a,a.tg)}</small><span class="sp"></span>
+      ${st?(st.claimed?'<span class="xtag ok">Claimed ✓</span>':`<button class="buy" data-claim="${a.id}">Claim ${fmt(achReward(a))} +${a.tier*50} XP</button>`):`<span class="xtag">Reward ${fmt(achReward(a))}</span>`}</div></div>`).join('');
+  $('#g').innerHTML=`
+    <div class="xc"><div class="xrow"><div class="sp"><small style="color:var(--mut);font-weight:700;letter-spacing:.04em">PLAYER LEVEL</small>
+      <div class="xbig">⭐ Level ${L} · ${title}</div></div>
+      <div style="text-align:right"><b>${got.length}/${ACH.length}</b><small style="display:block;color:var(--mut)">achievements</small></div></div>
+      <div class="xbar big"><i style="width:${pct100((S.xp-a0)/(a1-a0)*100)}%"></i></div>
+      <small style="color:var(--mut)">${Math.round(S.xp).toLocaleString()} XP · ${Math.max(0,Math.ceil(a1-S.xp)).toLocaleString()} XP to Level ${L+1} · earn XP by shopping and claiming achievements</small></div>
+    ${pend.length?`<div class="xc xrow" style="border-color:var(--warn)"><div class="sp"><b>🎁 ${pend.length} reward${pend.length>1?'s':''} ready</b><small style="display:block;color:var(--mut)">${fmt(pendTot)} waiting to be claimed</small></div><button class="buy" id="claimAll">Claim all</button></div>`:''}
+    <div class="sec-h">Achievements</div><div class="xgrid">${cards}</div>`;
+  $('#g').querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>{
+    const r=claimAch(b.dataset.claim);if(r){setBal(1);flt('+'+fmt(r),1);sfxDing(880,.15);confetti(40,2.2);checkAch(true)}
+  });
+  if($('#claimAll'))$('#claimAll').onclick=()=>{
+    let tot=0;ACH.forEach(a=>{tot+=claimAch(a.id)});
+    if(tot){setBal(1);flt('+'+fmt(tot),1);sfxFanfare(0);confetti(70,2.6);toast(`🎁 Claimed ${fmt(tot)} in rewards`);checkAch(true)}
+  };
+}
+
+// =====================================================================
+// FEATURE 4 — 📊 INSIGHTS DASHBOARD + BACKUP / RESTORE + THEME
+// =====================================================================
+function itemsValue(){let v=0;for(const k in S.inv){const[c,it]=ITM(k);if(isAsset(c,it))v+=it.p*S.inv[k]*.7}return v}
+function cashParts(){
+  const P=[];let subs=0,inc=0,upk=0;
+  for(const k in S.subs){const[,it]=ITM(k);if(it)subs+=it.p}
+  for(const k in S.inv){const[,it]=ITM(k);if(it&&it.cf){const a=it.cf*S.inv[k];if(a>0)inc+=a;else upk-=a}}
+  let rent=0,tax=0;S.prop.forEach(p=>{rent+=p.rent;tax+=p.tax});
+  let bi=0,bu=0;S.biz.forEach(b=>{if(!b.dead&&b.kind!='startup'){bi+=b.income*(1+(b.staff||0)*.15+(b.rd||0)*.25);bu+=b.upkeep+(b.staff||0)*b.staffPay}});
+  const vi=S.bank.sav*VAULT_RATE,li=S.creditUsed>0?S.creditUsed*S.apr:0,pr=premTotal();
+  [['🔁 Subscriptions',-subs],['📦 Asset income',inc],['🔧 Asset upkeep',-upk],['🏠 Rent',rent],['🧾 Property tax',-tax],['🏢 Business revenue',bi],['👔 Business costs',-bu],['🏦 Vault interest',vi],['💳 Credit interest',-li],['🛡️ Insurance premiums',-pr]]
+    .forEach(([n,v])=>{if(Math.abs(v)>=.005)P.push({n,v})});
+  return P;
+}
+function nwChart(){
+  const pts=S.nwHist.map(p=>p.v);pts.push(Math.round(getNetWorthRaw()-S.creditUsed));
+  if(pts.length<3)return '<div class="empty" style="border:0">The chart fills in as billing cycles pass (every 20 seconds).</div>';
+  const w=600,h=170,mn=Math.min(...pts),mx=Math.max(...pts),sp=(mx-mn)||1;
+  const xy=pts.map((v,i)=>(i/(pts.length-1)*w).toFixed(1)+','+(h-10-((v-mn)/sp)*(h-24)).toFixed(1)).join(' ');
+  const col=pts[pts.length-1]>=pts[0]?'#0fa968':'#e5383b';
+  return `<svg class="xchart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="Net worth over time">
+    <polygon points="0,${h} ${xy} ${w},${h}" style="fill:${col};opacity:.14"/>
+    <polyline points="${xy}" fill="none" style="stroke:${col}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
+    <div class="xaxis"><span>Low ${fmt(mn)}</span><span>${pts.length-1} cycles</span><span>High ${fmt(mx)}</span></div>`;
+}
+let bkMsg='';
+function renderInsights(){
+  const nw=getNetWorth(),start=S.start||1,change=nw-start;
+  const parts=[{n:'Cash',v:S.bal,c:'#0fa968'},{n:'Bank',v:bankValue(),c:'#06b6d4'},{n:'Stocks',v:portfolioValue(),c:'#5b3df5'},{n:'Property',v:propValue(),c:'#f59e0b'},{n:'Businesses',v:bizValue(),c:'#ec4899'},{n:'Items (70%)',v:itemsValue(),c:'#8b5cf6'}].filter(x=>x.v>.5);
+  const gross=parts.reduce((a,x)=>a+x.v,0)||1;
+  const cs=Object.entries(S.catSpend||{}).sort((a,b)=>b[1]-a[1]),sumC=cs.reduce((a,x)=>a+x[1],0),other=Math.max(0,S.spent-sumC);
+  if(other>1)cs.push(['Ventures, bills & other',other]);
+  const top=cs.sort((a,b)=>b[1]-a[1]).slice(0,9),mx=top.length?top[0][1]:1;
+  const cp=cashParts(),net=getCycleNet();
+  const life=[['⭐ Level',lvlOf(S.xp)],['🛍️ Purchases',(S.buys||0).toLocaleString()],['💸 Total spent',fmt(S.spent)],['🔨 Auctions won',S.wins||0],['📣 Ad impressions',(S.imp||0).toLocaleString()],['⚡ Flash deals used',S.flashBuys||0],['🎰 Games won',S.gameWins||0],['🌦️ Life events',S.evLog.length],['🏆 Achievements',Object.keys(S.achievements).length+'/'+ACH.length],['⏳ Cycles played',S.cycles||0]];
+  $('#i').innerHTML=`
+    <div class="xstats">
+      <div><small>Net worth</small><b>${fmt(nw)}</b></div>
+      <div><small>Since starting</small><b class="${change>=0?'good':'bad'}">${change>=0?'+':'−'}${fmt(Math.abs(change))}</b></div>
+      <div><small>Cashflow / 20s</small><b class="${net>=0?'good':'bad'}">${net>=0?'+':'−'}${fmt(Math.abs(net))}</b></div>
+      <div><small>Debt</small><b class="${S.creditUsed>0?'bad':''}">${fmt(S.creditUsed)}</b></div></div>
+    <div class="xc"><h4>📈 Net Worth Over Time</h4>${nwChart()}</div>
+    <div class="xc"><h4>🧩 Where Your Wealth Lives</h4>
+      <div class="xstack">${parts.map(x=>`<i style="width:${x.v/gross*100}%;background:${x.c}" title="${x.n}"></i>`).join('')}</div>
+      <div class="xleg">${parts.map(x=>`<span style="--c:${x.c}">${x.n} ${fmt(x.v)} (${Math.round(x.v/gross*100)}%)</span>`).join('')}</div></div>
+    <div class="xc"><h4>🛒 Spending by Category</h4>${top.length?top.map(([n,v])=>`<div class="xbarrow"><span>${n}</span><div class="xbar"><i style="width:${v/mx*100}%"></i></div><b style="color:var(--ink)">${fmt(v)}</b></div>`).join(''):'<div class="empty" style="border:0">Make a purchase to see where your money goes.</div>'}</div>
+    <div class="xc"><h4>⏱️ Cashflow Each Billing Cycle</h4>${cp.length?cp.map(x=>`<div class="xbarrow" style="grid-template-columns:1fr auto"><span>${x.n}</span><b class="${x.v>=0?'good':'bad'}">${x.v>=0?'+':'−'}${fmt(Math.abs(x.v))}</b></div>`).join(''):'<div class="empty" style="border:0">No recurring income or costs yet.</div>'}</div>
+    <div class="xc"><h4>📋 Lifetime Stats</h4><div class="xstats" style="margin:0">${life.map(([n,v])=>`<div><small>${n}</small><b>${v}</b></div>`).join('')}</div></div>
+    <div class="xc"><h4>🎨 Appearance</h4><div class="qbtns" style="margin:0">${['auto','light','dark'].map(m=>`<button data-theme="${m}" class="${themeMode==m?'buy':''}">${{auto:'🖥️ Auto',light:'☀️ Light',dark:'🌙 Dark'}[m]}</button>`).join('')}</div></div>
+    <div class="xc"><h4>💾 Backup &amp; Restore</h4><p>Copy your save to keep a backup or move it to another device, then paste it here and press Load to restore it.</p>
+      <textarea class="xta" id="bkTxt" spellcheck="false" placeholder="Paste a SpendSim save here…"></textarea>
+      <div class="qbtns"><button class="buy" id="bkCopy">📋 Copy my save</button><button id="bkLoad">📥 Load pasted save</button></div>
+      <small id="bkMsg" style="color:var(--mut)">${bkMsg}</small></div>`;
+  $('#i').querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{applyTheme(b.dataset.theme);renderInsights()});
+  $('#bkCopy').onclick=async()=>{
+    const txt=JSON.stringify(S),ta=$('#bkTxt');
+    try{await navigator.clipboard.writeText(txt);bkMsg='✅ Save copied to clipboard.'}
+    catch(e){ta.value=txt;ta.focus();ta.select();bkMsg='Clipboard blocked — your save is in the box above, copy it from there.'}
+    $('#bkMsg').textContent=bkMsg;
+  };
+  $('#bkLoad').onclick=()=>{
+    try{
+      const d=JSON.parse($('#bkTxt').value);
+      if(!d||typeof d.bal!=='number'||!Number.isFinite(d.bal))throw new Error('bad');
+      S=normalizeState(d);shown=S.bal;delete S.karma;
+      generateAuctionLots();next=Date.now()+20000;bkMsg='✅ Save loaded.';
+      setBal();renderTabs();if(openCo)refreshStore();toast('💾 Save restored');
+    }catch(e){bkMsg='❌ That does not look like a valid SpendSim save.';$('#bkMsg').textContent=bkMsg}
+  };
+}
+
+// =====================================================================
+// FEATURE 5 — ⚡ FLASH SALES & ⭐ WISHLIST (Stores tab)
+// =====================================================================
+let flash=[],flashEnd=0;
+function genFlash(){
+  const pool=[];
+  CO.forEach((c,ci)=>c.it.forEach((it,ii)=>{if(!it.f&&it.p>=20&&it.p<=2e7)pool.push(ci+'.'+ii)}));
+  flash=[];
+  while(flash.length<4&&flash.length<pool.length){
+    const k=pick(pool);if(flash.some(f=>f.k===k))continue;
+    const[ci,ii]=k.split('.').map(Number),pc=pick([10,15,20,25]);
+    flash.push({k,ci,ii,pct:pc,price:+(CO[ci].it[ii].p*(1-pc/100)).toFixed(2)});
+  }
+  flashEnd=Date.now()+90000;
+}
+genFlash();
+function saleOf(k){return Date.now()<flashEnd?flash.find(f=>f.k===k):null}
+function buyKey(k){
+  const[c,it]=ITM(k);if(!it)return;
+  const sale=saleOf(k);
+  checkout(c,sale?{...it,p:sale.price,_flash:1}:it,+k.split('.')[1]);
+}
+function toggleWish(k){
+  if(S.wish[k])delete S.wish[k];else S.wish[k]=1;
+  sfxTick(S.wish[k]?820:520);save();renderStoreExtras();if(openCo)refreshStore();checkAch();
+}
+function renderStoreExtras(){
+  const fe=$('#flash'),we=$('#wishBox');if(!fe||!we)return;
+  const left=Math.max(0,Math.ceil((flashEnd-Date.now())/1000));
+  fe.innerHTML=`<div class="sec-h" style="margin-top:2px">⚡ Flash Sales · new deals in <span class="saleClock">${clk(left)}</span></div><div class="flrow">${flash.map(f=>{
+    const c=CO[f.ci],it=c.it[f.ii];
+    return `<div class="flc"><span class="flp">−${f.pct}%</span><span class="fle">${it.e}</span><b>${it.n}</b><small>${c.n}</small>
+      <span class="fprice"><s>${fmt(it.p)}</s>${fmt(f.price)}</span>
+      <div class="xrow"><button class="buy" data-flash="${f.k}">Buy</button><button data-wish="${f.k}" aria-label="Toggle wishlist">${S.wish[f.k]?'★':'☆'}</button></div></div>`}).join('')}</div>`;
+  const wk=Object.keys(S.wish).filter(k=>ITM(k)[1]);
+  if(!wk.length){we.innerHTML='';}
+  else{
+    const price=k=>{const s=saleOf(k);return s?s.price:ITM(k)[1].p};
+    wk.sort((a,b)=>price(a)-price(b));
+    const tot=wk.reduce((a,k)=>a+price(k),0);
+    we.innerHTML=`<div class="sec-h">⭐ Wishlist (${wk.length}) · Total ${fmt(tot)} · ${tot<=S.bal?'<span class="good">you can afford it all ✓</span>':`need ${fmt(tot-S.bal)} more`}</div><div class="flrow">${wk.map(k=>{
+      const[c,it]=ITM(k),sale=saleOf(k);
+      return `<div class="flc">${sale?`<span class="flp">−${sale.pct}%</span>`:''}<span class="fle">${it.e}</span><b>${it.n}</b><small>${c.n}</small>
+        <span class="fprice">${sale?`<s>${fmt(it.p)}</s>`:''}${fmt(price(k))}</span>
+        <div class="xrow"><button class="buy" data-wbuy="${k}">Buy</button><button data-wish="${k}" aria-label="Remove from wishlist">✕</button></div></div>`}).join('')}</div>`;
+  }
+  document.querySelectorAll('#flash [data-flash],#wishBox [data-wbuy]').forEach(b=>b.onclick=()=>buyKey(b.dataset.flash||b.dataset.wbuy));
+  document.querySelectorAll('#flash [data-wish],#wishBox [data-wish]').forEach(b=>b.onclick=()=>toggleWish(b.dataset.wish));
+}
+setInterval(()=>{
+  if(Date.now()>=flashEnd){genFlash();if(tab==='s')renderStoreExtras();if(openCo)refreshStore()}
+  else document.querySelectorAll('.saleClock').forEach(el=>el.textContent=clk(Math.max(0,Math.ceil((flashEnd-Date.now())/1000))));
+},1000);
+
 // ---------- Tabs, reset, broke ----------
 document.querySelectorAll('.tabs [data-t]').forEach(b=>b.onclick=()=>{
   tab=b.dataset.t;
   document.querySelectorAll('.tabs [data-t]').forEach(x=>x.className=x==b?'on':'');
-  ['s','a','v','m','r'].forEach(i=>$('#'+i).hidden=i!=tab);
+  ['s','a','v','m','r','b','g','i'].forEach(i=>$('#'+i).hidden=i!=tab);
   if(tab=='a')renderAuctions();
   else if(tab=='v')renderVentures();
+  else if(FEAT_TABS.includes(tab))renderExtra();
+  else if(tab=='s'){renderStoreExtras();renderTabs()}
   else renderTabs();
 });
 function openResetModal(){
@@ -2066,7 +2584,7 @@ function celebrateRaw(emoji,label,col='#34d399'){
   confetti(55,2.6);sfxFanfare(0);text(label,{y:VH*.74,size:Math.min(38,VW/12),col,dur:2400});fxKick();
 }
 function earn(amt,emoji,label,sub='Ventures'){
-  S.bal=+(S.bal+amt).toFixed(2);
+  S.bal=+(S.bal+amt).toFixed(2);if(sub==='Executive Games')S.gameWins=(S.gameWins||0)+1;
   S.rec.unshift({e:emoji,n:label,s:sub,q:1,tot:-amt,t:Date.now(),d:1});
   setBal(1);flt('+'+fmt(amt),1);sfxDing(880,.15);
 }
@@ -2307,9 +2825,9 @@ function renderVentures(){
       if(sum>=8){const win=Math.round(bet*2.4);earn(win,'🎲',`Rolled ${d1}+${d2}=${sum} (2.4× Win!)`,'Executive Games');toast(`🎲 Rolled ${sum}! Won ${fmt(win)}!`)}
       else{toast(`🎲 Rolled ${d1}+${d2}=${sum} (Needed 8+). Lost ${fmt(bet)}.`);sfxTone(180,.25,'sawtooth')}
     }else{
-      const won=Math.random()<0.5;
-      if(won){const win=Math.round(bet*1.95);earn(win,'📈',`Options Call Hit! (1.95×)`,'Executive Games');toast(`📈 Market moved your way! Won ${fmt(win)}!`)}
-      else{toast(`📉 Market reversed! Options expired.`);sfxTone(180,.25,'sawtooth')}
+      const up=Math.random()<0.5,won=(gType==='bull')===up;
+      if(won){const win=Math.round(bet*1.95);earn(win,'📈',`Options Call Hit! (1.95×)`,'Executive Games');toast(`📈 Market ticked ${up?'UP':'DOWN'} — your ${gType} call won ${fmt(win)}!`)}
+      else{toast(`📉 Market ticked ${up?'UP':'DOWN'} — your ${gType} call expired.`);sfxTone(180,.25,'sawtooth')}
     }
     renderVentures();
   });
