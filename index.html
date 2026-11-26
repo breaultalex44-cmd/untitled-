@@ -384,6 +384,168 @@ main{max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-ri
 .wl{font-size:20px;line-height:1;padding:6px 4px;color:var(--mut)}
 .wl.on{color:#f5b301}
 @media(max-width:520px){.xbarrow{grid-template-columns:90px 1fr auto}}
+
+/* ===== Branded company pages (Reddit / Discord / Roblox / Epic / Riot) ===== */
+.bp-fx{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:8}
+.bp-drop{position:absolute;top:-10%;font-style:normal;line-height:1;animation:bpFall linear forwards;filter:drop-shadow(0 0 7px var(--g,#fff9));will-change:top,transform}
+@keyframes bpFall{0%{top:-10%;transform:translateX(0) rotate(0);opacity:0}8%{opacity:1}100%{top:var(--end,108%);transform:translateX(var(--sw,0)) rotate(var(--rot,0deg));opacity:1}}
+.bp-rise{position:absolute;bottom:-10%;font-style:normal;line-height:1;animation:bpRise ease-out forwards;filter:drop-shadow(0 0 8px var(--g,#fff9))}
+@keyframes bpRise{0%{bottom:-10%;transform:translateX(0) scale(.6);opacity:0}12%{opacity:1}100%{bottom:112%;transform:translateX(var(--sw,0)) scale(1.15);opacity:0}}
+.bp-banner{position:absolute;left:0;right:0;top:30%;padding:14px 12px;text-align:center;font-weight:900;font-size:clamp(20px,6vw,32px);letter-spacing:.06em;color:var(--bc,#fff);background:var(--bb,#000a);text-shadow:0 2px 0 #0006;animation:bpBan 3.2s cubic-bezier(.2,.9,.2,1) forwards;overflow:hidden;z-index:9;transform:skewX(-10deg)}
+.bp-banner small{display:block;font-size:12px;letter-spacing:.12em;opacity:.9;margin-top:2px}
+.bp-banner::after{content:"";position:absolute;top:0;bottom:0;width:60px;background:linear-gradient(90deg,transparent,#fff8,transparent);animation:bpSheen 1.2s .5s 2}
+@keyframes bpBan{0%{transform:translateX(-120%) skewX(-10deg)}14%{transform:translateX(0) skewX(-10deg)}80%{transform:translateX(0) skewX(-10deg);opacity:1}100%{transform:translateX(120%) skewX(-10deg);opacity:0}}
+@keyframes bpSheen{from{left:-80px}to{left:110%}}
+.bp-flash{position:absolute;inset:0;background:var(--fc,#fff);opacity:0;animation:bpFlash .7s ease-out;z-index:10;pointer-events:none}
+@keyframes bpFlash{0%{opacity:.85}100%{opacity:0}}
+.bp-shake{animation:bpShake .5s}
+@keyframes bpShake{0%,100%{transform:translate(0)}20%{transform:translate(-7px,3px)}40%{transform:translate(6px,-4px)}60%{transform:translate(-5px,-2px)}80%{transform:translate(4px,3px)}}
+.bp-pin{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:99px;background:#ffffff1c;color:#e2e8f0}
+.bp-x{width:30px;height:30px;border-radius:50%;background:#0007;color:#fff;display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.bp-fly{position:absolute;font-size:64px;top:16%;left:-20%;animation:bpFly 3s linear forwards;filter:drop-shadow(0 6px 10px #0008)}
+@keyframes bpFly{to{left:112%}}
+.bp-hex{position:absolute;left:50%;top:42%;width:120px;height:104px;margin:-52px 0 0 -60px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);background:var(--hc,#0ac8b9);opacity:.7;animation:bpHex 1.6s ease-out forwards}
+@keyframes bpHex{from{transform:scale(.2) rotate(0);opacity:.85}to{transform:scale(7) rotate(60deg);opacity:0}}
+.bp-rocket{position:absolute;left:50%;bottom:-14%;font-size:78px;margin-left:-39px;animation:bpRocket 2.4s cubic-bezier(.4,0,.2,1) forwards;filter:drop-shadow(0 0 14px var(--g,#ff73fa));z-index:9}
+@keyframes bpRocket{0%{bottom:-14%;transform:rotate(-8deg) scale(.7)}100%{bottom:108%;transform:rotate(6deg) scale(1.3)}}
+.bp-pop{animation:bpPop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bpPop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* ---------- Reddit · r/trailerparkboys ---------- */
+.rd{width:100%;max-width:520px;height:min(88vh,780px);height:min(88dvh,780px);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:#07110c;color:#d7dadc;border:1px solid #ff450077;box-shadow:0 24px 60px #000a,0 0 0 1px #ff450022;animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+.rd-bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:linear-gradient(#040813 0%,#0e2236 38%,#1b3a46 52%,#1d3a24 52.2%,#0c1a0d 100%)}
+.rd-stars{position:absolute;inset:0 0 50% 0;background-image:radial-gradient(1.6px 1.6px at 12% 20%,#fff,transparent),radial-gradient(1.2px 1.2px at 28% 52%,#fff,transparent),radial-gradient(1.8px 1.8px at 44% 14%,#fff,transparent),radial-gradient(1.2px 1.2px at 61% 38%,#fff,transparent),radial-gradient(1.6px 1.6px at 77% 18%,#fff,transparent),radial-gradient(1.2px 1.2px at 90% 46%,#fff,transparent),radial-gradient(1.4px 1.4px at 5% 62%,#fff,transparent),radial-gradient(1.4px 1.4px at 70% 66%,#fff,transparent);animation:rdTw 3.2s ease-in-out infinite alternate}
+@keyframes rdTw{from{opacity:.45}to{opacity:1}}
+.rd-moon{position:absolute;right:11%;top:7%;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffbe8,#e8dfae 60%,#b9ad78);box-shadow:0 0 40px #fff6c855}
+.rd-gnd{position:absolute;left:0;right:0;bottom:0;height:48%;background:linear-gradient(#22402a,#0a150b)}
+.rd-road{position:absolute;left:0;right:0;bottom:6%;height:11%;background:repeating-linear-gradient(90deg,#d8d28a 0 26px,transparent 26px 60px) center/100% 4px no-repeat,#2a2d31;opacity:.9}
+.rd-tr{position:absolute;bottom:20%;width:132px;height:62px;background:linear-gradient(#dfe5d4,#a3b09a);border-radius:10px 10px 3px 3px;border-bottom:6px solid #3b3f3a;box-shadow:inset 0 -8px 0 #0002;opacity:.78}
+.rd-tr::before{content:"";position:absolute;left:16px;top:14px;width:30px;height:20px;border-radius:3px;background:#ffe28a;box-shadow:0 0 14px #ffe28a99;animation:rdFlick 2.6s infinite}
+.rd-tr::after{content:"";position:absolute;right:16px;bottom:0;width:20px;height:38px;background:#6b5a44;border-radius:3px 3px 0 0}
+.rd-tr.a{left:-2%}.rd-tr.b{left:34%;width:150px;background:linear-gradient(#e2d6b0,#b3a57c);bottom:23%}.rd-tr.c{right:-3%;background:linear-gradient(#b6cad6,#7f98a7)}
+.rd-tr.b::before{animation-delay:.9s}.rd-tr.c::before{animation-delay:1.7s;background:#9ae6ff;box-shadow:0 0 14px #9ae6ff88}
+@keyframes rdFlick{0%,100%{opacity:1}46%{opacity:.5}50%{opacity:1}54%{opacity:.35}}
+.rd-fence{position:absolute;left:0;right:0;bottom:14%;height:70px;background:repeating-linear-gradient(45deg,transparent 0 9px,#a9b9b088 9px 10px),repeating-linear-gradient(-45deg,transparent 0 9px,#a9b9b088 9px 10px);border-top:3px solid #8a988fcc;opacity:.55}
+.rd-car{position:absolute;bottom:8.5%;font-size:34px;animation:rdCar 11s linear infinite;filter:drop-shadow(0 4px 3px #0008)}
+@keyframes rdCar{0%{left:-14%;transform:translateY(0)}25%{transform:translateY(-2px)}50%{transform:translateY(0)}75%{transform:translateY(-2px)}100%{left:112%;transform:translateY(0)}}
+.rd-smoke{position:absolute;bottom:26%;left:26%;width:14px;height:14px;border-radius:50%;background:#cfd8dc55;filter:blur(3px);animation:rdSmoke 4s ease-out infinite}
+.rd-smoke:nth-of-type(2){animation-delay:1.3s;left:27%}.rd-smoke:nth-of-type(3){animation-delay:2.6s;left:25.5%}
+@keyframes rdSmoke{0%{transform:translate(0,0) scale(.5);opacity:.8}100%{transform:translate(24px,-120px) scale(3);opacity:0}}
+.rd-fly{position:absolute;width:4px;height:4px;border-radius:50%;background:#fdf08a;box-shadow:0 0 8px #fdf08a;animation:rdFly 6s ease-in-out infinite alternate}
+@keyframes rdFly{0%{transform:translate(0,0);opacity:.2}50%{opacity:1}100%{transform:translate(46px,-38px);opacity:.3}}
+.rd-top{position:relative;z-index:3;display:flex;align-items:center;gap:8px;padding:10px 11px;background:linear-gradient(#000d,#0009);border-bottom:2px solid #ff4500}
+.rd-snoo{width:34px;height:34px;border-radius:50%;background:#ff4500;display:grid;place-items:center;font-size:20px;flex-shrink:0;box-shadow:0 0 14px #ff450088}
+.rd-top b{font-size:14px;color:#fff;display:block;line-height:1.1}.rd-top small{font-size:10.5px;color:#9aa5a0}
+.rd-top .sp{flex:1;min-width:0}
+.rd-join{background:#ff4500;color:#fff;font-weight:800;font-size:11.5px;padding:5px 13px;border-radius:99px}
+.rd-join.on{background:#ffffff26}
+.rd-scroll{position:relative;z-index:2;flex:1;overflow-y:auto;padding:0 10px 10px;scrollbar-width:thin}
+.rd-hero{height:128px;position:relative;display:flex;align-items:flex-end;padding:0 4px 10px}
+.rd-sign{position:absolute;left:50%;top:0;transform:translateX(-50%);transform-origin:top center;background:linear-gradient(#8a5a2b,#5e3b1b);border:3px solid #3a2410;border-radius:8px;padding:5px 12px;font-weight:900;font-size:12px;letter-spacing:.12em;color:#ffe9b0;text-align:center;text-shadow:0 2px 0 #0007;box-shadow:0 6px 14px #0008;animation:rdSwing 4s ease-in-out infinite;white-space:nowrap}
+.rd-sign::before,.rd-sign::after{content:"";position:absolute;top:-26px;width:2px;height:26px;background:#bbb}.rd-sign::before{left:16%}.rd-sign::after{right:16%}
+@keyframes rdSwing{0%,100%{transform:translateX(-50%) rotate(-2deg)}50%{transform:translateX(-50%) rotate(2deg)}}
+.rd-hero h2{margin:0;font-size:22px;color:#fff;text-shadow:0 2px 6px #000}.rd-hero p{margin:0;font-size:11.5px;color:#cbd5d0;text-shadow:0 1px 3px #000}
+.rd-hero .bigav{width:54px;height:54px;border-radius:50%;background:#ff4500;border:3px solid #fff;display:grid;place-items:center;font-size:28px;margin-right:10px;flex-shrink:0;box-shadow:0 4px 14px #0009}
+.rd-post{display:flex;gap:9px;background:#0d1a13ee;border:1px solid #2a3b30;border-radius:12px;padding:10px;backdrop-filter:blur(4px);position:relative;overflow:hidden}
+.rd-post.glow-gold{animation:rdGlowG 2.2s ease-out}
+.rd-post.glow-dia{animation:rdGlowD 2.2s ease-out}
+.rd-post.promo{border-color:#ff4500;box-shadow:0 0 22px #ff450066}
+@keyframes rdGlowG{0%,100%{box-shadow:0 0 0 #ffc10000}30%{box-shadow:0 0 38px #ffc107cc,inset 0 0 22px #ffc10044}}
+@keyframes rdGlowD{0%,100%{box-shadow:0 0 0 #7dd3fc00}30%{box-shadow:0 0 38px #7dd3fcdd,inset 0 0 22px #7dd3fc44}}
+.rd-vote{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:12px;width:30px;flex-shrink:0}
+.rd-vote button{font-size:17px;color:#818384;line-height:1;padding:2px 4px;border-radius:4px}
+.rd-vote button.up.on{color:#ff4500}.rd-vote button.dn.on{color:#7193ff}
+.rd-vote b.up{color:#ff4500}.rd-vote b.dn{color:#7193ff}
+.rd-pc{flex:1;min-width:0}
+.rd-meta{font-size:11px;color:#9aa5a0;margin-bottom:4px}.rd-meta b{color:#d7dadc}
+.rd-flair{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:#ff4500;color:#fff;margin-bottom:5px}
+.rd-pc h3{margin:0 0 5px;font-size:16px;color:#fff;line-height:1.25}
+.rd-pc p{margin:0 0 7px;font-size:13px;color:#c5cdc9;overflow-wrap:anywhere}
+.rd-awards{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;min-height:4px}
+.rd-awards span{background:#ffffff14;border-radius:99px;padding:2px 8px;font-size:12px;font-weight:700;animation:bpPop .5s cubic-bezier(.2,1.6,.4,1)}
+.rd-acts{display:flex;gap:14px;font-size:11.5px;color:#9aa5a0;font-weight:700}
+.rd-rank{display:none;margin-top:6px;font-size:11.5px;font-weight:800;color:#ffb199;background:#ff450022;border-radius:8px;padding:5px 8px}
+.rd-rank.on{display:block;animation:bpPop .5s}
+.rd-ribbon{position:absolute;right:-30px;top:10px;background:#ff4500;color:#fff;font-size:9.5px;font-weight:900;letter-spacing:.1em;padding:2px 34px;transform:rotate(35deg);display:none}
+.rd-post.promo .rd-ribbon{display:block}
+.rd-sort{font-size:11.5px;color:#9aa5a0;margin:10px 4px 6px;font-weight:700}.rd-sort b{color:#fff}
+.rd-cm{display:flex;gap:8px;background:#0d1a13d9;border-left:3px solid #ff450088;border-radius:0 10px 10px 0;padding:8px 10px;margin-bottom:6px;font-size:13px;animation:bpPop .4s cubic-bezier(.2,1.4,.4,1)}
+.rd-cm.me{border-left-color:#ffc107;background:#241d08e6}
+.rd-cm .av{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:14px;background:#26352c;flex-shrink:0}
+.rd-cm b{color:#fff;font-size:12px}.rd-cm small{color:#80908a;font-size:10.5px;margin-left:4px}
+.rd-cm div div{color:#d7dadc;overflow-wrap:anywhere;margin-top:1px}
+.rd-cm .v{font-size:11px;color:#9aa5a0;margin-top:2px;font-weight:700}
+.rd-bot{position:relative;z-index:3;padding:8px 10px 10px;background:linear-gradient(#0009,#000d);border-top:1px solid #2a3b30;display:flex;flex-direction:column;gap:7px}
+.rd-quick{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}.rd-quick::-webkit-scrollbar{display:none}
+.rd-quick button{white-space:nowrap;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:99px;background:#ffffff16;color:#fff;border:1px solid #ffffff22;flex-shrink:0}
+.rd-quick button:active{transform:scale(.94)}
+.rd-in{display:flex;gap:6px}
+.rd-in input{flex:1;background:#0b1511;border:1px solid #2a3b30;color:#fff;border-radius:99px;padding:9px 14px;font-size:13px}
+.rd-in button{background:#ff4500;color:#fff;font-weight:800;padding:0 16px;border-radius:99px}
+
+/* ---------- Discord ---------- */
+.dc{width:100%;max-width:560px;height:min(88vh,760px);height:min(88dvh,760px);border-radius:18px;overflow:hidden;position:relative;display:flex;background:#313338;color:#dbdee1;border:1px solid #5865f288;box-shadow:0 24px 60px #000a;animation:pop .32s cubic-bezier(.2,1.3,.4,1);font-family:"gg sans","Segoe UI",system-ui,sans-serif}
+.dc-rail{width:58px;background:#1e1f22;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0;flex-shrink:0}
+.dc-rail i{font-style:normal;width:40px;height:40px;border-radius:50%;background:#313338;display:grid;place-items:center;font-size:20px;transition:border-radius .15s,background .15s;position:relative}
+.dc-rail i.on{border-radius:14px;background:#5865f2}.dc-rail i.on::before{content:"";position:absolute;left:-9px;width:4px;height:30px;border-radius:0 4px 4px 0;background:#fff}
+.dc-main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+.dc-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #1e1f22;background:#313338;box-shadow:0 1px 0 #0003}
+.dc-top b{font-size:14px;color:#fff;white-space:nowrap}.dc-top .sp{flex:1}
+.dc-lvl{font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;background:linear-gradient(90deg,#ff73fa,#5865f2);color:#fff;display:inline-block}
+.dc-lvl.pop{animation:bpPop .6s cubic-bezier(.2,1.7,.4,1)}
+.dc-boost{padding:9px 12px;background:#2b2d31;border-bottom:1px solid #1e1f22}
+.dc-bl{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#b5bac1;margin-bottom:5px}
+.dc-bar{height:9px;border-radius:99px;background:#1e1f22;overflow:hidden;position:relative}
+.dc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5865f2,#ff73fa,#5865f2);background-size:200% 100%;animation:dcShim 1.6s linear infinite;transition:width 2.2s cubic-bezier(.2,.8,.2,1);border-radius:99px}
+@keyframes dcShim{to{background-position:-200% 0}}
+.dc-ticks{display:flex;justify-content:space-between;font-size:10px;color:#80848e;margin-top:3px;font-weight:700}
+.dc-voice{padding:8px 12px;background:#2b2d31;border-bottom:1px solid #1e1f22;display:flex;align-items:center;gap:8px;font-size:11px;color:#b5bac1;font-weight:700}
+.dc-voice .av{width:30px;height:30px;border-radius:50%;background:#404249;display:grid;place-items:center;font-size:16px;box-shadow:0 0 0 2px transparent}
+.dc-voice .av.sp{animation:dcSpeak 1s ease-in-out infinite alternate}
+@keyframes dcSpeak{from{box-shadow:0 0 0 2px #23a55a}to{box-shadow:0 0 0 3px #23a55a,0 0 12px #23a55a}}
+.dc-chat{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin;position:relative}
+.dc-m{display:flex;gap:10px;animation:dcIn .25s ease-out}
+@keyframes dcIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dc-m .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;flex-shrink:0;background:#404249}
+.dc-m b{font-size:13px}.dc-m small{color:#80848e;font-size:10.5px;margin-left:5px}
+.dc-m .t{font-size:13px;color:#dbdee1;overflow-wrap:anywhere}
+.dc-tag{font-size:9px;font-weight:900;background:#5865f2;color:#fff;border-radius:4px;padding:1px 4px;margin-left:5px;vertical-align:1px}
+.dc-emb{margin-top:4px;border-left:4px solid #ff73fa;background:#2b2d31;border-radius:4px;padding:8px 10px;font-size:12.5px;max-width:340px}
+.dc-emb b{display:block;color:#fff;font-size:13px}
+.dc-emb .nitro{background:linear-gradient(90deg,#ff73fa,#7b8cff,#ff73fa);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:dcShim 2s linear infinite;font-weight:900}
+.dc-typ{height:16px;padding:0 14px;font-size:11px;color:#b5bac1;font-weight:700}
+.dc-quick{display:flex;gap:5px;overflow-x:auto;padding:6px 12px;scrollbar-width:none}.dc-quick::-webkit-scrollbar{display:none}
+.dc-quick button{white-space:nowrap;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:6px;background:#404249;color:#fff;flex-shrink:0}
+.dc-quick button:active{transform:scale(.94)}
+.dc-in{display:flex;gap:6px;padding:0 12px 12px}
+.dc-in input{flex:1;background:#383a40;border:0;color:#fff;border-radius:8px;padding:11px 13px;font-size:13.5px}
+.dc-in button{background:#5865f2;color:#fff;font-weight:800;padding:0 15px;border-radius:8px}
+.dc-quest{position:relative;margin-top:4px;max-width:340px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#5865f2,#eb459e);padding:12px;color:#fff;animation:bpPop .5s}
+.dc-quest b{display:block;font-size:14px}.dc-quest small{opacity:.9}
+.dc-quest .qb{height:8px;border-radius:99px;background:#0004;margin-top:8px;overflow:hidden}.dc-quest .qb i{display:block;height:100%;width:0;background:#fff;transition:width 2.4s ease-out}
+@media(max-width:480px){.dc-rail{width:46px}.dc-rail i{width:34px;height:34px;font-size:17px}}
+
+/* ---------- Generic company page (Roblox / Epic / Riot) ---------- */
+.cp{width:100%;max-width:500px;height:min(88vh,760px);height:min(88dvh,760px);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;color:#fff;background:var(--cbg);border:1px solid var(--cc);box-shadow:0 24px 60px #000a,0 0 30px color-mix(in srgb,var(--cc) 35%,transparent);animation:pop .32s cubic-bezier(.2,1.3,.4,1)}
+.cp-pat{position:absolute;inset:0;z-index:0;opacity:.18;background:var(--cpat)}
+.cp-top{position:relative;z-index:3;display:flex;align-items:center;gap:9px;padding:11px;background:#000a;border-bottom:3px solid var(--cc)}
+.cp-logo{width:36px;height:36px;border-radius:10px;background:var(--cc);display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.cp-top b{display:block;font-size:14px;line-height:1.1}.cp-top small{font-size:10.5px;color:#cbd5e1}.cp-top .sp{flex:1;min-width:0}
+.cp-body{position:relative;z-index:2;flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.cp-card{background:#000a;border:1px solid #ffffff22;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(5px);animation:bpPop .5s cubic-bezier(.2,1.5,.4,1)}
+.cp-card .gi{font-size:46px;width:68px;height:68px;border-radius:16px;background:color-mix(in srgb,var(--cc) 35%,#000);display:grid;place-items:center;flex-shrink:0;animation:cpBob 1.6s ease-in-out infinite}
+@keyframes cpBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+.cp-card b{font-size:15px;display:block}.cp-card small{color:#cbd5e1;font-size:12px}
+.cp-card .tot{margin-left:auto;font-weight:900;font-size:17px;color:var(--cc);filter:brightness(1.4)}
+.cp-feed{display:flex;flex-direction:column;gap:6px}
+.cp-msg{background:#000a;border-radius:12px;padding:7px 10px;font-size:13px;animation:bpPop .35s cubic-bezier(.2,1.4,.4,1);overflow-wrap:anywhere}
+.cp-msg b{color:var(--cc);filter:brightness(1.5)}
+.cp-bot{position:relative;z-index:3;padding:8px 10px 10px;background:#000c;display:flex;flex-direction:column;gap:7px}
+.cp-quick{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}.cp-quick::-webkit-scrollbar{display:none}
+.cp-quick button{white-space:nowrap;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:99px;background:color-mix(in srgb,var(--cc) 40%,#000);color:#fff;border:1px solid var(--cc);flex-shrink:0}
+.cp-in{display:flex;gap:6px}.cp-in input{flex:1;background:#ffffff14;border:1px solid #ffffff2a;color:#fff;border-radius:99px;padding:9px 14px;font-size:13px}
+.cp-in button{background:var(--cc);color:#fff;font-weight:800;padding:0 16px;border-radius:99px}
+
 </style>
 </head>
 <body>
@@ -986,7 +1148,8 @@ function commit(c,it,i,q,tot,msg,useCredit=false){
   S.rec.unshift({e:it.e,n:it.n+(useCredit?' [LOC]':''),s:c.n,q,tot,t:Date.now(),d:/[gsamh]/.test(it.f)});
   S.rec=S.rec.slice(0,150);
   setBal(-1);flt((useCredit?'💳 −':'−')+fmt(tot));sfxDing(260,.2,'triangle');
-  if(it.f=='s'||it.f=='h'||(it.f=='g'&&c.cat!=='Gaming'))openLiveStudio(c,it,q,tot,msg);
+  if(BRANDED[c.n]&&/[gsha]/.test(it.f||''))BRANDED[c.n](c,it,q,tot,msg);
+  else if(it.f=='s'||it.f=='h'||(it.f=='g'&&c.cat!=='Gaming'))openLiveStudio(c,it,q,tot,msg);
   else if(it.f=='a')openViralAdSim(c,it,tot);
   else celebrate(c,it,q,tot);
   refreshStore();
@@ -2382,7 +2545,7 @@ function stars(n){
 }
 
 // =====================================================================
-// INTERACTIVE MULTI-PLATFORM LIVE STUDIO (TikTok / YouTube / Twitch / Kick)
+// LIVE STUDIO — each streaming platform is locked to itself (TikTok / YouTube / Twitch / Kick), no switching
 // =====================================================================
 let liveTimer=null,liveCloseTimer=null,stayInLive=false;
 function openLiveStudio(c,it,q,tot,msg,forcedPlat=null){
@@ -2423,11 +2586,7 @@ function openLiveStudio(c,it,q,tot,msg,forcedPlat=null){
       </div>
       <div class="tt-top">
         <div class="tt-plat-tabs">
-          <button data-plat="tt" class="${plat==='tt'?'on':''}">🎵 TikTok</button>
-          <button data-plat="yt" class="${plat==='yt'?'on':''}">▶️ YouTube</button>
-          <button data-plat="tw" class="${plat==='tw'?'on':''}">💜 Twitch</button>
-          <button data-plat="kk" class="${plat==='kk'?'on':''}">🟢 Kick</button>
-          <button id="ttStayBtn" style="margin-left:auto">${stayInLive?'📌 Pinned Open':'⏱️ Auto-Close'}</button>
+          <button id="ttStayBtn" style="margin-left:0">${stayInLive?'📌 Pinned Open':'⏱️ Auto-Close'}</button>
         </div>
         <div class="tt-bar">
           <div class="tt-creator">
@@ -2489,9 +2648,6 @@ function openLiveStudio(c,it,q,tot,msg,forcedPlat=null){
     if(stayInLive)clearTimeout(liveCloseTimer);
     sfxTick(760);
   };
-  $('#lay').querySelectorAll('[data-plat]').forEach(btn=>btn.onclick=()=>{
-    openLiveStudio(c,it,q,tot,msg,btn.dataset.plat);
-  });
   $('#ttFollow').onclick=function(){this.textContent=isYT?'Subscribed ✓':'Following ✓';this.style.background='#ffffff33';sfxDing(880,.08)};
 
   const spawnHeart=(emoji='❤️')=>{
@@ -2566,6 +2722,355 @@ function openLiveStudio(c,it,q,tot,msg,forcedPlat=null){
     if(!stayInLive&&$('#ttChat')){clearInterval(liveTimer);cls('lay')}
   },autoDur);
 }
+
+// =====================================================================
+// BRANDED COMPANY PAGES — every non-streaming company with live-style
+// donations gets its OWN page, chat and animation (no platform switching).
+// Streaming giants (TikTok / YouTube / Twitch / Kick) keep the live studio.
+// =====================================================================
+const BRANDED={'Reddit':openRedditPage,'Discord':openDiscordPage,'Roblox':openCompanyPage,'Epic Games':openCompanyPage,'Riot Games':openCompanyPage};
+const bpAlive=()=>!!$('#bpRoot');
+const bpEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const bpK=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'k':String(Math.round(n));
+function bpDrop(chars,n,o={}){
+  const h=$('#bpFx');if(!h)return;
+  const dur=o.dur||[2.2,4],size=o.size||[18,40];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('i');d.className=(o.rise?'bp-rise':'bp-drop');d.textContent=pick(chars);
+    const du=rnd(dur[0],dur[1]);
+    d.style.cssText=`left:${rnd(0,96)}%;font-size:${rnd(size[0],size[1])}px;animation-duration:${du}s;animation-delay:${rnd(0,o.spread??1.4)}s;--sw:${rnd(-50,50)}px;--rot:${o.spin?rnd(-720,720):rnd(-35,35)}deg;--g:${o.glow||'#fff9'};${o.end?`--end:${o.end};`:''}`;
+    h.append(d);setTimeout(()=>d.remove(),(du+(o.spread??1.4)+.5)*1000);
+  }
+}
+function bpBanner(text,sub,bg,col){
+  const h=$('#bpFx');if(!h)return;
+  const b=document.createElement('div');b.className='bp-banner';b.style.cssText=`--bb:${bg};--bc:${col}`;
+  b.innerHTML=`${bpEsc(text)}<small>${bpEsc(sub||'')}</small>`;h.append(b);setTimeout(()=>b.remove(),3300);
+}
+function bpFlash(col){const h=$('#bpFx');if(!h)return;const f=document.createElement('div');f.className='bp-flash';f.style.setProperty('--fc',col||'#fff');h.append(f);setTimeout(()=>f.remove(),800)}
+function bpShake(){const r=$('#bpRoot');if(!r)return;r.classList.remove('bp-shake');void r.offsetWidth;r.classList.add('bp-shake');setTimeout(()=>r&&r.classList.remove('bp-shake'),520)}
+function bpCount(sel,to,dur,fm){
+  const t0=performance.now();(function u(t){const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);const el=$(sel);if(!el)return;el.textContent=fm(Math.round(to*e));if(k<1)requestAnimationFrame(u)})(t0);
+}
+function bpChime(n=6,base=700){for(let i=0;i<n;i++)setTimeout(()=>sfxDing(base+i*90+Math.random()*60,.05),i*110)}
+function bpSpend(price,name,emoji,src){
+  if(S.bal<price){toast(`Need ${fmt(price)} cash to send ${name}!`);return false}
+  S.bal=+(S.bal-price).toFixed(2);S.spent+=price;S.c+=Math.log10(price+1)*3;
+  S.rec.unshift({e:emoji,n:`Live Drop: ${name}`,s:src,q:1,tot:price,t:Date.now(),d:1});
+  setBal(-1);flt('−'+fmt(price));sfxDing(260,.2,'triangle');save();return true;
+}
+function bpWire(tot){
+  $('#bpClose').onclick=()=>{clearInterval(liveTimer);clearTimeout(liveCloseTimer);cls('lay')};
+  $('#bpPinBtn').onclick=function(){
+    stayInLive=!stayInLive;this.textContent=stayInLive?'📌 Pinned':'⏱️ Auto-Close';
+    if(stayInLive)clearTimeout(liveCloseTimer);sfxTick(760);
+  };
+  const autoDur=(tot>=50000?12000:tot>=500?10000:8500);
+  liveCloseTimer=setTimeout(()=>{if(!stayInLive&&bpAlive()){clearInterval(liveTimer);cls('lay')}},autoDur);
+}
+
+// ---------------------------------------------------------------------
+// REDDIT · r/trailerparkboys
+// ---------------------------------------------------------------------
+const RD_AW={
+  silver:{e:'🥈',n:'Silver Award',price:1.99,rain:['🥈','✨','🪙'],col:'#cfd8dc',ban:'SILVER AWARD',sub:'Respect from the park',cnt:16,mode:'small'},
+  gold:{e:'🥇',n:'Golden Award',price:5.99,rain:['🥇','🪙','💰','✨'],col:'#ffc107',ban:'GOLDEN AWARD RAIN',sub:'It\'s raining gold in Sunnyvale',cnt:46,mode:'gold'},
+  glasses:{e:'🕶️',n:"Bubbles' Glasses Award",price:25,rain:['🕶️','🐱','🍔','✨'],col:'#ffe082',ban:'BUBBLES APPROVES',sub:'Cat-glasses certified, bud',cnt:30,mode:'small'},
+  rum:{e:'🥃',n:'Rum & Coke Award',price:150,rain:['🥃','🥤','🧊','🍺'],col:'#ff8a50',ban:'RUM & COKE ROUND',sub:'Drinks on u/YOU, boys',cnt:40,mode:'rum'},
+  diamond:{e:'💎',n:'Diamond Platinum Award',price:250,rain:['💎','🔷','❄️','✨'],col:'#7dd3fc',ban:'DIAMOND PLATINUM STORM',sub:'The whole subreddit is shaking',cnt:60,mode:'dia'}
+};
+const RD_USERS=['Bubbles_Kitties','Sunnyvale_Supervisor','Trailer_Hitch_Hank','Rum_And_Coke_Julian','DecentAndThenSome','Shed_Dweller','GreasyBackyardBob','Dartmouth_Dave','FlyingSnoo99','Cheeseburger_Karen','DumpsterDiver_Dan'];
+const RD_AVS=['🐱','👮','🔧','🥃','😎','🏚️','🍔','🚓','👽','🍟','🗑️'];
+const RD_MSG=['Decent. Absolutely decent.','mods pin this before the supervisor sees it','that is more cash than the whole park has seen in a decade','gold AND a trailer budget? who is this guy','spent my whole hash fund on a pizza, respect','this man is the new park supervisor','my inbox is full of people asking who u/YOU is','not even the Dartmouth bank has this much','greatest thing since the ice cream truck','where do I send my rum and coke award?','somebody check if the shed is still standing','ok I am officially jealous','take my upvote, it is all I have left','this belongs on r/all, no question'];
+function rdKind(it){return /Diamond|Platinum/i.test(it.n)?'diamond':/Gold/i.test(it.n)?'gold':it.f=='a'?'promo':'gold'}
+function openRedditPage(c,it,q,tot,msg){
+  clearInterval(liveTimer);clearTimeout(liveCloseTimer);
+  const kind=rdKind(it);let votes=Math.round(rnd(3,40)),myVote=1,joined=false,comments=0,awardCt={};
+  const body=msg?bpEsc(msg):`Dropped ${fmt(tot)} on r/trailerparkboys${q>1?' ('+q+'×)':''}. Sunnyvale has never seen this kind of cash, boys. 🍺`;
+  const flair=kind=='promo'?'📣 PROMOTED TAKEOVER':kind=='diamond'?'💎 DIAMOND DONATION':'🥇 DECENT DONATION';
+  show('lay',`
+  <div class="rd" id="bpRoot">
+    <div class="rd-bg">
+      <div class="rd-stars"></div><div class="rd-moon"></div>
+      <div class="rd-gnd"></div>
+      <div class="rd-tr a"></div><div class="rd-tr b"></div><div class="rd-tr c"></div>
+      <i class="rd-smoke"></i><i class="rd-smoke"></i><i class="rd-smoke"></i>
+      <div class="rd-fence"></div><div class="rd-road"></div><div class="rd-car">🚗</div>
+      ${[8,22,40,58,72,86].map((l,i)=>`<i class="rd-fly" style="left:${l}%;top:${40+(i*7)%30}%;animation-delay:${i*.7}s"></i>`).join('')}
+    </div>
+    <div class="rd-top">
+      <div class="rd-snoo">👽</div>
+      <div class="sp"><b>r/trailerparkboys</b><small id="rdOn">1.4M members · 8,214 online</small></div>
+      <button class="rd-join" id="rdJoin">Join</button>
+      <button class="bp-pin" id="bpPinBtn">${stayInLive?'📌 Pinned':'⏱️ Auto-Close'}</button>
+      <button class="bp-x" id="bpClose">✕</button>
+    </div>
+    <div class="rd-scroll" id="rdScroll">
+      <div class="rd-hero">
+        <div class="rd-sign">SUNNYVALE TRAILER PARK</div>
+        <div class="bigav">🕶️</div>
+        <div><h2>r/trailerparkboys</h2><p>Fan community · Sunnyvale, Nova Scotia · Est. 2001</p></div>
+      </div>
+      <div class="rd-post${kind=='promo'?' promo':''}" id="rdPost">
+        <div class="rd-ribbon">PROMOTED</div>
+        <div class="rd-vote"><button class="up on" id="rdUp">▲</button><b class="up" id="rdKarma">${votes+1}</b><button class="dn" id="rdDn">▼</button></div>
+        <div class="rd-pc">
+          <div class="rd-meta"><b>r/trailerparkboys</b> · Posted by <b>u/YOU</b> · just now</div>
+          <span class="rd-flair">${flair}</span>
+          <h3>${it.e} ${bpEsc(it.n)}${q>1?' ×'+q.toLocaleString():''} — ${fmt(tot)}</h3>
+          <p>${body}</p>
+          <div class="rd-awards" id="rdAwards"></div>
+          <div class="rd-acts"><span>💬 <b id="rdCc">0</b> Comments</span><span>🎁 Award</span><span>↗ Share</span></div>
+          <div class="rd-rank" id="rdRank">📈 #1 on r/all · <b id="rdImp">0</b> impressions</div>
+        </div>
+      </div>
+      <div class="rd-sort">Sort by: <b>Best ▾</b></div>
+      <div id="rdCom"></div>
+    </div>
+    <div class="bp-fx" id="bpFx"></div>
+    <div class="rd-bot">
+      <div class="rd-quick">${Object.entries(RD_AW).map(([k,a])=>`<button data-rdaw="${k}">${a.e} ${a.n.replace(' Award','')} (${fmt(a.price)})</button>`).join('')}</div>
+      <div class="rd-in"><input type="text" id="rdIn" maxlength="140" placeholder="Add a comment as u/YOU…"><button id="rdSend">Reply</button></div>
+    </div>
+  </div>`);
+
+  const addAward=(k,n=1)=>{
+    awardCt[k]=(awardCt[k]||0)+n;const a=RD_AW[k];
+    const box=$('#rdAwards');if(!box)return;
+    box.querySelector(`[data-k="${k}"]`)?.remove();
+    box.insertAdjacentHTML('beforeend',`<span data-k="${k}">${a.e} ${awardCt[k]>1?'×'+awardCt[k].toLocaleString():''}</span>`);
+  };
+  const addComment=(u,av,text,me)=>{
+    const box=$('#rdCom');if(!box)return;comments++;
+    let lk=Math.round(rnd(2,420));
+    box.insertAdjacentHTML('afterbegin',`<div class="rd-cm${me?' me':''}"><div class="av">${av}</div><div><b>u/${u}</b><small>${me?'just now · OP':Math.round(rnd(1,9))+' min ago'}</small><div>${bpEsc(text)}</div><div class="v">▲ ${me?1:lk} ▼ &nbsp;·&nbsp; Reply &nbsp;·&nbsp; 🎁 Award</div></div></div>`);
+    if($('#rdCc'))$('#rdCc').textContent=comments;
+  };
+  const setVotes=()=>{
+    const k=$('#rdKarma');if(!k)return;k.textContent=bpK(votes+(myVote===1?1:myVote===-1?-1:0));
+    k.className=myVote===1?'up':myVote===-1?'dn':'';
+    $('#rdUp').className='up'+(myVote===1?' on':'');$('#rdDn').className='dn'+(myVote===-1?' on':'');
+  };
+
+  // ----- the donation animation -----
+  const rdFire=(k,srcItem)=>{
+    const a=RD_AW[k];const col=a.col;
+    if(!bpAlive())return;
+    const post=$('#rdPost');
+    if(a.mode==='gold'){
+      sfxFanfare(0);bpChime(9,820);
+      bpFlash('#ffc107');
+      bpDrop(a.rain,a.cnt+Math.min(40,q),{glow:'#ffc107',dur:[2.4,4.2],size:[20,46],spin:true});
+      bpBanner(a.ban,a.sub,'linear-gradient(90deg,#b8860b,#ffc107,#b8860b)','#3a2500');
+      if(post){post.classList.remove('glow-gold');void post.offsetWidth;post.classList.add('glow-gold')}
+      tint(hexToRgba('#ffc107','A'),2600,.32);hero('🥇',{size:170,anim:'pop',dur:2600,glow:'#ffc107'});
+      ring({col:'#ffc107',w:9,dur:1300});burst(CX(),CY(),{col:'#ffd54f',n:46,speed:480,glow:14});
+    }else if(a.mode==='dia'){
+      sfxFanfare(0);setTimeout(()=>sfxFanfare(.1),260);bpChime(10,1000);
+      bpFlash('#e0f7ff');bpShake();shakeFX(12);
+      bpDrop(a.rain,a.cnt+Math.min(40,q),{glow:'#7dd3fc',dur:[1.6,3.4],size:[22,52],spin:true});
+      bpDrop(['⚡'],6,{glow:'#fde047',dur:[.7,1.1],size:[60,110],spread:1.2});
+      bpBanner(a.ban,a.sub,'linear-gradient(90deg,#0369a1,#7dd3fc,#0369a1)','#032a44');
+      if(post){post.classList.remove('glow-dia');void post.offsetWidth;post.classList.add('glow-dia')}
+      tint('rgba(56,189,248,A)',3000,.4);hero('💎',{size:190,anim:'pop',dur:3000,glow:'#7dd3fc'});
+      rays('rgba(186,230,253,.3)',3000,20,0);ring({col:'#7dd3fc',w:11,dur:1500});
+    }else if(a.mode==='rum'){
+      sfxDing(330,.2,'triangle');bpChime(6,520);
+      bpDrop(a.rain,a.cnt,{rise:true,glow:'#ff8a50',dur:[2.2,3.8],size:[22,40]});
+      bpBanner(a.ban,a.sub,'linear-gradient(90deg,#7c2d12,#ea580c,#7c2d12)','#fff3e0');
+      hero('🥃',{size:150,anim:'pop',dur:2200,glow:'#ff8a50'});tint('rgba(234,88,12,A)',2200,.28);
+    }else{
+      sfxDing(880,.1);bpChime(4,900);
+      bpDrop(a.rain,a.cnt,{glow:col,dur:[2,3.4],size:[18,34]});
+      bpBanner(a.ban,a.sub,'#000b',col);
+      hero(a.e,{size:120,anim:'pop',dur:1800,glow:col});
+    }
+    addAward(k,k===kind?Math.max(1,q):1);
+    if(k===kind||a.mode!=='small'){
+      const gain=Math.round(40+Math.log10((srcItem?.p||a.price)+1)*600);votes+=gain;
+      setVotes();
+    }
+    votes+=Math.round(rnd(30,90));setVotes();
+  };
+  const rdPromo=()=>{
+    if(!bpAlive())return;
+    sfxFanfare(0);bpChime(8,760);bpFlash('#ff4500');
+    bpDrop(['🚀'],1,{rise:true,glow:'#ff4500',dur:[2.4,2.6],size:[80,80],spread:0});
+    bpDrop(['📈','👽','🔥','⬆️','🧡'],56,{rise:true,glow:'#ff4500',dur:[2.2,4],size:[20,40]});
+    bpBanner('FRONT PAGE TAKEOVER',bpEsc(it.n),'linear-gradient(90deg,#9a2a00,#ff4500,#9a2a00)','#fff');
+    tint('rgba(255,69,0,A)',3000,.4);hero('📣',{size:170,anim:'pop',dur:2800,glow:'#ff4500'});ring({col:'#ff4500',w:10,dur:1400});
+    $('#rdRank')?.classList.add('on');
+    const imp=Math.round(tot*rnd(60,150));bpCount('#rdImp',imp,3200,bpK);
+    votes+=Math.round(imp*.012);setVotes();addAward('gold',1);
+  };
+
+  // sequencing
+  setTimeout(()=>{if(!bpAlive())return;kind==='promo'?rdPromo():rdFire(kind,it)},380);
+  setTimeout(()=>addComment('Bubbles_Kitties','🐱',kind=='diamond'?'DIAMOND?! that is like a million kitties worth of cheeseburgers':'that is a lot of kitties, bud',false),1400);
+  setTimeout(()=>addComment('Sunnyvale_Supervisor','👮',pick(RD_MSG),false),2600);
+
+  // interactions
+  $('#rdUp').onclick=()=>{myVote=myVote===1?0:1;setVotes();sfxTick(820)};
+  $('#rdDn').onclick=()=>{myVote=myVote===-1?0:-1;setVotes();sfxTick(480)};
+  $('#rdJoin').onclick=function(){joined=!joined;this.textContent=joined?'Joined ✓':'Join';this.className='rd-join'+(joined?' on':'');sfxDing(880,.08)};
+  const send=()=>{const i=$('#rdIn');if(!i)return;const v=i.value.trim();if(!v)return;i.value='';
+    addComment('YOU','👑',v,true);sfxDing(960,.07);bpDrop(['🧡','⬆️'],8,{rise:true,dur:[1.6,2.6],size:[16,26],glow:'#ff4500'});
+    setTimeout(()=>{const n=Math.floor(Math.random()*RD_USERS.length);addComment(RD_USERS[n],RD_AVS[n],`u/YOU "${v.slice(0,30)}" — ${pick(RD_MSG)}`,false)},900)};
+  $('#rdSend').onclick=send;$('#rdIn').onkeydown=e=>{if(e.key==='Enter')send()};
+  $('#lay').querySelectorAll('[data-rdaw]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.rdaw,a=RD_AW[k];
+    if(!bpSpend(a.price,a.n,a.e,'r/trailerparkboys'))return;
+    rdFire(k,{p:a.price});
+    addComment('YOU','👑',`gave ${a.e} ${a.n} (${fmt(a.price)})`,true);
+  });
+  let ticks=0;
+  liveTimer=setInterval(()=>{
+    if(!bpAlive()){clearInterval(liveTimer);return}
+    ticks++;const n=Math.floor(Math.random()*RD_USERS.length);
+    addComment(RD_USERS[n],RD_AVS[n],pick(RD_MSG),false);
+    votes+=Math.round(rnd(4,40));setVotes();
+    if($('#rdOn'))$('#rdOn').textContent=`1.4M members · ${Math.round(rnd(8000,15000)).toLocaleString()} online`;
+    if(ticks%3===0)bpDrop(['⬆️','🧡'],5,{rise:true,dur:[2,3.2],size:[16,24],glow:'#ff4500'});
+  },1700);
+  bpWire(tot);
+}
+
+// ---------------------------------------------------------------------
+// DISCORD
+// ---------------------------------------------------------------------
+const DC_USERS=[['NightOwl','#f0b232','🦉'],['mochi_to','#ff73fa','🍡'],['KaylaK','#23a55a','🎧'],['TorontoMans','#5865f2','🍁'],['PixelPirate','#eb459e','🏴‍☠️'],['lofi_girl','#00b0f4','📚']];
+const DC_MSG=['WAIT WHO JUST BOOSTED?? 👀','the server is glowing omg','mods!! pin this!','THE PERKS ARE UNLOCKING 🔥','new emoji slots let\'s gooo','welcome to the golden age of this server','my ping just got 10x more dramatic','is this real life??','server banner animated now?!','somebody screenshot this'];
+function openDiscordPage(c,it,q,tot,msg){
+  clearInterval(liveTimer);clearTimeout(liveCloseTimer);
+  const isBoost=/Boost/i.test(it.n),isQuest=it.f=='a';
+  const m=/×\s*(\d+)/.exec(it.n);const add=isBoost?(m?+m[1]:1)*q:isQuest?10:3*q;
+  const base=6,total=base+add,cap=14;
+  const lvl=n=>n>=14?3:n>=7?2:n>=2?1:0;
+  show('lay',`
+  <div class="dc" id="bpRoot">
+    <div class="dc-rail"><i>🏠</i><i class="on">⚡</i><i>🍁</i><i>🎮</i><i>🎵</i><i>➕</i></div>
+    <div class="dc-main">
+      <div class="dc-top"><b># general-chat</b><span class="dc-lvl" id="dcLvl">🚀 Level ${lvl(base)}</span><span class="sp"></span>
+        <button class="bp-pin" id="bpPinBtn">${stayInLive?'📌 Pinned':'⏱️ Auto-Close'}</button><button class="bp-x" id="bpClose">✕</button></div>
+      <div class="dc-boost">
+        <div class="dc-bl"><span>⚡ Maple Syndicate · Server Boosts</span><span id="dcBoosts">${base} / ${cap}</span></div>
+        <div class="dc-bar"><i id="dcBar" style="width:${base/cap*100}%"></i></div>
+        <div class="dc-ticks"><span>Lv 1 · 2</span><span>Lv 2 · 7</span><span>Lv 3 · 14</span></div>
+      </div>
+      <div class="dc-voice">🔊 Lounge ${['🦉','🍡','🎧','🍁'].map((e,i)=>`<span class="av${i%2?'':' sp'}" style="animation-delay:${i*.2}s">${e}</span>`).join('')}<span>+3</span></div>
+      <div class="dc-chat" id="dcChat"></div>
+      <div class="dc-typ" id="dcTyp"></div>
+      <div class="dc-quick">
+        <button data-dcq="🚀|Server Boost|4.99">🚀 Boost ($4.99)</button>
+        <button data-dcq="🎁|Gift Nitro|9.99">🎁 Gift Nitro ($9.99)</button>
+        <button data-dcq="👑|Gift Nitro Year|99.99">👑 Nitro Year ($99.99)</button>
+        <button data-dcq="🎆|Super Reaction|1.99">🎆 Super Reaction ($1.99)</button>
+      </div>
+      <div class="dc-in"><input type="text" id="dcIn" maxlength="140" placeholder="Message #general-chat"><button id="dcSend">Send</button></div>
+      <div class="bp-fx" id="bpFx"></div>
+    </div>
+  </div>`);
+
+  const chat=(u,col,av,html,bot)=>{
+    const ch=$('#dcChat');if(!ch)return;
+    ch.insertAdjacentHTML('beforeend',`<div class="dc-m"><div class="av">${av}</div><div><b style="color:${col}">${u}</b>${bot?'<span class="dc-tag">BOT</span>':''}<small>Today at ${new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</small><div class="t">${html}</div></div></div>`);
+    ch.scrollTop=ch.scrollHeight;while(ch.children.length>30)ch.firstChild.remove();
+  };
+  let boosts=base;
+  const setBoost=(n)=>{
+    const l0=lvl(boosts);boosts=n;
+    if($('#dcBar'))$('#dcBar').style.width=Math.min(100,n/cap*100)+'%';
+    bpCount('#dcBoosts',n,1800,v=>`${v} / ${cap}`);
+    const L=$('#dcLvl');if(L){L.textContent=`🚀 Level ${lvl(n)}`;if(lvl(n)>l0){L.classList.remove('pop');void L.offsetWidth;L.classList.add('pop')}}
+  };
+  const boostFx=(n)=>{
+    sfxFanfare(0);setTimeout(()=>sfxFanfare(.1),300);bpChime(10,700);
+    bpDrop(['🚀'],1,{rise:true,glow:'#ff73fa',dur:[2.4,2.6],size:[84,84],spread:0});
+    bpDrop(['💎','🟣','💗','✨','⭐'],54+Math.min(30,n),{glow:'#ff73fa',dur:[2.2,4],size:[18,40],spin:true});
+    bpFlash('#ff73fa');
+    bpBanner(`SERVER BOOSTED ×${n}`,lvl(boosts+n)>lvl(boosts)?`Level ${lvl(boosts+n)} Unlocked!`:'Perks are flowing',`linear-gradient(90deg,#4752c4,#ff73fa,#4752c4)`,'#fff');
+    tint('rgba(88,101,242,A)',3000,.38);hero('🚀',{size:170,anim:'fly',dur:2800,glow:'#ff73fa'});
+    ring({col:'#ff73fa',w:10,dur:1400});confetti(60,3);
+    setBoost(boosts+n);
+  };
+  const questFx=()=>{
+    sfxFanfare(0);bpChime(9,880);bpFlash('#eb459e');
+    bpDrop(['🔮','🎁','🏆','⭐','✨'],56,{glow:'#eb459e',dur:[2.2,4],size:[20,42],spin:true});
+    bpBanner('SPONSORED QUEST LIVE',bpEsc(it.n),'linear-gradient(90deg,#5865f2,#eb459e,#5865f2)','#fff');
+    tint('rgba(235,69,158,A)',3000,.36);hero('🎉',{size:170,anim:'pop',dur:2800,glow:'#eb459e'});ring({col:'#eb459e',w:10,dur:1400});
+    setBoost(Math.min(cap,boosts+3));
+  };
+  setTimeout(()=>{
+    if(!bpAlive())return;
+    chat('Wumpus','#5865f2','🤖',isBoost?`🚀 <b>@YOU</b> just boosted the server <b>${add} time${add>1?'s':''}</b>! The server has <b>${total}</b> boosts and is now <b>Level ${lvl(total)}</b>.`:isQuest?`🎉 <b>@YOU</b> launched a Sponsored Quest for the entire network!`:`🎁 <b>@YOU</b> sent ${it.e} <b>${bpEsc(it.n)}</b>${q>1?' ×'+q:''} — ${fmt(tot)}`,true);
+    const ch=$('#dcChat');
+    if(isBoost)ch.lastChild.querySelector('.t').insertAdjacentHTML('beforeend',`<div class="dc-emb"><b class="nitro">⚡ Perks unlocked</b>Animated server icon · 100 emoji slots · 50MB uploads · custom invite splash</div>`);
+    if(isQuest)ch.lastChild.querySelector('.t').insertAdjacentHTML('beforeend',`<div class="dc-quest"><b>${it.e} ${bpEsc(it.n)}</b><small>Complete the quest to earn Orbs · ${fmt(tot)} sponsored</small><div class="qb"><i id="dcQ"></i></div></div>`),setTimeout(()=>{if($('#dcQ'))$('#dcQ').style.width='100%'},200);
+    if(msg)chat('YOU','#f0b232','👑',bpEsc(msg),false);
+    isBoost?boostFx(add):isQuest?questFx():boostFx(Math.max(1,q));
+  },380);
+  const sayLoop=()=>{const[u,col,av]=pick(DC_USERS);const t=$('#dcTyp');if(t)t.textContent=`${u} is typing…`;
+    setTimeout(()=>{if(!bpAlive())return;chat(u,col,av,pick(DC_MSG));if($('#dcTyp'))$('#dcTyp').textContent=''},900)};
+  liveTimer=setInterval(()=>{if(!bpAlive()){clearInterval(liveTimer);return}sayLoop()},2100);
+  const send=()=>{const i=$('#dcIn');if(!i)return;const v=i.value.trim();if(!v)return;i.value='';chat('YOU','#f0b232','👑',bpEsc(v));sfxDing(960,.07);
+    setTimeout(()=>{const[u,col,av]=pick(DC_USERS);chat(u,col,av,`@YOU ${pick(['legend','W','real ones know','okay boss 😎'])}`)},800)};
+  $('#dcSend').onclick=send;$('#dcIn').onkeydown=e=>{if(e.key==='Enter')send()};
+  $('#lay').querySelectorAll('[data-dcq]').forEach(b=>b.onclick=()=>{
+    const[ge,gn,gp]=b.dataset.dcq.split('|'),price=+gp;
+    if(!bpSpend(price,gn,ge,'Maple Syndicate'))return;
+    chat('Wumpus','#5865f2','🤖',`${ge} <b>@YOU</b> sent <b>${gn}</b> (${fmt(price)})!`,true);
+    if(/Boost/.test(gn))boostFx(1);
+    else{sfxFanfare(0);bpChime(6,800);bpDrop([ge,'💎','✨','💗'],34,{glow:'#ff73fa',dur:[2,3.6],size:[18,36],spin:true});bpBanner(gn.toUpperCase(),'Sent with love','linear-gradient(90deg,#4752c4,#ff73fa,#4752c4)','#fff');setBoost(Math.min(cap,boosts+1))}
+  });
+  bpWire(tot);
+}
+
+// ---------------------------------------------------------------------
+// GENERIC BRANDED PAGE (Roblox / Epic Games / Riot Games)
+// ---------------------------------------------------------------------
+const CP_CFG={
+  'Roblox':{cc:'#e2231a',bg:'linear-gradient(#1b2a49,#0b1222)',pat:'repeating-linear-gradient(0deg,#fff 0 2px,transparent 2px 40px),repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 40px)',logo:'🧱',sub:'Obby Party Server · 42/50 players',word:'ROBUX RAIN',fx:'bricks',rain:['🟥','🟦','🟩','🟨','💰','🧱'],users:['BuilderBob_09','NoobMaster','ObbyQueen','TycoonTim'],msgs:['OMG FREE ROBUX FALLING','who is this rich guy','my avatar is jealous','admin abuse!!','BRICKS EVERYWHERE'],quick:[['🟩','Brick Pack',4.99],['💰','Robux Mega Pack',49.99],['👑','Limited Crown',199]]},
+  'Epic Games':{cc:'#2a7de1',bg:'linear-gradient(#10243f,#070b14)',pat:'radial-gradient(circle,#fff 1.5px,transparent 1.6px) 0 0/26px 26px',logo:'🎮',sub:'Item Shop · Battle Bus Lobby',word:'V-BUCKS DROP',fx:'bus',rain:['🎈','💙','🪙','🎁'],users:['DropZoneDan','VictoryRoyale','LlamaLuis','BushCamper'],msgs:['THE BUS IS HERE','who dropped all the loot?!','victory royale in chat','skin shop is on fire'],quick:[['💙','V-Bucks 1000',12.99],['🎁','Gift a Skin',24.99],['🚌','Battle Pass Bundle',59.99]]},
+  'Riot Games':{cc:'#d13639',bg:'linear-gradient(#0b1a2b,#14090c)',pat:'repeating-linear-gradient(60deg,#0ac8b9 0 1px,transparent 1px 34px)',logo:'⚔️',sub:'Rift Lobby · Ranked Queue',word:'HEXTECH SURGE',fx:'hex',rain:['🔷','✨','⚔️','🛡️'],users:['MidOrFeed','JungleDiff','SupportMain','BaronNashor'],msgs:['HEXTECH CHEST OPENED','insane surge in lobby','who bought all the RP?!','GG no re'],quick:[['🔷','RP Pack',9.99],['🛡️','Skin Gift',24.99],['⚔️','Season Pass',49.99]]}
+};
+function openCompanyPage(c,it,q,tot,msg){
+  clearInterval(liveTimer);clearTimeout(liveCloseTimer);
+  const f=CP_CFG[c.n]||{cc:c.c,bg:'linear-gradient(#111827,#030712)',pat:'none',logo:c.e||'⭐',sub:`${c.n} Community`,word:'GIFT DROP',fx:'bricks',rain:[it.e,'✨','💎'],users:['Player1','Player2'],msgs:['wow!','legend'],quick:[['🎁','Gift',9.99]]};
+  show('lay',`
+  <div class="cp" id="bpRoot" style="--cc:${f.cc};--cbg:${f.bg};--cpat:${f.pat}">
+    <div class="cp-pat"></div>
+    <div class="cp-top"><div class="cp-logo">${f.logo}</div><div class="sp"><b>${bpEsc(c.n)}</b><small>${f.sub}</small></div>
+      <button class="bp-pin" id="bpPinBtn">${stayInLive?'📌 Pinned':'⏱️ Auto-Close'}</button><button class="bp-x" id="bpClose">✕</button></div>
+    <div class="cp-body">
+      <div class="cp-card"><div class="gi">${it.e}</div><div><b>YOU sent ${bpEsc(it.n)}${q>1?' ×'+q.toLocaleString():''}</b><small>${bpEsc(c.n)} · live community gift</small></div><div class="tot">${fmt(tot)}</div></div>
+      <div class="cp-feed" id="cpFeed"></div>
+    </div>
+    <div class="bp-fx" id="bpFx"></div>
+    <div class="cp-bot">
+      <div class="cp-quick">${f.quick.map(x=>`<button data-cpq="${x[0]}|${x[1]}|${x[2]}">${x[0]} ${x[1]} (${fmt(x[2])})</button>`).join('')}</div>
+      <div class="cp-in"><input type="text" id="cpIn" maxlength="140" placeholder="Chat with the ${bpEsc(c.n)} community…"><button id="cpSend">Send</button></div>
+    </div>
+  </div>`);
+  const feed=(u,t,me)=>{const fd=$('#cpFeed');if(!fd)return;fd.insertAdjacentHTML('beforeend',`<div class="cp-msg"><b>${bpEsc(u)}:</b> ${bpEsc(t)}</div>`);fd.parentElement.scrollTop=fd.parentElement.scrollHeight;while(fd.children.length>24)fd.firstChild.remove()};
+  const fxRun=(emoji,n)=>{
+    sfxFanfare(0);bpChime(8,760);bpFlash(f.cc);
+    if(f.fx==='bricks'){bpDrop(f.rain,n,{end:'86%',dur:[1.4,2.6],size:[26,44],spin:false,glow:f.cc});bpShake()}
+    else if(f.fx==='bus'){const h=$('#bpFx');if(h){const b=document.createElement('div');b.className='bp-fly';b.textContent='🚌';h.append(b);setTimeout(()=>b.remove(),3100)}bpDrop(f.rain,n,{dur:[2.2,3.8],size:[24,44],glow:f.cc})}
+    else{const h=$('#bpFx');if(h){for(let i=0;i<5;i++){const x=document.createElement('div');x.className='bp-hex';x.style.cssText=`--hc:${i%2?f.cc:'#0ac8b9'};animation-delay:${i*.18}s`;h.append(x);setTimeout(()=>x.remove(),2400)}}bpDrop(f.rain,n,{dur:[2,3.4],size:[20,38],glow:'#0ac8b9',spin:true})}
+    bpBanner(f.word,`${c.n} · ${emoji}`,`linear-gradient(90deg,#000b,${f.cc},#000b)`,'#fff');
+    tint(hexToRgba(f.cc,'A'),2800,.36);hero(emoji,{size:170,anim:'pop',dur:2800,glow:f.cc});ring({col:f.cc,w:10,dur:1400});
+  };
+  setTimeout(()=>{if(!bpAlive())return;feed('SYSTEM',`YOU sent ${it.n}${q>1?' ×'+q:''} (${fmt(tot)})`);if(msg)feed('YOU',msg);fxRun(it.e,36+Math.min(40,q))},380);
+  liveTimer=setInterval(()=>{if(!bpAlive()){clearInterval(liveTimer);return}feed(pick(f.users),pick(f.msgs))},1800);
+  const send=()=>{const i=$('#cpIn');if(!i)return;const v=i.value.trim();if(!v)return;i.value='';feed('YOU',v);sfxDing(960,.07);setTimeout(()=>feed(pick(f.users),`@YOU ${pick(f.msgs)}`),800)};
+  $('#cpSend').onclick=send;$('#cpIn').onkeydown=e=>{if(e.key==='Enter')send()};
+  $('#lay').querySelectorAll('[data-cpq]').forEach(b=>b.onclick=()=>{
+    const[ge,gn,gp]=b.dataset.cpq.split('|'),price=+gp;
+    if(!bpSpend(price,gn,ge,c.n))return;feed('YOU',`sent ${ge} ${gn} (${fmt(price)})`);fxRun(ge,30);
+  });
+  bpWire(tot);
+}
+
 
 // ---------- Viral ad simulator ----------
 function openViralAdSim(c,it,tot){
